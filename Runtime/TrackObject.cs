@@ -5,13 +5,12 @@ using UnityEngine;
 [AddComponentMenu("InformXR/Track Object")]
 public class TrackObject : MonoBehaviour
 {
-    public float positionUpdateIntervalSeconds = (float)(1.0 / Configuration.instance.trackingUpdatesPerSecond);
-    
     private Vector3 _currentPosition;
     private Quaternion _currentRotation;
 
     private void Start()
     {
+        float positionUpdateIntervalSeconds = (float)(1.0 / Configuration.instance.trackingUpdatesPerSecond);
         InvokeRepeating(nameof(UpdateLocation), 0, positionUpdateIntervalSeconds);
     }
 
