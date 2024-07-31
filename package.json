@@ -1,0 +1,19 @@
+{
+    "name": "com.informxr.unity-sdk",
+    "version": "1.0.0",
+    "displayName": "iXRLib Unity SDK",
+    "description": "iXRLib Unity SDK for analytics",
+    "unity": "2021.3",
+    "author": {
+      "name": "informXR",
+      "url": "https://informxr.com"
+    },
+    "dependencies": {
+      "com.unity.xr.core-utils": "2.2.3",
+      "com.unity.xr.interaction.toolkit": "2.5.3",
+      "com.unity.xr.management": "4.4.1",
+      "com.unity.textmeshpro": "3.0.6",
+      "com.unity.editorcoroutines": "1.0.0",
+      "com.unity.nuget.newtonsoft-json": "3.2.1"
+    }
+}
