@@ -6,7 +6,6 @@ using XRDM.SDK.External.Unity;
 [DefaultExecutionOrder(1)]
 public class Authentication : SdkBehaviour
 {
-    public static bool Authenticated;
     private static Authentication _instance;
     private string _arborOrgId;
     private string _arborDeviceId;
@@ -95,12 +94,10 @@ public class Authentication : SdkBehaviour
         if (result == iXRResult.Ok)
         {
             Debug.Log("iXRLib - Authenticated successfully");
-            Authenticated = true;
         }
         else
         {
             Debug.LogError($"iXRLib - Authentication failed : {result}");
-            Authenticated = false;
         }
     }
 }

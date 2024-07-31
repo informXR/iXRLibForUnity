@@ -12,15 +12,10 @@ public static class Initialize
         iXRInit.Start();
         SetConfigValues();
         Authentication.Initialize();
-
-        if (Authentication.Authenticated)
-        {
-            TrackSystemInfo.Initialize();
+        TrackSystemInfo.Initialize();
 #if UNITY_ANDROID
-            TrackInputDevices.Initialize();
+        TrackInputDevices.Initialize();
 #endif
-        }
-
         ShutDown.Initialize();
     }
 
