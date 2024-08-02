@@ -18,8 +18,8 @@ public class ConfigInspector : Editor
         EditorGUILayout.LabelField("Player Tracking", EditorStyles.boldLabel);
         config.headsetTracking = EditorGUILayout.Toggle(new GUIContent(
             "Headset/Controller Tracking", "Track the Headset and Controllers"), config.headsetTracking);
-        config.trackingUpdatesPerSecond = EditorGUILayout.IntField(
-            "Tracking Updates Per Second", config.trackingUpdatesPerSecond);
+        config.trackingUpdatesPerMinute = EditorGUILayout.IntField(
+            "Tracking Updates Per Minute", config.trackingUpdatesPerMinute);
         
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Network", EditorStyles.boldLabel);

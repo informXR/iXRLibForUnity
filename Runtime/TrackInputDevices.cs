@@ -6,7 +6,7 @@ using UnityEngine.XR;
 [DefaultExecutionOrder(100)] // Doesn't matter when this one runs
 public class TrackInputDevices : MonoBehaviour
 {
-    public float positionUpdateIntervalSeconds = (float)(1.0 / Configuration.instance.trackingUpdatesPerSecond);
+    public float positionUpdateIntervalSeconds = (float)(60.0 / Configuration.instance.trackingUpdatesPerMinute);
     
     private InputDevice _rightController;
     private InputDevice _leftController;
