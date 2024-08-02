@@ -79,7 +79,7 @@ public class TrackInputDevices : MonoBehaviour
             _rightTriggerValues.TryGetValue(trigger, out bool current);
             if (pressed != current)
             {
-                iXRSend.AddTelemetryEntry($"Right Controller {trigger.name}", "Pressed");
+                iXRSend.AddTelemetryEntry($"Right Controller {trigger.name}", $"{trigger.name},Pressed");
                 _rightTriggerValues[trigger] = pressed;
             }
         }
@@ -90,7 +90,7 @@ public class TrackInputDevices : MonoBehaviour
             _leftTriggerValues.TryGetValue(trigger, out bool current);
             if (pressed != current)
             {
-                iXRSend.AddTelemetryEntry($"Left Controller {trigger.name}", "Pressed");
+                iXRSend.AddTelemetryEntry($"Left Controller {trigger.name}", $"{trigger.name},Pressed");
                 _leftTriggerValues[trigger] = pressed;
             }
         }
