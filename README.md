@@ -10,6 +10,9 @@ The InformXR SDK for Unity
 
 * In the Unity UI, click the 'InformXR' tab, then 'Configuration'
 
+![alt text](https://github.com/informXR/iXRLibUnitySDK/blob/[branch]/README-UISettingsScreen.png?raw=true)
+
+
 ## Object Tracking
 
 * Select the object you would like to Track
