@@ -24,7 +24,7 @@ public class Configuration : ScriptableObject
     [Tooltip("Optional")] public string authSecret;
     
     public bool headsetTracking;
-    public int trackingUpdatesPerMinute = 60;
+    public int trackingUpdatesPerMinute = 4;
     
     public string restUrl = "https://libapi.informxr.io/";
 
