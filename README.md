@@ -1,4 +1,4 @@
-## Table of Contents
+# Table of Contents
 
 1. [Introduction](\#introduction)  
 1. [Installation](\#installation)  
@@ -12,21 +12,25 @@
 
 ### Overview
 
-The informXR SDK for Unity empowers developers to seamlessly integrate advanced XR tracking and analytics into their applications. By utilizing our SDK, you can collect and analyze data from a wide range of XR devices, including headsets, controllers, and more, to enhance user experiences and gather actionable insights.
+The informXR SDK for Unity empowers developers **for free** to seamlessly integrate advanced XR tracking, analytics, and data management into their applications. By leveraging informXR's comprehensive features _(see below)_, **developers like you** can **significantly enhance their product’s appeal to enterprise customers**. We are a cost-effective solution for your customers, making your product not just innovative, but also enterprise-ready.
+* Seamless LMS and business intelligence integrations
+* An advanced analytics platform
+* Secure data storage solutions
+* An AI proxy
 
-### Key Features
+### Key SDK Features
 
+- **Event Tracking**: Get error logs and user interactions based events within your XR applications.
 - **HMD and Controller Tracking**: Real-time tracking of head-mounted displays (HMD) and controllers for a comprehensive XR experience.   
 - **Object Tracking**: Track specific objects within your XR environment to monitor interactions and movements.
 - **System Information Tracking**: Capture system-level data, such as device specifications and performance metrics.  
-- **Event Tracking**: Get error logs and user interactions based events within your XR applications.
 
 ## Installation
 
 ### Steps to Install
 
 1. On the top menu choose `Window > Package Manager`.
-2. Click the \+ button in the top left and select 'Add Package from git URL'  
+2. Click the **\'+'** button in the top left and select 'Add Package from git URL'  
 3. Input `https://github.com/informXR/iXRLibUnitySDK.git`
 4. Once the package is installed, you should see informXR appear in your Unity toolbar.
 
@@ -37,16 +41,16 @@ The informXR SDK for Unity empowers developers to seamlessly integrate advanced 
 To get started with the informXR SDK, you'll need to configure your application with the necessary authentication details.
 
 1. On the top menu choose `informXR > Configuration`.
-2. Enter the Application ID, Organization ID, and Authorization Secret. These can be retrieved from the [informXR Web Application](https://app.informxr.io/).
+2. Enter the Application ID, Organization ID, and Authorization Secret. These can be retrieved from the [informXR Web Application](https://app.informxr.io/) which requires a **free account** to continue.
      * Organization ID and Authorization Secret: Available under `Settings > Organization Codes`.
      * Application ID: Available in the Web Dashboard under your application settings.
      * Follow the visual guides below for clarity.
 
-# Organization ID and Authorization Secret Location - Web App
+### Organization ID and Authorization Secret Location - Web App
 ![Visual Tutorial to get to Settings](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/GotoSettings.png?raw=true "Go to Settings")
 ![Visual Tutorial to get to Organization Codes](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/goToOrganizationCodes.png?raw=true "Go to Organization Codes")
 
-# Application ID Location - Web App
+### Application ID Location - Web App
 
 This tutorial will include the full steps to publishing your application with informXR and obtaining your Application ID.
 
@@ -63,7 +67,7 @@ This tutorial will include the full steps to publishing your application with in
 ### Feature 1: Headset Tracking
 
 Enable real-time tracking of headsets and controllers:
-1. In the Configuration UI, click on Headset Tracking.
+1. By default it is on. However, if not, in the Configuration UI click on Headset Tracking.
 2. The SDK will automatically start tracking the HMD and controllers.
 
 ### Feature 2: Object Tracking
@@ -71,21 +75,21 @@ Enable real-time tracking of headsets and controllers:
 To track specific objects:
 1. Select the object you want to track in your Unity scene.
 2. In the Inspector window, click Add Component.
-3. Choose InformXR > Track Object.
+3. Choose `informXR > Track Object`.
 
 ### Feature 3: Event Tracking
 
 To log events within your application:
-1. Integrate event logging by calling iXRSend.AddEvent() within your code.
+1. Integrate event logging by calling `iXRSend.AddEvent()` within your code.
 2. Customize your event parameters based on what you need to track.
 
 
-### FAQ
+## FAQ
 
-## Q: How do I retrieve my Application ID and Authorization Secret?
+### Q: How do I retrieve my Application ID and Authorization Secret?
 A: Your Application ID can be found in the Web Dashboard under the application details. For the Authorization Secret, navigate to Settings > Organization Codes on the same dashboard.
 
-## Q: How do I enable object tracking?
+### Q: How do I enable object tracking?
 A: Object tracking can be enabled by adding the Track Object component to any GameObject in your scene via the Unity Inspector.
 
 
@@ -95,7 +99,7 @@ A: Object tracking can be enabled by adding the Track Object component to any Ga
 
 1. **Issue**: Authentication failing due to network error.  
      
-   - **Solution**: Uncheck ‘Force Remove Internet Permissions’ in Project Settings \-\> XR Plug-in Management \-\> OpenXR \-\> Meta Quest Support Settings.
+   - **Solution**: Uncheck ‘Force Remove Internet Permissions’ in `Project Settings > XR Plug-in Management > OpenXR > Meta Quest Support Settings`.
 
 2. **Issue**: Event data not appearing in the dashboard.
 
