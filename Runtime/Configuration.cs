@@ -9,7 +9,7 @@ public class Configuration : ScriptableObject
         {
             if (_instance != null) return _instance;
             
-            _instance = Resources.Load<Configuration>("InformXR-Configuration");
+            _instance = Resources.Load<Configuration>("informXR");
             if (_instance == null)
             {
                 _instance = CreateInstance<Configuration>();
