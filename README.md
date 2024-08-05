@@ -42,8 +42,8 @@ iXRLib requires an initial configuration for authentication.
 * Application ID is obtained from the WebUI by clicking on your published application, then clicking ‘AppID’  
 * Organization ID and Authorization Secret are obtained from the WebUI by clicking `Settings->Organization Codes`
 
-![alt text](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/UISettingsButton.png?raw=true)
-![alt text](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/UISettingsScreen.png?raw=true)
+![alt text](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/GotoSettings.png?raw=true)
+![alt text](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/goToOrganizationCodes.png?raw=true)
 
 
 ## Features
