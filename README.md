@@ -25,7 +25,7 @@ The informXR SDK for Unity empowers developers to seamlessly integrate advanced 
 
 ### Steps to Install
 
-1. Open 'Package Manager' from the Window menu  
+1. On the top menu choose `Window > Package Manager`.
 2. Click the \+ button in the top left and select 'Add Package from git URL'  
 3. Input `https://github.com/informXR/iXRLibUnitySDK.git`
 4. Once the package is installed, you should see informXR appear in your Unity toolbar.
@@ -36,9 +36,9 @@ The informXR SDK for Unity empowers developers to seamlessly integrate advanced 
 
 To get started with the informXR SDK, you'll need to configure your application with the necessary authentication details.
 
-1. In the Unity UI, click the 'informXR' tab, then 'Configuration'  
+1. On the top menu choose `informXR > Configuration`.
 2. Enter the Application ID, Organization ID, and Authorization Secret. These can be retrieved from the [informXR Web Application](https://app.informxr.io/).
-     * Organization ID and Authorization Secret: Available under Settings > Organization Codes.
+     * Organization ID and Authorization Secret: Available under `Settings > Organization Codes`.
      * Application ID: Available in the Web Dashboard under your application settings.
      * Follow the visual guides below for clarity.
 
