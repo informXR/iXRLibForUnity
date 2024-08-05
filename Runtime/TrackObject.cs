@@ -2,7 +2,7 @@ using iXRLib;
 using UnityEngine;
 
 [DefaultExecutionOrder(100)] // Doesn't matter when this one runs
-[AddComponentMenu("InformXR/Track Object")]
+[AddComponentMenu("informXR/Track Object")]
 public class TrackObject : MonoBehaviour
 {
     private Vector3 _currentPosition;

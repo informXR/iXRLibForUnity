@@ -14,7 +14,7 @@ public class UpdateCheck
     private const int UpdateCheckFrequencyDays = 1;
     public const string UpdateCheckPref = "iXR_updateCheck";
 
-    [MenuItem("InformXR/Check For Updates")]
+    [MenuItem("informXR/Check For Updates")]
     public static async void CheckForUpdatesMenu()
     {
         EditorPrefs.DeleteKey(SkippedVersionKey);
