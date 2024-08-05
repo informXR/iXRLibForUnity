@@ -26,7 +26,7 @@ public class Configuration : ScriptableObject
     public bool headsetTracking;
     public int trackingUpdatesPerMinute = 4;
     
-    public string restUrl = "https://libapi.informxr.io/";
+    public string restUrl = "https://libapi.informxr.io/v1/";
 
     public int sendRetriesOnFailure = 3;
     public int sendRetryIntervalSeconds = 3;
