@@ -16,7 +16,6 @@ public static class Initialize
 #if UNITY_ANDROID
         TrackInputDevices.Initialize();
 #endif
-        ShutDown.Initialize();
     }
 
     private static void SetConfigValues()

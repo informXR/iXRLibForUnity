@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using iXRLib;
 using UnityEngine;
 using XRDM.SDK.External.Unity;
@@ -11,6 +12,7 @@ public class Authentication : SdkBehaviour
     private string _arborDeviceId;
     private string _arborAuthSecret;
     private Partner _partner = Partner.eNone;
+    private DateTime _lostFocus = DateTime.MaxValue;
     
     public static void Initialize()
     {
@@ -52,6 +54,27 @@ public class Authentication : SdkBehaviour
         CheckArborInfo();
         if (!string.IsNullOrEmpty(_arborOrgId)) _partner = Partner.eArborXR;
 #endif
+        Authenticate();
+    }
+    
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        if (hasFocus)
+        {
+            if ((DateTime.UtcNow - _lostFocus).Hours >= 1)
+            {
+                Authenticate();
+            }
+        }
+        else
+        {
+            iXRInit.ForceSendUnsentSynchronous();
+            _lostFocus = DateTime.UtcNow;
+        }
+    }
+
+    private void Authenticate()
+    {
         const string appIdPattern = "^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$";
         if (!Regex.IsMatch(Configuration.instance.appID, appIdPattern))
         {
