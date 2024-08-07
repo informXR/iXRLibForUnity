@@ -36,7 +36,10 @@ public class Authentication : SdkBehaviour
     {
         _arborOrgId = Callback.Service.GetOrgId();
         _arborDeviceId = Callback.Service.GetDeviceId();
-        _arborAuthSecret = Callback.Service.GetAuthSecret();
+        _arborAuthSecret = Callback.Service.GetFingerprint();
+        Debug.Log($"iXRLib - !!!{_arborAuthSecret}");
+        Debug.Log($"iXRLib - device = {_arborDeviceId}");
+        Debug.Log($"iXRLib - org = {_arborOrgId}");
     }
     
     private sealed class Callback : IConnectionCallback
