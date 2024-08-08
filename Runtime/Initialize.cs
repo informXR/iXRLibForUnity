@@ -5,11 +5,22 @@ using UnityEngine;
 
 public static class Initialize
 {
+	public delegate void SetTextMesh(string sz);
+	// ---
+	static SetTextMesh	m_pfnSetTextMesh = null;
+	// ---
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void OnBeforeSceneLoad()
     {
-        //TestDiagnosticStringCallbackMechanism();
-        iXRInit.Start();
+		string	szOrgId = null,
+				szDeviceId = null,
+				szAuthSecret = null;
+
+        TestDiagnosticStringCallbackMechanism();
+		//ArborInfo.Initialize();
+		//ArborInfo.GetFromArbor(out szOrgId, out szDeviceId, out szAuthSecret);blah
+		Task.Run(async () => await Initialize.DiagnosticString($"Ey mon, the OrgId from Arbor is {szOrgId}, DeviceId is {szDeviceId}, AuthSecret is {szAuthSecret}"));
+		iXRInit.Start();
         SetConfigValues();
         Authentication.Initialize();
         TrackSystemInfo.Initialize();
@@ -42,6 +53,14 @@ public static class Initialize
 
     private static async Task DiagnosticString(string szString)
     {
-        await Task.Run(() => Debug.Log($"iXRLib - {szString}"));
-    }
+        await Task.Run(() => Debug.Log($"iXRLibDebug - {szString}"));
+		if (m_pfnSetTextMesh != null)
+		{
+			m_pfnSetTextMesh(szString);
+		}
+	}
+	public static void SetTextMeshCallback(SetTextMesh pfnSetTextMesh)
+	{
+		m_pfnSetTextMesh = pfnSetTextMesh;
+	}
 }
