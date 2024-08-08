@@ -61,7 +61,7 @@ public class Authentication : SdkBehaviour
     {
         if (hasFocus)
         {
-            if ((DateTime.UtcNow - _lostFocus).Hours >= 1)
+			if (iXRLib.iXRAuthentication.TokenExpirationImminent())
             {
                 Authenticate();
             }
