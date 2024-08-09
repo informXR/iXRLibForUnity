@@ -1,4 +1,5 @@
-using iXRLib;
+using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 [DefaultExecutionOrder(100)] // Doesn't matter when this one runs
@@ -21,7 +22,12 @@ public class TrackObject : MonoBehaviour
 
         _currentPosition = transform.position;
         _currentRotation = transform.rotation;
-        iXRSend.AddTelemetryEntry(
-            name + " Position", $"x,{transform.position.x},y,{transform.position.y},z,{transform.position.z}");
+        var positionDict = new Dictionary<string, string>
+        {
+            ["x"] = transform.position.x.ToString(CultureInfo.InvariantCulture),
+            ["y"] = transform.position.y.ToString(CultureInfo.InvariantCulture),
+            ["z"] = transform.position.z.ToString(CultureInfo.InvariantCulture)
+        };
+        iXRLog.TelemetryEntry(name + " Position", positionDict);
     }
 }
