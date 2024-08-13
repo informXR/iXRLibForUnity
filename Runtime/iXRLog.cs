@@ -68,6 +68,28 @@ public class iXRLog
 		meta["z"] = gameObject.transform.position.z.ToString(CultureInfo.InvariantCulture);
 		return iXRSend.Event(message, DictToString(meta));
 	}
+	public static iXRResult EventSynchronous(string name, string meta)
+	{
+		return iXRSend.EventSynchronous(name, meta);
+	}
+	public static iXRResult Event(string message, string meta)
+	{
+		return iXRSend.Event(message, meta);
+	}
+	public static iXRResult EventSynchronous(string name, string meta, GameObject gameObject)
+	{
+		meta += $"x={gameObject.transform.position.x}";
+		meta += $"y={gameObject.transform.position.y}";
+		meta += $"z={gameObject.transform.position.z}";
+		return iXRSend.EventSynchronous(name, meta);
+	}
+	public static iXRResult Event(string message, string meta, GameObject gameObject)
+	{
+		meta += $"x={gameObject.transform.position.x}";
+		meta += $"y={gameObject.transform.position.y}";
+		meta += $"z={gameObject.transform.position.z}";
+		return iXRSend.Event(message, meta);
+	}
 	// ---
 	public static iXRResult TelemetryEntrySynchronous(string name, Dictionary<string, string> data)
 	{
@@ -76,6 +98,14 @@ public class iXRLog
 	public static iXRResult TelemetryEntry(string name, Dictionary<string, string> data)
 	{
 		return iXRSend.AddTelemetryEntry(name, DictToString(data));
+	}
+	public static iXRResult TelemetryEntrySynchronous(string name, string data)
+	{
+		return iXRSend.AddTelemetryEntrySynchronous(name, data);
+	}
+	public static iXRResult TelemetryEntry(string name, string data)
+	{
+		return iXRSend.AddTelemetryEntry(name, data);
 	}
 
 	private static string DictToString(Dictionary<string, string> dict)
