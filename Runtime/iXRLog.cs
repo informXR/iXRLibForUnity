@@ -78,15 +78,17 @@ public class iXRLog
 	}
 	public static iXRResult EventSynchronous(string name, string meta, GameObject gameObject)
 	{
-		meta += $"x={gameObject.transform.position.x}";
-		meta += $"y={gameObject.transform.position.y}";
+		if (!string.IsNullOrEmpty(meta)) meta += ",";
+		meta += $"x={gameObject.transform.position.x},";
+		meta += $"y={gameObject.transform.position.y},";
 		meta += $"z={gameObject.transform.position.z}";
 		return iXRSend.EventSynchronous(name, meta);
 	}
 	public static iXRResult Event(string message, string meta, GameObject gameObject)
 	{
-		meta += $"x={gameObject.transform.position.x}";
-		meta += $"y={gameObject.transform.position.y}";
+		if (!string.IsNullOrEmpty(meta)) meta += ",";
+		meta += $"x={gameObject.transform.position.x},";
+		meta += $"y={gameObject.transform.position.y},";
 		meta += $"z={gameObject.transform.position.z}";
 		return iXRSend.Event(message, meta);
 	}
