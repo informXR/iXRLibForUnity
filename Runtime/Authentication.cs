@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using iXRLib;
 using UnityEngine;
@@ -61,7 +62,7 @@ public class Authentication : SdkBehaviour
     {
         if (hasFocus)
         {
-			if (iXRLib.iXRAuthentication.TokenExpirationImminent())
+			if (iXRAuthentication.TokenExpirationImminent())
             {
                 Authenticate();
             }
@@ -117,10 +118,34 @@ public class Authentication : SdkBehaviour
         if (result == iXRResult.Ok)
         {
             Debug.Log("iXRLib - Authenticated successfully");
+            PostAuthTelemetry();
         }
         else
         {
             Debug.LogError($"iXRLib - Authentication failed : {result}");
         }
+    }
+
+    private static void PostAuthTelemetry()
+    {
+        //TODO Device Type
+        
+        iXRLog.TelemetryEntry("OS Version", $"Version={SystemInfo.operatingSystem}");
+        
+        var currentAssembly = Assembly.GetExecutingAssembly();
+        AssemblyName[] referencedAssemblies = currentAssembly.GetReferencedAssemblies();
+        foreach (AssemblyName assemblyName in referencedAssemblies)
+        {
+            if (assemblyName.Name == "XRDM.SDK.External.Unity")
+            {
+                iXRLog.TelemetryEntry("XRDM Version", $"Version={assemblyName.Version}");
+                break;
+            }
+        }
+        
+        //TODO Geolocation
+
+        iXRLog.TelemetryEntry("Application Version", $"Version={Application.version}");
+        iXRLog.TelemetryEntry("Unity Version", $"Version={Application.unityVersion}");
     }
 }
