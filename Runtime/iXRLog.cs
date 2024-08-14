@@ -116,7 +116,7 @@ public class iXRLog
 		foreach (KeyValuePair<string, string> kvp in dict)
 		{
 			if (!string.IsNullOrEmpty(result)) result += ",";
-			result += $"{kvp.Key},{kvp.Value}";
+			result += $"{kvp.Key}={kvp.Value}";
 		}
 
 		return result;
