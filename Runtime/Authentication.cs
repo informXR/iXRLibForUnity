@@ -130,7 +130,7 @@ public class Authentication : SdkBehaviour
     {
         //TODO Device Type
         
-        iXRLog.TelemetryEntry("OS Version", $"Version={SystemInfo.operatingSystem}");
+        iXR.TelemetryEntry("OS Version", $"Version={SystemInfo.operatingSystem}");
         
         var currentAssembly = Assembly.GetExecutingAssembly();
         AssemblyName[] referencedAssemblies = currentAssembly.GetReferencedAssemblies();
@@ -138,14 +138,14 @@ public class Authentication : SdkBehaviour
         {
             if (assemblyName.Name == "XRDM.SDK.External.Unity")
             {
-                iXRLog.TelemetryEntry("XRDM Version", $"Version={assemblyName.Version}");
+                iXR.TelemetryEntry("XRDM Version", $"Version={assemblyName.Version}");
                 break;
             }
         }
         
         //TODO Geolocation
 
-        iXRLog.TelemetryEntry("Application Version", $"Version={Application.version}");
-        iXRLog.TelemetryEntry("Unity Version", $"Version={Application.unityVersion}");
+        iXR.TelemetryEntry("Application Version", $"Version={Application.version}");
+        iXR.TelemetryEntry("Unity Version", $"Version={Application.unityVersion}");
     }
 }

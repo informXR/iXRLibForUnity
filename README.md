@@ -80,23 +80,23 @@ To track specific objects:
 ### Feature 3: Event Tracking
 
 Integrate event logging by calling the following methods from within your code:
-- iXRLog.TelemetryEntry(string name, string data)
+- iXR.TelemetryEntry(string name, string data)
     - name (String) - a string that we will leave open (examples are OS version, XRDM Version, Geolocation, Battery Level, Battery Status, RAM Usage, CPU Usage, Object Tracking, FPS)
     - data (String) - a comma-separated string of name=value pairs of whatever the developer wants to provide
-- iXRLog.Event(string message, string meta)
+- iXR.Event(string message, string meta)
     - name (String) - a string that we will leave open, but will provide recommendations for the value
     - meta (String)- a comma-separated string of name=value pairs of whatever the developer wants to provice
-- iXRLog.Event(string message, string meta, GameObject gameObject)
+- iXR.Event(string message, string meta, GameObject gameObject)
     - Automatically adds the gameObject's coordinates to the meta
-- iXRLog.Critical(string text)
+- iXR.LogCritical(string text)
     - Logs a critical message
-- iXRLog.Error(string text)
+- iXR.LogError(string text)
     - Logs an error message
-- iXRLog.Warn(string text)
+- iXR.LogWarn(string text)
     - Logs a warning message
-- iXRLog.Info(string text)
+- iXR.LogInfo(string text)
     - Logs an info message
-- iXRLog.Debug(string text)
+- iXR.LogDebug(string text)
     - Logs a debug message
 
 ## FAQ

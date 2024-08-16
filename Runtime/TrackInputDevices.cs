@@ -71,8 +71,8 @@ public class TrackInputDevices : MonoBehaviour
             ["y"] = rotation.y.ToString(CultureInfo.InvariantCulture),
             ["z"] = rotation.z.ToString(CultureInfo.InvariantCulture)
         };
-        iXRLog.TelemetryEntry(deviceName + " Position", positionDict);
-        iXRLog.TelemetryEntry(deviceName + " Rotation", rotationDict);
+        iXR.TelemetryEntry(deviceName + " Position", positionDict);
+        iXR.TelemetryEntry(deviceName + " Rotation", rotationDict);
     }
 
     private void CheckTriggers()
@@ -95,7 +95,7 @@ public class TrackInputDevices : MonoBehaviour
                 {
                     [trigger.name] = "Pressed"
                 };
-                iXRLog.TelemetryEntry($"Right Controller {trigger.name}", telemetryData);
+                iXR.TelemetryEntry($"Right Controller {trigger.name}", telemetryData);
                 _rightTriggerValues[trigger] = pressed;
             }
         }
@@ -110,7 +110,7 @@ public class TrackInputDevices : MonoBehaviour
                 {
                     [trigger.name] = "Pressed"
                 };
-                iXRLog.TelemetryEntry($"Left Controller {trigger.name}", telemetryData);
+                iXR.TelemetryEntry($"Left Controller {trigger.name}", telemetryData);
                 _leftTriggerValues[trigger] = pressed;
             }
         }

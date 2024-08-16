@@ -3,49 +3,49 @@ using System.Globalization;
 using iXRLib;
 using UnityEngine;
 
-public class iXRLog
+public class iXR
 {
-    public static iXRResult DebugSynchronous(string bstrText)
+	// Logging
+    public static iXRResult LogDebugSynchronous(string bstrText)
 	{
 		return iXRSend.LogDebugSynchronous(bstrText);
 	}
-	public static iXRResult Debug(string bstrText)
+	public static iXRResult LogDebug(string bstrText)
 	{
 		return iXRSend.LogDebug(bstrText);
 	}
-	public static iXRResult InfoSynchronous(string bstrText)
+	public static iXRResult LogInfoSynchronous(string bstrText)
 	{
 		return iXRSend.LogInfoSynchronous(bstrText);
 	}
-	public static iXRResult Info(string bstrText)
+	public static iXRResult LogInfo(string bstrText)
 	{
 		return iXRSend.LogInfo(bstrText);
 	}
-	public static iXRResult WarnSynchronous(string bstrText)
+	public static iXRResult LogWarnSynchronous(string bstrText)
 	{
 		return iXRSend.LogWarnSynchronous(bstrText);
 	}
-	public static iXRResult Warn(string bstrText)
+	public static iXRResult LogWarn(string bstrText)
 	{
 		return iXRSend.LogWarn(bstrText);
 	}
-	public static iXRResult ErrorSynchronous(string bstrText)
+	public static iXRResult LogErrorSynchronous(string bstrText)
 	{
 		return iXRSend.LogErrorSynchronous(bstrText);
 	}
-	public static iXRResult Error(string bstrText)
+	public static iXRResult LogError(string bstrText)
 	{
 		return iXRSend.LogError(bstrText);
 	}
-	public static iXRResult CriticalSynchronous(string bstrText)
+	public static iXRResult LogCriticalSynchronous(string bstrText)
 	{
 		return iXRSend.LogCriticalSynchronous(bstrText);
 	}
-	public static iXRResult Critical(string bstrText)
+	public static iXRResult LogCritical(string bstrText)
 	{
 		return iXRSend.LogCritical(bstrText);
 	}
-	// ---
 	public static iXRResult EventSynchronous(string name, Dictionary<string, string> meta)
 	{
 		return iXRSend.EventSynchronous(name, DictToString(meta));
@@ -92,7 +92,6 @@ public class iXRLog
 		meta += $"z={gameObject.transform.position.z}";
 		return iXRSend.Event(message, meta);
 	}
-	// ---
 	public static iXRResult TelemetryEntrySynchronous(string name, Dictionary<string, string> data)
 	{
 		return iXRSend.AddTelemetryEntrySynchronous(name, DictToString(data));
@@ -120,5 +119,53 @@ public class iXRLog
 		}
 
 		return result;
+	}
+
+	// Storage
+	public static string GetDefaultStorageEntryAsString()
+	{
+		return iXRLibInterop.MarshalString(() => iXRLibInterop.GetDefaultStorageEntryAsString());
+	}
+	public static string GetStorageEntryAsString(string bstrName)
+	{
+		return iXRLibInterop.MarshalString(() => iXRLibInterop.GetStorageEntryAsString(bstrName));
+	}
+	public static iXRResult SetDefaultStorageEntryFromString(string bstrStorageEntry, bool bKeepLatest, string bstrOrigin, bool bSessionData)
+	{
+		return iXRLibInterop.SetDefaultStorageEntryFromString(bstrStorageEntry, bKeepLatest, bstrOrigin, bSessionData);
+	}
+	public static iXRResult SetStorageEntryFromString(string bstrName, string bstrStorageEntry, bool bKeepLatest, string bstrOrigin, bool bSessionData)
+	{
+		return iXRLibInterop.SetStorageEntryFromString(bstrName, bstrStorageEntry, bKeepLatest, bstrOrigin, bSessionData);
+	}
+	public static iXRResult RemoveDefaultStorageEntry()
+	{
+		return iXRLibInterop.RemoveDefaultStorageEntry();
+	}
+	public static iXRResult RemoveStorageEntry(string bstrName)
+	{
+		return iXRLibInterop.RemoveStorageEntry(bstrName);
+	}
+	public static iXRResult RemoveMultipleStorageEntries(bool bSessionOnly)
+	{
+		return iXRLibInterop.RemoveMultipleStorageEntries(bSessionOnly);
+	}
+	
+	// AI
+	public static iXRResult AddAIProxySynchronous(string bstrPrompt, string bstrLMMProvider)
+	{
+		return iXRLibInterop.AddAIProxySynchronous(bstrPrompt, "", bstrLMMProvider);
+	}
+	public static iXRResult AddAIProxySynchronous(string bstrPrompt, string bstrPastMessages, string bstrLMMProvider)
+	{
+		return iXRLibInterop.AddAIProxySynchronous(bstrPrompt, bstrPastMessages, bstrLMMProvider);
+	}
+	public static iXRResult AddAIProxy(string bstrPrompt, string bstrLMMProvider)
+	{
+		return iXRLibInterop.AddAIProxy(bstrPrompt, "", bstrLMMProvider);
+	}
+	public static iXRResult AddAIProxy(string bstrPrompt, string bstrPastMessages, string bstrLMMProvider)
+	{
+		return iXRLibInterop.AddAIProxy(bstrPrompt, bstrPastMessages, bstrLMMProvider);
 	}
 }
