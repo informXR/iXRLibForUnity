@@ -80,10 +80,10 @@ To track specific objects:
 ### Feature 3: Event Tracking
 
 Integrate event logging by calling the following methods from within your code:
-- iXR.TelemetryEntry(string name, string data)
+- iXR.TelemetryEntry(string name, string data) - iXR.TelemetryEntry("Battery", "Level=100")
     - name (String) - a string that we will leave open (examples are OS version, XRDM Version, Geolocation, Battery Level, Battery Status, RAM Usage, CPU Usage, Object Tracking, FPS)
     - data (String) - a comma-separated string of name=value pairs of whatever the developer wants to provide
-- iXR.Event(string message, string meta)
+- iXR.Event(string message, string meta) - iXR.Event("Placement Complete", "Item=Ready")
     - name (String) - a string that we will leave open, but will provide recommendations for the value
     - meta (String)- a comma-separated string of name=value pairs of whatever the developer wants to provice
 - iXR.Event(string message, string meta, GameObject gameObject)
