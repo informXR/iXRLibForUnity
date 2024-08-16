@@ -62,7 +62,7 @@ This tutorial will include the full steps to publishing your application with in
 ![Published Application Tour - Step 1](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/PubAppTour1.png?raw=true "Published Application Tour - Step 1")
 ![Published Application Tour - Step 2](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/PubAppTour2.png?raw=true "Published Application Tour - Step 2")
 
-## Features
+## Sending Data
 
 ### Feature 1: Headset Tracking
 
@@ -79,10 +79,25 @@ To track specific objects:
 
 ### Feature 3: Event Tracking
 
-To log events within your application:
-1. Integrate event logging by calling `iXRSend.AddEvent()` within your code.
-2. Customize your event parameters based on what you need to track.
-
+Integrate event logging by calling the following methods from within your code:
+- iXRLog.TelemetryEntry(string name, string data)
+    - name (String) - a string that we will leave open (examples are OS version, XRDM Version, Geolocation, Battery Level, Battery Status, RAM Usage, CPU Usage, Object Tracking, FPS)
+    - data (String) - a comma-separated string of name=value pairs of whatever the developer wants to provide
+- iXRLog.Event(string message, string meta)
+    - name (String) - a string that we will leave open, but will provide recommendations for the value
+    - meta (String)- a comma-separated string of name=value pairs of whatever the developer wants to provice
+- iXRLog.Event(string message, string meta, GameObject gameObject)
+    - Automatically adds the gameObject's coordinates to the meta
+- iXRLog.Critical(string text)
+    - Logs a critical message
+- iXRLog.Error(string text)
+    - Logs an error message
+- iXRLog.Warn(string text)
+    - Logs a warning message
+- iXRLog.Info(string text)
+    - Logs an info message
+- iXRLog.Debug(string text)
+    - Logs a debug message
 
 ## FAQ
 
