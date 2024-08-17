@@ -122,19 +122,19 @@ public class iXR
 	}
 
 	// Storage
-	public static string StorageGetDefaultEntryAsString()
+	public static string StorageGetDefaultEntry()
 	{
 		return iXRLibInterop.MarshalString(() => iXRLibInterop.GetDefaultStorageEntryAsString());
 	}
-	public static string StorageGetEntryAsString(string bstrName)
+	public static string StorageGetEntry(string bstrName)
 	{
 		return iXRLibInterop.MarshalString(() => iXRLibInterop.GetStorageEntryAsString(bstrName));
 	}
-	public static iXRResult StorageSetDefaultEntryFromString(string bstrStorageEntry, bool bKeepLatest, string bstrOrigin, bool bSessionData)
+	public static iXRResult StorageSetDefaultEntry(string bstrStorageEntry, bool bKeepLatest, string bstrOrigin, bool bSessionData)
 	{
 		return iXRLibInterop.SetDefaultStorageEntryFromString(bstrStorageEntry, bKeepLatest, bstrOrigin, bSessionData);
 	}
-	public static iXRResult StorageSetEntryFromString(string bstrName, string bstrStorageEntry, bool bKeepLatest, string bstrOrigin, bool bSessionData)
+	public static iXRResult StorageSetEntry(string bstrName, string bstrStorageEntry, bool bKeepLatest, string bstrOrigin, bool bSessionData)
 	{
 		return iXRLibInterop.SetStorageEntryFromString(bstrName, bstrStorageEntry, bKeepLatest, bstrOrigin, bSessionData);
 	}
@@ -152,19 +152,19 @@ public class iXR
 	}
 	
 	// AI
-	public static iXRResult AddAIProxySynchronous(string bstrPrompt, string bstrLMMProvider)
+	public static iXRResult AIProxySynchronous(string bstrPrompt, string bstrLMMProvider)
 	{
 		return iXRLibInterop.AddAIProxySynchronous(bstrPrompt, "", bstrLMMProvider);
 	}
-	public static iXRResult AddAIProxySynchronous(string bstrPrompt, string bstrPastMessages, string bstrLMMProvider)
+	public static iXRResult AIProxySynchronous(string bstrPrompt, string bstrPastMessages, string bstrLMMProvider)
 	{
 		return iXRLibInterop.AddAIProxySynchronous(bstrPrompt, bstrPastMessages, bstrLMMProvider);
 	}
-	public static iXRResult AddAIProxy(string bstrPrompt, string bstrLMMProvider)
+	public static iXRResult AIProxy(string bstrPrompt, string bstrLMMProvider)
 	{
 		return iXRLibInterop.AddAIProxy(bstrPrompt, "", bstrLMMProvider);
 	}
-	public static iXRResult AddAIProxy(string bstrPrompt, string bstrPastMessages, string bstrLMMProvider)
+	public static iXRResult IProxy(string bstrPrompt, string bstrPastMessages, string bstrLMMProvider)
 	{
 		return iXRLibInterop.AddAIProxy(bstrPrompt, bstrPastMessages, bstrLMMProvider);
 	}

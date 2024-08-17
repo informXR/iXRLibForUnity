@@ -64,30 +64,21 @@ This tutorial will include the full steps to publishing your application with in
 
 ## Sending Data
 
-### Feature 1: Headset Tracking
-
-Enable real-time tracking of headsets and controllers:
-1. By default it is on. However, if not, in the Configuration UI click on Headset Tracking.
-2. The SDK will automatically start tracking the HMD and controllers.
-
-### Feature 2: Object Tracking
-
-To track specific objects:
-1. Select the object you want to track in your Unity scene.
-2. In the Inspector window, click Add Component.
-3. Choose `informXR > Track Object`.
-
-### Feature 3: Event Tracking
+### Feature 1: Event Tracking & Debug Logging
 
 Integrate event logging by calling the following methods from within your code:
 - iXR.TelemetryEntry(string name, string data) - iXR.TelemetryEntry("Battery", "Level=100")
     - name (String) - a string that we will leave open (examples are OS version, XRDM Version, Geolocation, Battery Level, Battery Status, RAM Usage, CPU Usage, Object Tracking, FPS)
     - data (String) - a comma-separated string of name=value pairs of whatever the developer wants to provide
+
+#### Event Recording
 - iXR.Event(string message, string meta) - iXR.Event("Placement Complete", "Item=Ready")
     - name (String) - a string that we will leave open, but will provide recommendations for the value
     - meta (String)- a comma-separated string of name=value pairs of whatever the developer wants to provice
 - iXR.Event(string message, string meta, GameObject gameObject)
     - Automatically adds the gameObject's coordinates to the meta
+
+### Log Functions
 - iXR.LogCritical(string text)
     - Logs a critical message
 - iXR.LogError(string text)
@@ -98,6 +89,34 @@ Integrate event logging by calling the following methods from within your code:
     - Logs an info message
 - iXR.LogDebug(string text)
     - Logs a debug message
+
+### Feature 2: Session Storage
+- iXR.StorageSetEntry(name text, StorageEntry text)
+    - name (String) - The name, `session` is a good option to start with
+    - StorageEntry (String)- Store any data as a string value. JSON is a good solution in many cases
+
+- iXR.StorageGetEntry(name text)
+    - name (String) - The name, `session` is a good option to start with
+
+- iXR.StorageRemoveEntry(name text)
+    - name (String) - The name, `session` is a good option to start with
+
+### Feature 3: Headset Tracking
+
+Enable real-time tracking of headsets and controllers:
+1. By default it is on. However, if not, in the Configuration UI click on Headset Tracking.
+2. The SDK will automatically start tracking the HMD and controllers.
+
+### Feature 4: Object Tracking
+To track specific objects:
+1. Select the object you want to track in your Unity scene.
+2. In the Inspector window, click Add Component.
+3. Choose `informXR > Track Object`.
+
+### Feature 4: Other Services
+- iXR.AIProxy(prompt text)
+    - prompt (String) - The GTP prompt
+
 
 ## FAQ
 
