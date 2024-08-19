@@ -1,12 +1,12 @@
 # Table of Contents
 
-1. [Introduction](\#introduction)  
-1. [Installation](\#installation)  
-1. [Configuration](\#configuration)  
-1. [Features](\#features)  
-1. [FAQ](\#faq)  
-1. [Troubleshooting](\#troubleshooting)  
-1. [Contact](\#contact)
+1. [Introduction](\#introduction)
+2. [Installation](\#installation)
+3. [Configuration](\#configuration)
+4. [Sending Data](\#sending-data) 
+5. [FAQ](\#faq)
+6. [Troubleshooting](\#troubleshooting)
+7. [Contact](\#contact)
 
 ## Introduction
 
