@@ -164,7 +164,7 @@ public class iXR
 	{
 		return iXRLibInterop.AddAIProxy(bstrPrompt, "", bstrLMMProvider);
 	}
-	public static iXRResult IProxy(string bstrPrompt, string bstrPastMessages, string bstrLMMProvider)
+	public static iXRResult AIProxy(string bstrPrompt, string bstrPastMessages, string bstrLMMProvider)
 	{
 		return iXRLibInterop.AddAIProxy(bstrPrompt, bstrPastMessages, bstrLMMProvider);
 	}
