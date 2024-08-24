@@ -5,10 +5,14 @@ using UnityEngine;
 
 public static class Initialize
 {
+	public delegate void TextMeshCallback(string szString);
+	// ---
+	static TextMeshCallback	_pfnTextMeshCallback = null;
+	// ---
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void OnBeforeSceneLoad()
     {
-        //TestDiagnosticStringCallbackMechanism();
+        TestDiagnosticStringCallbackMechanism();
         iXRInit.Start();
         SetConfigValues();
         Authentication.Initialize();
@@ -42,6 +46,15 @@ public static class Initialize
 
     private static async Task DiagnosticString(string szString)
     {
-        await Task.Run(() => Debug.Log($"iXRLib - {szString}"));
+        await Task.Run(() => Debug.Log($"iXRLibDebug - {szString}"));
+		if (_pfnTextMeshCallback != null)
+		{
+			_pfnTextMeshCallback(szString);
+			//_pfnTextMeshCallback("Let him who hath understanding reckon the bullshit.");
+		}
     }
+	public static void SetTextMeshCallback(TextMeshCallback pfnTextMeshCallback)
+	{
+		_pfnTextMeshCallback = pfnTextMeshCallback;
+	}
 }
