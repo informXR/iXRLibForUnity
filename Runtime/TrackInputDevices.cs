@@ -69,7 +69,8 @@ public class TrackInputDevices : MonoBehaviour
         {
             ["x"] = rotation.x.ToString(CultureInfo.InvariantCulture),
             ["y"] = rotation.y.ToString(CultureInfo.InvariantCulture),
-            ["z"] = rotation.z.ToString(CultureInfo.InvariantCulture)
+            ["z"] = rotation.z.ToString(CultureInfo.InvariantCulture),
+            ["w"] = rotation.w.ToString(CultureInfo.InvariantCulture)
         };
         iXR.TelemetryEntry(deviceName + " Position", positionDict);
         iXR.TelemetryEntry(deviceName + " Rotation", rotationDict);
