@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using iXRLib;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -58,9 +58,22 @@ public class TrackInputDevices : MonoBehaviour
         string deviceName = HmdName;
         if (device.characteristics.HasFlag(InputDeviceCharacteristics.Right)) deviceName = RightControllerName;
         if (device.characteristics.HasFlag(InputDeviceCharacteristics.Left)) deviceName = LeftControllerName;
-        
-        iXRSend.AddTelemetryEntry(deviceName + " Position", $"x,{position.x},y,{position.y},z,{position.z}");
-        iXRSend.AddTelemetryEntry(deviceName + " Rotation", $"x,{rotation.x},y,{rotation.y},z,{rotation.z}");
+
+        var positionDict = new Dictionary<string, string>
+        {
+            ["x"] = position.x.ToString(CultureInfo.InvariantCulture),
+            ["y"] = position.y.ToString(CultureInfo.InvariantCulture),
+            ["z"] = position.z.ToString(CultureInfo.InvariantCulture)
+        };
+        var rotationDict = new Dictionary<string, string>
+        {
+            ["x"] = rotation.x.ToString(CultureInfo.InvariantCulture),
+            ["y"] = rotation.y.ToString(CultureInfo.InvariantCulture),
+            ["z"] = rotation.z.ToString(CultureInfo.InvariantCulture),
+            ["w"] = rotation.w.ToString(CultureInfo.InvariantCulture)
+        };
+        iXR.TelemetryEntry(deviceName + " Position", positionDict);
+        iXR.TelemetryEntry(deviceName + " Rotation", rotationDict);
     }
 
     private void CheckTriggers()
@@ -79,7 +92,11 @@ public class TrackInputDevices : MonoBehaviour
             _rightTriggerValues.TryGetValue(trigger, out bool current);
             if (pressed != current)
             {
-                iXRSend.AddTelemetryEntry($"Right Controller {trigger.name}", $"{trigger.name},Pressed");
+                var telemetryData = new Dictionary<string, string>
+                {
+                    [trigger.name] = "Pressed"
+                };
+                iXR.TelemetryEntry($"Right Controller {trigger.name}", telemetryData);
                 _rightTriggerValues[trigger] = pressed;
             }
         }
@@ -90,7 +107,11 @@ public class TrackInputDevices : MonoBehaviour
             _leftTriggerValues.TryGetValue(trigger, out bool current);
             if (pressed != current)
             {
-                iXRSend.AddTelemetryEntry($"Left Controller {trigger.name}", $"{trigger.name},Pressed");
+                var telemetryData = new Dictionary<string, string>
+                {
+                    [trigger.name] = "Pressed"
+                };
+                iXR.TelemetryEntry($"Left Controller {trigger.name}", telemetryData);
                 _leftTriggerValues[trigger] = pressed;
             }
         }

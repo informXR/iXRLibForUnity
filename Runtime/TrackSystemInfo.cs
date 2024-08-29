@@ -1,4 +1,5 @@
-﻿using iXRLib;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 [DefaultExecutionOrder(100)] // Doesn't matter when this one runs
@@ -26,21 +27,30 @@ public class TrackSystemInfo : MonoBehaviour
 
     private void CheckSystemInfo()
     {
-        iXRSend.AddTelemetryEntry("Battery", $"Percentage, {(int)(SystemInfo.batteryLevel * 100 + 0.5)}%");
-        iXRSend.AddTelemetryEntry("Battery", $"Status, {SystemInfo.batteryStatus}");
+        var batteryData = new Dictionary<string, string>
+        {
+            ["Percentage"] = (int)(SystemInfo.batteryLevel * 100 + 0.5) + "%",
+            ["Status"] = SystemInfo.batteryStatus.ToString()
+        };
+        iXR.TelemetryEntry("Battery", batteryData);
         
-        iXRSend.AddTelemetryEntry("Memory",
-            $"Total Allocated, {UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong()}");
-        iXRSend.AddTelemetryEntry("Memory",
-            $"Total Reserved, {UnityEngine.Profiling.Profiler.GetTotalReservedMemoryLong()}");
-        iXRSend.AddTelemetryEntry("Memory",
-            $"Total Unused Reserved, {UnityEngine.Profiling.Profiler.GetTotalUnusedReservedMemoryLong()}");
+        var memoryData = new Dictionary<string, string>
+        {
+            ["Total Allocated"] = UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong().ToString(),
+            ["Total Reserved"] = UnityEngine.Profiling.Profiler.GetTotalReservedMemoryLong().ToString(),
+            ["Total Unused Reserved"] = UnityEngine.Profiling.Profiler.GetTotalUnusedReservedMemoryLong().ToString()
+        };
+        iXR.TelemetryEntry("Memory", memoryData);
     }
     
     private void CheckFrameRate()
     {
         float frameRate = (Time.frameCount - _lastFrameCount) / (Time.time - _lastTime);
-        iXRSend.AddTelemetryEntry("Frame Rate", $"Per Second,{frameRate}");
+        var telemetryData = new Dictionary<string, string>
+        {
+            ["Per Second"] = frameRate.ToString(CultureInfo.InvariantCulture)
+        };
+        iXR.TelemetryEntry("Frame Rate", telemetryData);
         _lastFrameCount = Time.frameCount;
         _lastTime = Time.time;
     }
