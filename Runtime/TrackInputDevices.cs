@@ -94,7 +94,7 @@ public class TrackInputDevices : MonoBehaviour
             {
                 var telemetryData = new Dictionary<string, string>
                 {
-                    ["pressed"] = "true"
+                    ["pressed"] = pressed ? "true" : "false"
                 };
                 iXR.TelemetryEntry($"Right Controller {trigger.name}", telemetryData);
                 _rightTriggerValues[trigger] = pressed;
@@ -109,7 +109,7 @@ public class TrackInputDevices : MonoBehaviour
             {
                 var telemetryData = new Dictionary<string, string>
                 {
-                    ["pressed"] = "true"
+                    ["pressed"] = pressed ? "true" : "false"
                 };
                 iXR.TelemetryEntry($"Left Controller {trigger.name}", telemetryData);
                 _leftTriggerValues[trigger] = pressed;
