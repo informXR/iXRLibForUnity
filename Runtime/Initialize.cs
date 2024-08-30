@@ -50,7 +50,6 @@ public static class Initialize
 		if (_pfnTextMeshCallback != null)
 		{
 			_pfnTextMeshCallback(szString);
-			//_pfnTextMeshCallback("Let him who hath understanding reckon the bullshit.");
 		}
     }
 	public static void SetTextMeshCallback(TextMeshCallback pfnTextMeshCallback)

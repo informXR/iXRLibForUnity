@@ -124,31 +124,31 @@ public class iXR
 	// Storage
 	public static string StorageGetDefaultEntry()
 	{
-		return iXRLibInterop.MarshalString(() => iXRLibInterop.GetDefaultStorageEntryAsString());
+		return iXRLibInterop.MarshalString(() => iXRLibInterop.StorageGetDefaultEntryAsString());
 	}
 	public static string StorageGetEntry(string bstrName)
 	{
-		return iXRLibInterop.MarshalString(() => iXRLibInterop.GetStorageEntryAsString(bstrName));
+		return iXRLibInterop.MarshalString(() => iXRLibInterop.StorageGetEntryAsString(bstrName));
 	}
 	public static iXRResult StorageSetDefaultEntry(string bstrStorageEntry, bool bKeepLatest, string bstrOrigin, bool bSessionData)
 	{
-		return iXRLibInterop.SetDefaultStorageEntryFromString(bstrStorageEntry, bKeepLatest, bstrOrigin, bSessionData);
+		return iXRLibInterop.StorageSetDefaultEntryFromString(bstrStorageEntry, bKeepLatest, bstrOrigin, bSessionData);
 	}
 	public static iXRResult StorageSetEntry(string bstrName, string bstrStorageEntry, bool bKeepLatest, string bstrOrigin, bool bSessionData)
 	{
-		return iXRLibInterop.SetStorageEntryFromString(bstrName, bstrStorageEntry, bKeepLatest, bstrOrigin, bSessionData);
+		return iXRLibInterop.StorageSetEntryFromString(bstrName, bstrStorageEntry, bKeepLatest, bstrOrigin, bSessionData);
 	}
 	public static iXRResult StorageRemoveDefaultEntry()
 	{
-		return iXRLibInterop.RemoveDefaultStorageEntry();
+		return iXRLibInterop.StorageRemoveDefaultEntry();
 	}
 	public static iXRResult StorageRemoveEntry(string bstrName)
 	{
-		return iXRLibInterop.RemoveStorageEntry(bstrName);
+		return iXRLibInterop.StorageRemoveEntry(bstrName);
 	}
 	public static iXRResult StorageRemoveMultipleEntries(bool bSessionOnly)
 	{
-		return iXRLibInterop.RemoveMultipleStorageEntries(bSessionOnly);
+		return iXRLibInterop.StorageRemoveMultipleEntries(bSessionOnly);
 	}
 	
 	// AI
