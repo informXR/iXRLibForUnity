@@ -79,7 +79,7 @@ public class Authentication : SdkBehaviour
         const string appIdPattern = "^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$";
         if (!Regex.IsMatch(Configuration.instance.appID, appIdPattern))
         {
-            Debug.LogError("iXRLib - Invalid Application ID. Cannot authenticate.");
+            Debug.LogError("iXRLibDebug - Invalid Application ID. Cannot authenticate.");
             return;
         }
         
@@ -87,14 +87,14 @@ public class Authentication : SdkBehaviour
         if (string.IsNullOrEmpty(orgId)) orgId = Configuration.instance.orgID;
         if (string.IsNullOrEmpty(orgId))
         {
-            Debug.LogError("iXRLib - Missing Organization ID. Cannot authenticate.");
+            Debug.LogError("iXRLibDebug - Missing Organization ID. Cannot authenticate.");
             return;
         }
         
         const string orgIdPattern = "^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$";
         if (!Regex.IsMatch(orgId, orgIdPattern))
         {
-            Debug.LogError("iXRLib - Invalid Organization ID. Cannot authenticate.");
+            Debug.LogError("iXRLibDebug - Invalid Organization ID. Cannot authenticate.");
             return;
         }
 
@@ -102,7 +102,7 @@ public class Authentication : SdkBehaviour
         if (string.IsNullOrEmpty(deviceId)) deviceId = SystemInfo.deviceUniqueIdentifier;
         if (string.IsNullOrEmpty(deviceId))
         {
-            Debug.LogError("iXRLib - Missing Device ID. Cannot authenticate.");
+            Debug.LogError("iXRLibDebug - Missing Device ID. Cannot authenticate.");
             return;
         }
 
@@ -110,19 +110,19 @@ public class Authentication : SdkBehaviour
         if (string.IsNullOrEmpty(authSecret)) authSecret = Configuration.instance.authSecret;
         if (string.IsNullOrEmpty(authSecret))
         {
-            Debug.LogError("iXRLib - Missing Auth Secret. Cannot authenticate.");
+            Debug.LogError("iXRLibDebug - Missing Auth Secret. Cannot authenticate.");
             return;
         }
         
         var result = iXRInit.Authenticate(Configuration.instance.appID, orgId, deviceId, authSecret, _partner);
         if (result == iXRResult.Ok)
         {
-            Debug.Log("iXRLib - Authenticated successfully");
+            Debug.Log("iXRLibDebug - Authenticated successfully");
             PostAuthTelemetry();
         }
         else
         {
-            Debug.LogError($"iXRLib - Authentication failed : {result}");
+            Debug.LogError($"iXRLibDebug - Authentication failed : {result}");
         }
     }
 

@@ -5,6 +5,10 @@ using UnityEngine;
 
 public static class Initialize
 {
+	public delegate void TextMeshCallback(string szString);
+	// ---
+	static TextMeshCallback	_pfnTextMeshCallback = null;
+	// ---
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void OnBeforeSceneLoad()
     {
@@ -42,6 +46,14 @@ public static class Initialize
 
     private static async Task DiagnosticString(string szString)
     {
-        await Task.Run(() => Debug.Log($"iXRLib - {szString}"));
+        await Task.Run(() => Debug.Log($"iXRLibDebug - {szString}"));
+		if (_pfnTextMeshCallback != null)
+		{
+			_pfnTextMeshCallback(szString);
+		}
     }
+	public static void SetTextMeshCallback(TextMeshCallback pfnTextMeshCallback)
+	{
+		_pfnTextMeshCallback = pfnTextMeshCallback;
+	}
 }
