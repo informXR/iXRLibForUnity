@@ -12,7 +12,7 @@ public static class Initialize
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void OnBeforeSceneLoad()
     {
-        TestDiagnosticStringCallbackMechanism();
+        //TestDiagnosticStringCallbackMechanism();
         iXRInit.Start();
         SetConfigValues();
         Authentication.Initialize();
