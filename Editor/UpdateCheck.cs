@@ -28,9 +28,19 @@ public class UpdateCheck
         using var client = new HttpClient();
         try
         {
-            client.DefaultRequestHeaders.UserAgent.ParseAdd("request");
-            var response = await client.GetStringAsync(PackageUrl);
-            var latestRelease = JsonUtility.FromJson<GitHubRelease>(response);
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("Unity/" + Application.unityVersion);
+            client.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github.v3+json");
+            
+            var response = await client.GetAsync(PackageUrl);
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                Debug.LogError($"Error checking for updates: Response status code does not indicate success: {response.StatusCode}");
+                return;
+            }
+
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            var latestRelease = JsonUtility.FromJson<GitHubRelease>(jsonResponse);
 
             string skippedVersion = EditorPrefs.GetString(SkippedVersionKey, "");
 
