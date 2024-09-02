@@ -46,7 +46,7 @@ public static class Initialize
 
     private static async Task DiagnosticString(string szString)
     {
-        await Task.Run(() => Debug.Log($"iXRLibDebug - {szString}"));
+        await Task.Run(() => Debug.Log($"iXRLib - {szString}"));
 		if (_pfnTextMeshCallback != null)
 		{
 			_pfnTextMeshCallback(szString);
