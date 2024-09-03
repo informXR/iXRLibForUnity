@@ -1,18 +1,18 @@
 # Table of Contents
 
-1. [Introduction](\#introduction)
-2. [Installation](\#installation)
-3. [Configuration](\#configuration)
-4. [Sending Data](\#sending-data) 
-5. [FAQ](\#faq)
-6. [Troubleshooting](\#troubleshooting)
-7. [Contact](\#contact)
+1. [Introduction](#introduction)
+2. [Installation](#installation)
+3. [Configuration](#configuration)
+4. [Sending Data](#sending-data) 
+5. [FAQ](#faq)
+6. [Troubleshooting](#troubleshooting)
+7. [Contact](#contact)
 
 ## Introduction
 
 ### Overview
 
-The informXR SDK for Unity empowers developers **for free** to seamlessly integrate advanced XR tracking, analytics, and data management into their applications. By leveraging informXR's comprehensive features _(see below)_, **developers like you** can **significantly enhance their product’s appeal to enterprise customers**. We are a cost-effective solution for your customers, making your product not just innovative, but also enterprise-ready.
+The informXR SDK for Unity empowers developers **for free** to seamlessly integrate advanced XR tracking, analytics, and data management into their applications. By leveraging informXR's comprehensive features _(see below)_, **developers like you** can **significantly enhance their product's appeal to enterprise customers**. We are a cost-effective solution for your customers, making your product not just innovative, but also enterprise-ready.
 * Seamless LMS and business intelligence integrations
 * An advanced analytics platform
 * Secure data storage solutions
@@ -30,7 +30,7 @@ The informXR SDK for Unity empowers developers **for free** to seamlessly integr
 ### Steps to Install
 
 1. On the top menu choose `Window > Package Manager`.
-2. Click the **\'+'** button in the top left and select 'Add Package from git URL'  
+2. Click the **'+'** button in the top left and select 'Add Package from git URL'  
 3. Input `https://github.com/informXR/iXRLibUnitySDK.git`
 4. Once the package is installed, you should see informXR appear in your Unity toolbar.
 
@@ -71,10 +71,10 @@ Integrate event logging by calling the following methods from within your code:
     - name (String) - a string that we will leave open (examples are OS version, XRDM Version, Geolocation, Battery Level, Battery Status, RAM Usage, CPU Usage, Object Tracking, FPS)
     - data (String) - a comma-separated string of name=value pairs of whatever the developer wants to provide
 
-#### Event Recording
+### Event Recording
 - iXR.Event(string message, string meta) - iXR.Event("Placement Complete", "Item=Ready")
     - name (String) - a string that we will leave open, but will provide recommendations for the value
-    - meta (String)- a comma-separated string of name=value pairs of whatever the developer wants to provice
+    - meta (String)- a comma-separated string of name=value pairs of whatever the developer wants to provide
 - iXR.Event(string message, string meta, GameObject gameObject)
     - Automatically adds the gameObject's coordinates to the meta
 
@@ -89,6 +89,69 @@ Integrate event logging by calling the following methods from within your code:
     - Logs an info message
 - iXR.LogDebug(string text)
     - Logs a debug message
+
+### Wrapper Functions
+
+#### EventAssessmentStart
+```csharp
+iXRSend.EventAssessmentStart(string assessment_name, Dictionary<string, string> meta)
+```
+This function wraps the `Event` method to create a standardized assessment start event.
+
+**Parameters:**
+- `assessment_name` (string): The name of the assessment.
+- `meta` (Dictionary<string, string>): Additional metadata for the event.
+
+**Example:**
+```csharp
+iXRSend.EventAssessmentStart("1", new Dictionary<string, string> { { "victory", "uncertain" } });
+```
+This results in:
+```csharp
+iXRSend.Event("assessment_start", "assessment_name=1,victory=uncertain");
+```
+
+#### EventInteractionComplete
+```csharp
+iXRSend.EventInteractionComplete(string interaction_name, string score, string duration, Dictionary<string, string> meta)
+```
+This function wraps the `Event` method to create a standardized interaction complete event.
+
+**Parameters:**
+- `interaction_name` (string): The name of the interaction.
+- `score` (string): The score achieved in the interaction.
+- `duration` (string): The duration of the interaction in milliseconds.
+- `meta` (Dictionary<string, string>): Additional metadata for the event.
+
+**Example:**
+```csharp
+iXRSend.EventInteractionComplete("place apple", "90", "84846", new Dictionary<string, string> { { "success", "true" } });
+```
+This results in:
+```csharp
+iXRSend.Event("assessment_complete", "verb=completed,interaction_name=place apple,score=90,duration=84846,success=true");
+```
+
+#### EventAssessmentComplete
+```csharp
+iXRSend.EventAssessmentComplete(string assessment_name, string score, string duration, Dictionary<string, string> meta)
+```
+This function wraps the `Event` method to create a standardized assessment complete event.
+
+**Parameters:**
+- `assessment_name` (string): The name of the assessment.
+- `score` (string): The score achieved in the assessment.
+- `duration` (string): The duration of the assessment in milliseconds.
+- `meta` (Dictionary<string, string>): Additional metadata for the event.
+
+**Example:**
+```csharp
+iXRSend.EventAssessmentComplete("1", "4", "84846", new Dictionary<string, string> { { "success", "true" }, { "score_min", "0" }, { "score_max", "5" } });
+```
+This results in:
+```csharp
+iXRSend.Event("assessment_complete", "verb=completed,assessment_name=1,score=4,duration=84846,success=true,score_min=0,score_max=5");
+```
 
 ### Feature 2: Session Storage
 - iXR.StorageSetEntry(name text, StorageEntry text)
@@ -113,7 +176,7 @@ To track specific objects:
 2. In the Inspector window, click Add Component.
 3. Choose `informXR > Track Object`.
 
-### Feature 4: Other Services
+### Feature 5: Other Services
 - iXR.AIProxy(prompt text)
     - prompt (String) - The GTP prompt
 
@@ -133,7 +196,7 @@ A: Object tracking can be enabled by adding the Track Object component to any Ga
 
 1. **Issue**: Authentication failing due to network error.  
      
-   - **Solution**: Uncheck ‘Force Remove Internet Permissions’ in `Project Settings > XR Plug-in Management > OpenXR > Meta Quest Support Settings`.
+   - **Solution**: Uncheck 'Force Remove Internet Permissions' in `Project Settings > XR Plug-in Management > OpenXR > Meta Quest Support Settings`.
 
 2. **Issue**: Event data not appearing in the dashboard.
 
@@ -157,4 +220,4 @@ To submit a Pull Request:
 5. Push the changes to your fork on GitHub.
 6. Go to the original repository and create a Pull Request from your forked branch.
 
-Once submitted, our team will review your Pull Request. We may ask for additional information or changes, and once everything looks good, we'll approve and merge your changes into the main branch. If necessary, we might also deny the PR with feedback on why it was not accepted. 
+Once submitted, our team will review your Pull Request. We may ask for additional information or changes, and once everything looks good, we'll approve and merge your changes into the main branch. If necessary, we might also deny the PR with feedback on why it was not accepted.
