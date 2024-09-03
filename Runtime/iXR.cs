@@ -235,4 +235,33 @@ public class iXR
 		}
 		return Event("assessment_complete", meta);
 	}
+
+	public static iXRResult EventAssessmentStart(string assessmentName, Dictionary<string, string> meta = null)
+	{
+		meta = meta ?? new Dictionary<string, string>();
+		meta["verb"] = "started";
+		meta["assessment_name"] = assessmentName;
+		return Event("assessment_start", meta);
+	}
+
+	public static iXRResult EventAssessmentStart(string assessmentName, string metaString)
+	{
+		var meta = new Dictionary<string, string>
+		{
+			["verb"] = "started",
+			["assessment_name"] = assessmentName
+		};
+		if (!string.IsNullOrEmpty(metaString))
+		{
+			foreach (var pair in metaString.Split(','))
+			{
+				var keyValue = pair.Split('=');
+				if (keyValue.Length == 2)
+				{
+					meta[keyValue[0]] = keyValue[1];
+				}
+			}
+		}
+		return Event("assessment_start", meta);
+	}
 }
