@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using iXRLib;
@@ -7,8 +6,8 @@ using UnityEngine;
 
 public class iXR
 {
-    private static Dictionary<string, DateTime> assessmentStartTimes = new Dictionary<string, DateTime>();
-    private static Dictionary<string, DateTime> interactionStartTimes = new Dictionary<string, DateTime>();
+    private static Dictionary<string, float> assessmentStartTimes = new Dictionary<string, float>();
+    private static Dictionary<string, float> interactionStartTimes = new Dictionary<string, float>();
 
     // Logging
     public static iXRResult LogDebugSynchronous(string bstrText)
@@ -181,8 +180,8 @@ public class iXR
 		meta["verb"] = "started";
 		meta["assessment_name"] = assessmentName;
 		
-		// Store the start time
-		assessmentStartTimes[assessmentName] = DateTime.Now;
+		// Store the start time using Unity's Time.time
+		assessmentStartTimes[assessmentName] = Time.time;
 		
 		return Event("assessment_start", meta);
 	}
@@ -206,8 +205,8 @@ public class iXR
 			}
 		}
 		
-		// Store the start time
-		assessmentStartTimes[assessmentName] = DateTime.Now;
+		// Store the start time using Unity's Time.time
+		assessmentStartTimes[assessmentName] = Time.time;
 		
 		return Event("assessment_start", meta);
 	}
@@ -220,10 +219,10 @@ public class iXR
 		meta["score"] = score;
 		
 		// Calculate and add duration if start time exists, otherwise use "0"
-		if (assessmentStartTimes.TryGetValue(assessmentName, out DateTime startTime))
+		if (assessmentStartTimes.TryGetValue(assessmentName, out float startTime))
 		{
-			TimeSpan duration = DateTime.Now - startTime;
-			meta["duration"] = duration.TotalSeconds.ToString(CultureInfo.InvariantCulture);
+			float duration = Time.time - startTime;
+			meta["duration"] = duration.ToString(CultureInfo.InvariantCulture);
 			assessmentStartTimes.Remove(assessmentName);
 		}
 		else
@@ -244,10 +243,10 @@ public class iXR
 		};
 		
 		// Calculate and add duration if start time exists, otherwise use "0"
-		if (assessmentStartTimes.TryGetValue(assessmentName, out DateTime startTime))
+		if (assessmentStartTimes.TryGetValue(assessmentName, out float startTime))
 		{
-			TimeSpan duration = DateTime.Now - startTime;
-			meta["duration"] = duration.TotalSeconds.ToString(CultureInfo.InvariantCulture);
+			float duration = Time.time - startTime;
+			meta["duration"] = duration.ToString(CultureInfo.InvariantCulture);
 			assessmentStartTimes.Remove(assessmentName);
 		}
 		else
@@ -278,7 +277,7 @@ public class iXR
         meta["interaction_id"] = interactionId;
         meta["interaction_name"] = interactionName;
         
-        interactionStartTimes[interactionId] = DateTime.Now;
+        interactionStartTimes[interactionId] = Time.time;
         
         return Event("interaction_start", meta);
     }
@@ -303,7 +302,7 @@ public class iXR
             }
         }
         
-        interactionStartTimes[interactionId] = DateTime.Now;
+        interactionStartTimes[interactionId] = Time.time;
 
         return Event("interaction_start", meta);
     }
@@ -317,10 +316,10 @@ public class iXR
         meta["interaction_name"] = interactionName;
         meta["score"] = score;
         
-        if (interactionStartTimes.TryGetValue(interactionId, out DateTime startTime))
+        if (interactionStartTimes.TryGetValue(interactionId, out float startTime))
         {
-            TimeSpan duration = DateTime.Now - startTime;
-            meta["duration"] = duration.TotalSeconds.ToString(CultureInfo.InvariantCulture);
+            float duration = Time.time - startTime;
+            meta["duration"] = duration.ToString(CultureInfo.InvariantCulture);
             interactionStartTimes.Remove(interactionId);
         }
         else
@@ -347,10 +346,10 @@ public class iXR
             ["score"] = score
         };
         
-        if (interactionStartTimes.TryGetValue(interactionId, out DateTime startTime))
+        if (interactionStartTimes.TryGetValue(interactionId, out float startTime))
         {
-            TimeSpan duration = DateTime.Now - startTime;
-            meta["duration"] = duration.TotalSeconds.ToString(CultureInfo.InvariantCulture);
+            float duration = Time.time - startTime;
+            meta["duration"] = duration.ToString(CultureInfo.InvariantCulture);
             interactionStartTimes.Remove(interactionId);
         }
         else
