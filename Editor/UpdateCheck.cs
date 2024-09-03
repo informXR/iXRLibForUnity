@@ -26,12 +26,15 @@ public class UpdateCheck
     {
         string currentVersion = await CheckPackageVersion();
         
-        // Remove the HTTP client and GitHub API check
-        // Instead, we'll check if the package is up to date using Unity's package manager
+        if (string.IsNullOrEmpty(currentVersion))
+        {
+            Debug.LogError("Failed to get current package version.");
+            return;
+        }
+
+        bool updateAvailable = await IsUpdateAvailable(currentVersion);
         
-        bool isUpToDate = await IsPackageUpToDate(currentVersion);
-        
-        if (isUpToDate)
+        if (!updateAvailable)
         {
             if (forced)
             {
@@ -46,24 +49,31 @@ public class UpdateCheck
         EditorPrefs.SetString(UpdateCheckPref, DateTime.UtcNow.AddDays(UpdateCheckFrequencyDays).ToString("G"));
     }
 
-    private static async Task<bool> IsPackageUpToDate(string currentVersion)
+    private static async Task<bool> IsUpdateAvailable(string currentVersion)
     {
-        AddRequest addRequest = Client.Add(PackageUrl);
-        
-        while (!addRequest.IsCompleted)
+        ListRequest listRequest = Client.List(true); // true to include packages from the registry
+
+        while (!listRequest.IsCompleted)
         {
             await Task.Delay(100);
         }
 
-        if (addRequest.Status == StatusCode.Success)
+        if (listRequest.Status == StatusCode.Success)
         {
-            string latestVersion = addRequest.Result.version;
-            return currentVersion == latestVersion;
+            foreach (var package in listRequest.Result)
+            {
+                if (package.name == PackageName)
+                {
+                    return package.version != currentVersion;
+                }
+            }
+            Debug.LogWarning($"Package {PackageName} not found in the registry.");
+            return false;
         }
         else
         {
-            Debug.LogError($"Failed to check for updates: {addRequest.Error.message}");
-            return true; // Assume up to date to avoid unnecessary prompts
+            Debug.LogError($"Failed to check for updates: {listRequest.Error.message}");
+            return false;
         }
     }
 
@@ -85,7 +95,21 @@ public class UpdateCheck
 
     private static void UpdatePackage()
     {
-        Client.Add(PackageUrl);
+        AddRequest addRequest = Client.Add(PackageUrl);
+        EditorApplication.update += ProgressUpdate;
+
+        void ProgressUpdate()
+        {
+            if (addRequest.IsCompleted)
+            {
+                if (addRequest.Status == StatusCode.Success)
+                    Debug.Log("Package updated successfully");
+                else if (addRequest.Status >= StatusCode.Failure)
+                    Debug.LogError($"Package update failed: {addRequest.Error.message}");
+
+                EditorApplication.update -= ProgressUpdate;
+            }
+        }
     }
 
     private static async Task<string> CheckPackageVersion()
