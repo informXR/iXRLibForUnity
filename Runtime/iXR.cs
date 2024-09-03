@@ -168,4 +168,71 @@ public class iXR
 	{
 		return iXRLibInterop.AddAIProxy(bstrPrompt, bstrPastMessages, bstrLMMProvider);
 	}
+
+	// Event wrapper functions
+	public static iXRResult EventInteractionComplete(string interactionName, string score, string duration, Dictionary<string, string> meta = null)
+	{
+		meta = meta ?? new Dictionary<string, string>();
+		meta["verb"] = "completed";
+		meta["interaction_name"] = interactionName;
+		meta["score"] = score;
+		meta["duration"] = duration;
+		return Event("interaction_complete", meta);
+	}
+
+	public static iXRResult EventInteractionComplete(string interactionName, string score, string duration, string metaString)
+	{
+		var meta = new Dictionary<string, string>
+		{
+			["verb"] = "completed",
+			["interaction_name"] = interactionName,
+			["score"] = score,
+			["duration"] = duration
+		};
+		if (!string.IsNullOrEmpty(metaString))
+		{
+			foreach (var pair in metaString.Split(','))
+			{
+				var keyValue = pair.Split('=');
+				if (keyValue.Length == 2)
+				{
+					meta[keyValue[0]] = keyValue[1];
+				}
+			}
+		}
+		return Event("interaction_complete", meta);
+	}
+
+	public static iXRResult EventAssessmentComplete(string assessmentName, string score, string duration, Dictionary<string, string> meta = null)
+	{
+		meta = meta ?? new Dictionary<string, string>();
+		meta["verb"] = "completed";
+		meta["assessment_name"] = assessmentName;
+		meta["score"] = score;
+		meta["duration"] = duration;
+		return Event("assessment_complete", meta);
+	}
+
+	public static iXRResult EventAssessmentComplete(string assessmentName, string score, string duration, string metaString)
+	{
+		var meta = new Dictionary<string, string>
+		{
+			["verb"] = "completed",
+			["assessment_name"] = assessmentName,
+			["score"] = score,
+			["duration"] = duration
+		};
+		if (!string.IsNullOrEmpty(metaString))
+		{
+			foreach (var pair in metaString.Split(','))
+			{
+				var keyValue = pair.Split('=');
+				if (keyValue.Length == 2)
+				{
+					meta[keyValue[0]] = keyValue[1];
+				}
+			}
+		}
+		return Event("assessment_complete", meta);
+	}
 }
