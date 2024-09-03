@@ -8,7 +8,7 @@ using UnityEditor.PackageManager.Requests;
 
 public class UpdateCheck
 {
-    private const string PackageUrl = "https://api.github.com/repos/informXR/iXRLibUnitySDK/releases/latest";
+    private const string PackageUrl = "https://github.com/informXR/iXRLibUnitySDK.git";
     private const string PackageName = "com.informxr.unity-sdk";
     private const string SkippedVersionKey = "SkippedPackageVersion";
     private const int UpdateCheckFrequencyDays = 1;
@@ -25,62 +25,67 @@ public class UpdateCheck
     public static async Task CheckForUpdates(bool forced = false)
     {
         string currentVersion = await CheckPackageVersion();
-        using var client = new HttpClient();
-        try
+        
+        // Remove the HTTP client and GitHub API check
+        // Instead, we'll check if the package is up to date using Unity's package manager
+        
+        bool isUpToDate = await IsPackageUpToDate(currentVersion);
+        
+        if (isUpToDate)
         {
-            client.DefaultRequestHeaders.UserAgent.ParseAdd("Unity/" + Application.unityVersion);
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github.v3+json");
-            
-            var response = await client.GetAsync(PackageUrl);
-            
-            if (!response.IsSuccessStatusCode)
+            if (forced)
             {
-                Debug.LogError($"Error checking for updates: Response status code does not indicate success: {response.StatusCode}");
-                return;
+                EditorUtility.DisplayDialog("Up-to-date", "You have the latest version of the package.", "OK");
             }
-
-            var jsonResponse = await response.Content.ReadAsStringAsync();
-            var latestRelease = JsonUtility.FromJson<GitHubRelease>(jsonResponse);
-
-            string skippedVersion = EditorPrefs.GetString(SkippedVersionKey, "");
-
-            if (latestRelease.tag_name == currentVersion)
-            {
-                if (forced)
-                {
-                    EditorUtility.DisplayDialog("Up-to-date", "You have the latest version of the package.", "OK");
-                }
-            }
-            else
-            {
-                if (latestRelease.tag_name != skippedVersion || forced)
-                {
-                    ShowUpdateDialog(latestRelease);
-                }
-            }
-            
-            EditorPrefs.SetString(UpdateCheckPref, DateTime.UtcNow.AddDays(UpdateCheckFrequencyDays).ToString("G"));
         }
-        catch (HttpRequestException e)
+        else
         {
-            Debug.LogError("Error checking for updates: " + e.Message);
+            ShowUpdateDialog(currentVersion);
+        }
+        
+        EditorPrefs.SetString(UpdateCheckPref, DateTime.UtcNow.AddDays(UpdateCheckFrequencyDays).ToString("G"));
+    }
+
+    private static async Task<bool> IsPackageUpToDate(string currentVersion)
+    {
+        AddRequest addRequest = Client.Add(PackageUrl);
+        
+        while (!addRequest.IsCompleted)
+        {
+            await Task.Delay(100);
+        }
+
+        if (addRequest.Status == StatusCode.Success)
+        {
+            string latestVersion = addRequest.Result.version;
+            return currentVersion == latestVersion;
+        }
+        else
+        {
+            Debug.LogError($"Failed to check for updates: {addRequest.Error.message}");
+            return true; // Assume up to date to avoid unnecessary prompts
         }
     }
 
-    private static void ShowUpdateDialog(GitHubRelease latestRelease)
+    private static void ShowUpdateDialog(string currentVersion)
     {
         int option = EditorUtility.DisplayDialogComplex("Update Available",
-            $"A new version ({latestRelease.tag_name}) is available. Please update your package.",
-            "Download", "Cancel", "Skip This Version");
+            $"A new version is available. Your current version is {currentVersion}. Would you like to update?",
+            "Update", "Cancel", "Skip This Version");
 
-        if (option == 0) // Download
+        if (option == 0) // Update
         {
-            Application.OpenURL(latestRelease.html_url);
+            UpdatePackage();
         }
         else if (option == 2) // Skip this version
         {
-            EditorPrefs.SetString(SkippedVersionKey, latestRelease.tag_name);
+            EditorPrefs.SetString(SkippedVersionKey, currentVersion);
         }
+    }
+
+    private static void UpdatePackage()
+    {
+        Client.Add(PackageUrl);
     }
 
     private static async Task<string> CheckPackageVersion()
