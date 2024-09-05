@@ -43,7 +43,7 @@ To get started with the informXR SDK, you'll need to configure your application 
 1. On the top menu choose `informXR > Configuration`.
 2. Enter the Application ID, Organization ID, and Authorization Secret. These can be retrieved from the [informXR Web Application](https://app.informxr.io/) which requires a **free account** to continue.
      * Organization ID and Authorization Secret: Available under `Settings > Organization Codes`.
-     * Application ID: Available in the Web Dashboard under your application settings.
+     * Application ID: Available in the Web Dashboard under your application settings. Please use the "Get Started" tutorial button on the Home page and choose the 'Developer' option for step-by-step instructions.
      * Follow the visual guides below for clarity.
 
 ### Organization ID and Authorization Secret Location - Web App
@@ -51,16 +51,7 @@ To get started with the informXR SDK, you'll need to configure your application 
 ![Visual Tutorial to get to Organization Codes](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/goToOrganizationCodes.png?raw=true "Go to Organization Codes")
 
 ### Application ID Location - Web App
-
-This tutorial will include the full steps to publishing your application with informXR and obtaining your Application ID.
-
-![Visual Tutorial to Publish Application - Step 1](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/PublishApp1.png?raw=true "Publish an Application - Step 1")
-![Visual Tutorial to Publish Application - Step 2](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/PublishApp2.png?raw=true "Publish an Application - Step 2")
-![Visual Tutorial to Publish Application - Step 3](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/PublishApp3.png?raw=true "Publish an Application - Step 3")
-![Visual Tutorial to Publish Application - Step 4](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/PublishApp4.png?raw=true "Publish an Application - Step 4")
-![Visual Tutorial to Publish Application - Step 5](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/PublishApp5.png?raw=true "Publish an Application - Step 5")
-![Published Application Tour - Step 1](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/PubAppTour1.png?raw=true "Published Application Tour - Step 1")
-![Published Application Tour - Step 2](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/PubAppTour2.png?raw=true "Published Application Tour - Step 2")
+![Visual Tutorial to get App ID](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/PressGetStarted.png?raw=true "Press Get Started")
 
 ## Sending Data
 
