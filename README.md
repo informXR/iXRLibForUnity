@@ -70,110 +70,129 @@ This tutorial will include the full steps to publishing your application with in
 ```csharp
 iXR.Event(string name)
 iXR.Event(string name, Dictionary<string, string> meta)
-iXR.Event(string name, Dictionary<string, string> meta, Vector3 locationData)
+iXR.Event(string name, Dictionary<string, string> meta, Vector3 location_data)
 ```
 Records an event with optional metadata and location data.
 
 **Parameters:**
-- `name` (string): The name of the event. Suggested to be in snake_case for analytics purposes.
-- `meta` (Dictionary<string, string>): Optional. Name-value pairs of additional information.
-- `locationData` (Vector3): Optional. (x, y, z) coordinates indicating location in 3D space.
+- `name` (string): The name of the event. Use snake_case for better analytics processing.
+- `meta` (Dictionary<string, string>): Optional. Additional key-value pairs describing the event.
+- `location_data` (Vector3): Optional. The (x, y, z) coordinates of the event in 3D space.
 
-**Note:** The system automatically collects timestamp and origin ("user" by default) for each event.
+**Note:** The system automatically includes a timestamp and origin ("user" by default, "system" for lib-generated events) with each event.
 
-#### Event Wrapper Functions
+### Event Wrapper Functions
 
-##### EventLevelStart
+These functions provide standardized ways to record common event types.
+
+#### EventLevelStart
 ```csharp
 iXR.EventLevelStart(string level_name)
 iXR.EventLevelStart(string level_name, Dictionary<string, string> meta)
 ```
-Records the start of a level.
 
-##### EventLevelComplete
+#### EventLevelComplete
 ```csharp
 iXR.EventLevelComplete(string level_name, int score)
 iXR.EventLevelComplete(string level_name, int score, Dictionary<string, string> meta)
 ```
-Records the completion of a level.
 
-**Note:** Duration is automatically calculated if EventLevelStart was used with the same level_name.
-
-##### EventAssessmentStart
+#### EventAssessmentStart
 ```csharp
 iXR.EventAssessmentStart(string assessment_name)
 iXR.EventAssessmentStart(string assessment_name, Dictionary<string, string> meta)
 ```
-Records the start of an assessment.
 
-##### EventAssessmentComplete
+#### EventAssessmentComplete
 ```csharp
 iXR.EventAssessmentComplete(string assessment_name, int score)
 iXR.EventAssessmentComplete(string assessment_name, int score, Dictionary<string, string> meta)
 ```
-Records the completion of an assessment.
 
-**Note:** Duration is automatically calculated if EventAssessmentStart was used with the same assessment_name.
-
-##### EventInteractionStart
+#### EventInteractionStart
 ```csharp
 iXR.EventInteractionStart(string interaction_name)
 iXR.EventInteractionStart(string interaction_name, Dictionary<string, string> meta)
 ```
-Records the start of an interaction.
 
-##### EventInteractionComplete
+#### EventInteractionComplete
 ```csharp
 iXR.EventInteractionComplete(string interaction_name, int score)
 iXR.EventInteractionComplete(string interaction_name, int score, Dictionary<string, string> meta)
 ```
-Records the completion of an interaction.
 
-**Note:** Duration is automatically calculated if EventInteractionStart was used with the same interaction_name.
+**Parameters for all Event Wrapper Functions:**
+- `level_name/assessment_name/interaction_name` (string): The identifier for the level, assessment, or interaction. Use snake_case for consistency.
+- `score` (int): The numerical score achieved. While typically between 1-100, any integer is valid.
+- `meta` (Dictionary<string, string>): Optional. Additional key-value pairs describing the event.
+
+**Note:** For all "Complete" events, the duration is automatically calculated if the corresponding "Start" event was recorded with the same name.
 
 ### Log Methods
 
 #### Log
 ```csharp
-iXR.Log(LogLevel level, string text)
+iXR.Log(LogLevel level, string message)
 ```
-Logs a message with the specified log level.
 
-#### Wrapper Functions
+**Parameters:**
+- `level` (LogLevel): The severity of the log (Debug, Info, Warn, Error, Critical).
+- `message` (string): The content of the log message.
+
+#### Log Wrapper Functions
 ```csharp
-iXR.LogDebug(string text)
-iXR.LogInfo(string text)
-iXR.LogWarn(string text)
-iXR.LogError(string text)
-iXR.LogCritical(string text)
+iXR.LogDebug(string message)
+iXR.LogInfo(string message)
+iXR.LogWarn(string message)
+iXR.LogError(string message)
+iXR.LogCritical(string message)
 ```
-Log messages at specific levels.
+
+**Parameters:**
+- `message` (string): The content of the log message.
 
 ### Storage Methods
 
 #### SetStorageEntry
 ```csharp
-iXR.SetStorageEntry(Dictionary<string, string> data, string name = "state", bool keepLatest = true, string origin = null, bool sessionData = false)
+iXR.SetStorageEntry(Dictionary<string, string> data, string name = "state", bool keep_latest = true, string origin = null, bool session_data = false)
 ```
-Stores data in the session storage.
+
+**Parameters:**
+- `data` (Dictionary<string, string>): The key-value pairs to store.
+- `name` (string): Optional. The identifier for this storage entry. Default is "state".
+- `keep_latest` (bool): Optional. If true, only the most recent entry is kept. If false, entries are appended. Default is true.
+- `origin` (string): Optional. The source of the data (e.g., "system").
+- `session_data` (bool): Optional. If true, the data is specific to the current session. Default is false.
 
 #### GetStorageEntry
 ```csharp
-iXR.GetStorageEntry(string name = "state", string origin = null, string[] tagsAny = null, string[] tagsAll = null, bool userOnly = false)
+iXR.GetStorageEntry(string name = "state", string origin = null, string[] tags_any = null, string[] tags_all = null, bool user_only = false)
 ```
-Retrieves stored data.
+
+**Parameters:**
+- `name` (string): Optional. The identifier of the storage entry to retrieve. Default is "state".
+- `origin` (string): Optional. Filter entries by their origin ("system", "user", or "admin").
+- `tags_any` (string[]): Optional. Retrieve entries matching any of these tags.
+- `tags_all` (string[]): Optional. Retrieve entries matching all of these tags.
+- `user_only` (bool): Optional. If true, retrieve data for the current user across all devices for this app. Default is false.
+
+**Returns:** A dictionary containing the retrieved storage entry.
 
 #### RemoveStorageEntry
 ```csharp
 iXR.RemoveStorageEntry(string name = "state")
 ```
-Removes a storage entry.
+
+**Parameters:**
+- `name` (string): Optional. The identifier of the storage entry to remove. Default is "state".
 
 #### GetAllStorageEntries
 ```csharp
 iXR.GetAllStorageEntries()
 ```
-Retrieves all storage entries for the user/device.
+
+**Returns:** A dictionary containing all storage entries for the current user/device.
 
 ### Telemetry Methods
 
@@ -181,15 +200,26 @@ Retrieves all storage entries for the user/device.
 ```csharp
 iXR.Telemetry(string name, Dictionary<string, string> data)
 ```
-Records telemetry data.
+
+**Parameters:**
+- `name` (string): The type of telemetry data (e.g., "OS_Version", "Battery_Level", "RAM_Usage").
+- `data` (Dictionary<string, string>): Key-value pairs of telemetry data.
 
 ### AI Integration Methods
 
 #### AIProxy
 ```csharp
-iXR.AIProxy(string prompt, string pastMessages = "", string botId = "")
+iXR.AIProxy(string prompt, string past_messages = "", string bot_id = "")
 ```
-Sends an AI prompt and returns the response.
+
+**Parameters:**
+- `prompt` (string): The input prompt for the AI.
+- `past_messages` (string): Optional. Previous conversation history for context.
+- `bot_id` (string): Optional. An identifier for a specific pre-defined chatbot.
+
+**Returns:** The AI-generated response as a string.
+
+**Note:** AIProxy calls are processed immediately and bypass the cache system. However, they still respect the SendRetriesOnFailure and SendRetryInterval settings.
 
 ## FAQ
 
