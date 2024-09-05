@@ -64,122 +64,162 @@ This tutorial will include the full steps to publishing your application with in
 
 ## Sending Data
 
-### Feature 1: Event Tracking & Debug Logging
+### Event Methods
 
-Integrate event logging by calling the following methods from within your code:
-- iXR.TelemetryEntry(string name, string data) - iXR.TelemetryEntry("Battery", "Level=100")
-    - name (String) - a string that we will leave open (examples are OS version, XRDM Version, Geolocation, Battery Level, Battery Status, RAM Usage, CPU Usage, Object Tracking, FPS)
-    - data (String) - a comma-separated string of name=value pairs of whatever the developer wants to provide
+#### Event
+```csharp
+iXR.Event(string name)
+iXR.Event(string name, Dictionary<string, string> meta)
+iXR.Event(string name, Dictionary<string, string> meta, Vector3 location_data)
+```
+Records an event with optional metadata and location data.
 
-### Event Recording
-- iXR.Event(string message, string meta) - iXR.Event("Placement Complete", "Item=Ready")
-    - name (String) - a string that we will leave open, but will provide recommendations for the value
-    - meta (String)- a comma-separated string of name=value pairs of whatever the developer wants to provide
-- iXR.Event(string message, string meta, GameObject gameObject)
-    - Automatically adds the gameObject's coordinates to the meta
+**Parameters:**
+- `name` (string): The name of the event. Use snake_case for better analytics processing.
+- `meta` (Dictionary<string, string>): Optional. Additional key-value pairs describing the event.
+- `location_data` (Vector3): Optional. The (x, y, z) coordinates of the event in 3D space.
 
-### Log Functions
-- iXR.LogCritical(string text)
-    - Logs a critical message
-- iXR.LogError(string text)
-    - Logs an error message
-- iXR.LogWarn(string text)
-    - Logs a warning message
-- iXR.LogInfo(string text)
-    - Logs an info message
-- iXR.LogDebug(string text)
-    - Logs a debug message
+**Note:** The system automatically includes a timestamp and origin ("user" by default, "system" for lib-generated events) with each event.
 
-### Wrapper Functions
+### Event Wrapper Functions
+
+These functions provide standardized ways to record common event types.
+
+#### EventLevelStart
+```csharp
+iXR.EventLevelStart(string level_name)
+iXR.EventLevelStart(string level_name, Dictionary<string, string> meta)
+```
+
+#### EventLevelComplete
+```csharp
+iXR.EventLevelComplete(string level_name, int score)
+iXR.EventLevelComplete(string level_name, int score, Dictionary<string, string> meta)
+```
 
 #### EventAssessmentStart
 ```csharp
-iXRSend.EventAssessmentStart(string assessment_name, Dictionary<string, string> meta)
-```
-This function wraps the `Event` method to create a standardized assessment start event.
-
-**Parameters:**
-- `assessment_name` (string): The name of the assessment.
-- `meta` (Dictionary<string, string>): Additional metadata for the event.
-
-**Example:**
-```csharp
-iXRSend.EventAssessmentStart("1", new Dictionary<string, string> { { "victory", "uncertain" } });
-```
-This results in:
-```csharp
-iXRSend.Event("assessment_start", "assessment_name=1,victory=uncertain");
-```
-
-#### EventInteractionComplete
-```csharp
-iXRSend.EventInteractionComplete(string interaction_name, string score, string duration, Dictionary<string, string> meta)
-```
-This function wraps the `Event` method to create a standardized interaction complete event.
-
-**Parameters:**
-- `interaction_name` (string): The name of the interaction.
-- `score` (string): The score achieved in the interaction.
-- `duration` (string): The duration of the interaction in milliseconds.
-- `meta` (Dictionary<string, string>): Additional metadata for the event.
-
-**Example:**
-```csharp
-iXRSend.EventInteractionComplete("place apple", "90", "84846", new Dictionary<string, string> { { "success", "true" } });
-```
-This results in:
-```csharp
-iXRSend.Event("assessment_complete", "verb=completed,interaction_name=place apple,score=90,duration=84846,success=true");
+iXR.EventAssessmentStart(string assessment_name)
+iXR.EventAssessmentStart(string assessment_name, Dictionary<string, string> meta)
 ```
 
 #### EventAssessmentComplete
 ```csharp
-iXRSend.EventAssessmentComplete(string assessment_name, string score, string duration, Dictionary<string, string> meta)
+iXR.EventAssessmentComplete(string assessment_name, int score)
+iXR.EventAssessmentComplete(string assessment_name, int score, Dictionary<string, string> meta)
 ```
-This function wraps the `Event` method to create a standardized assessment complete event.
+
+#### EventInteractionStart
+```csharp
+iXR.EventInteractionStart(string interaction_name)
+iXR.EventInteractionStart(string interaction_name, Dictionary<string, string> meta)
+```
+
+#### EventInteractionComplete
+```csharp
+iXR.EventInteractionComplete(string interaction_name, int score)
+iXR.EventInteractionComplete(string interaction_name, int score, Dictionary<string, string> meta)
+```
+
+**Parameters for all Event Wrapper Functions:**
+- `level_name/assessment_name/interaction_name` (string): The identifier for the level, assessment, or interaction. Use snake_case for consistency.
+- `score` (int): The numerical score achieved. While typically between 1-100, any integer is valid.
+- `meta` (Dictionary<string, string>): Optional. Additional key-value pairs describing the event.
+
+**Note:** For all "Complete" events, the duration is automatically calculated if the corresponding "Start" event was recorded with the same name.
+
+### Log Methods
+
+#### Log
+```csharp
+iXR.Log(LogLevel level, string message)
+```
 
 **Parameters:**
-- `assessment_name` (string): The name of the assessment.
-- `score` (string): The score achieved in the assessment.
-- `duration` (string): The duration of the assessment in milliseconds.
-- `meta` (Dictionary<string, string>): Additional metadata for the event.
+- `level` (LogLevel): The severity of the log (Debug, Info, Warn, Error, Critical).
+- `message` (string): The content of the log message.
 
-**Example:**
+#### Log Wrapper Functions
 ```csharp
-iXRSend.EventAssessmentComplete("1", "4", "84846", new Dictionary<string, string> { { "success", "true" }, { "score_min", "0" }, { "score_max", "5" } });
-```
-This results in:
-```csharp
-iXRSend.Event("assessment_complete", "verb=completed,assessment_name=1,score=4,duration=84846,success=true,score_min=0,score_max=5");
+iXR.LogDebug(string message)
+iXR.LogInfo(string message)
+iXR.LogWarn(string message)
+iXR.LogError(string message)
+iXR.LogCritical(string message)
 ```
 
-### Feature 2: Session Storage
-- iXR.StorageSetEntry(name text, StorageEntry text)
-    - name (String) - The name, `session` is a good option to start with
-    - StorageEntry (String)- Store any data as a string value. JSON is a good solution in many cases
+**Parameters:**
+- `message` (string): The content of the log message.
 
-- iXR.StorageGetEntry(name text)
-    - name (String) - The name, `session` is a good option to start with
+### Storage Methods
 
-- iXR.StorageRemoveEntry(name text)
-    - name (String) - The name, `session` is a good option to start with
+#### SetStorageEntry
+```csharp
+iXR.SetStorageEntry(Dictionary<string, string> data, string name = "state", bool keep_latest = true, string origin = null, bool session_data = false)
+```
 
-### Feature 3: Headset Tracking
+**Parameters:**
+- `data` (Dictionary<string, string>): The key-value pairs to store.
+- `name` (string): Optional. The identifier for this storage entry. Default is "state".
+- `keep_latest` (bool): Optional. If true, only the most recent entry is kept. If false, entries are appended. Default is true.
+- `origin` (string): Optional. The source of the data (e.g., "system").
+- `session_data` (bool): Optional. If true, the data is specific to the current session. Default is false.
 
-Enable real-time tracking of headsets and controllers:
-1. By default it is on. However, if not, in the Configuration UI click on Headset Tracking.
-2. The SDK will automatically start tracking the HMD and controllers.
+#### GetStorageEntry
+```csharp
+iXR.GetStorageEntry(string name = "state", string origin = null, string[] tags_any = null, string[] tags_all = null, bool user_only = false)
+```
 
-### Feature 4: Object Tracking
-To track specific objects:
-1. Select the object you want to track in your Unity scene.
-2. In the Inspector window, click Add Component.
-3. Choose `informXR > Track Object`.
+**Parameters:**
+- `name` (string): Optional. The identifier of the storage entry to retrieve. Default is "state".
+- `origin` (string): Optional. Filter entries by their origin ("system", "user", or "admin").
+- `tags_any` (string[]): Optional. Retrieve entries matching any of these tags.
+- `tags_all` (string[]): Optional. Retrieve entries matching all of these tags.
+- `user_only` (bool): Optional. If true, retrieve data for the current user across all devices for this app. Default is false.
 
-### Feature 5: Other Services
-- iXR.AIProxy(prompt text)
-    - prompt (String) - The GTP prompt
+**Returns:** A dictionary containing the retrieved storage entry.
 
+#### RemoveStorageEntry
+```csharp
+iXR.RemoveStorageEntry(string name = "state")
+```
+
+**Parameters:**
+- `name` (string): Optional. The identifier of the storage entry to remove. Default is "state".
+
+#### GetAllStorageEntries
+```csharp
+iXR.GetAllStorageEntries()
+```
+
+**Returns:** A dictionary containing all storage entries for the current user/device.
+
+### Telemetry Methods
+
+#### Telemetry
+```csharp
+iXR.Telemetry(string name, Dictionary<string, string> data)
+```
+
+**Parameters:**
+- `name` (string): The type of telemetry data (e.g., "OS_Version", "Battery_Level", "RAM_Usage").
+- `data` (Dictionary<string, string>): Key-value pairs of telemetry data.
+
+### AI Integration Methods
+
+#### AIProxy
+```csharp
+iXR.AIProxy(string prompt, string past_messages = "", string bot_id = "")
+```
+
+**Parameters:**
+- `prompt` (string): The input prompt for the AI.
+- `past_messages` (string): Optional. Previous conversation history for context.
+- `bot_id` (string): Optional. An identifier for a specific pre-defined chatbot.
+
+**Returns:** The AI-generated response as a string.
+
+**Note:** AIProxy calls are processed immediately and bypass the cache system. However, they still respect the SendRetriesOnFailure and SendRetryInterval settings.
 
 ## FAQ
 
