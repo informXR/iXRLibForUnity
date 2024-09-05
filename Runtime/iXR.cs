@@ -8,6 +8,7 @@ public class iXR
 {
     private static Dictionary<string, float> assessmentStartTimes = new Dictionary<string, float>();
     private static Dictionary<string, float> interactionStartTimes = new Dictionary<string, float>();
+    private static Dictionary<string, float> levelStartTimes = new Dictionary<string, float>();
 
     // Logging
     public static iXRResult LogDebugSynchronous(string bstrText)
@@ -269,7 +270,6 @@ public class iXR
 		return Event("assessment_complete", meta);
 	}
 
-
     public static iXRResult EventInteractionStart(string interactionId, string interactionName, Dictionary<string, string> meta = null)
     {
         meta = meta ?? new Dictionary<string, string>();
@@ -376,5 +376,100 @@ public class iXR
         }
         
         return Event("interaction_complete", meta);
+    }
+
+    public static iXRResult EventLevelStart(string levelName, Dictionary<string, string> meta = null)
+    {
+        meta = meta ?? new Dictionary<string, string>();
+        meta["verb"] = "started";
+        meta["level_name"] = levelName;
+        
+        // Store the start time using Unity's Time.time
+        levelStartTimes[levelName] = Time.time;
+        
+        return Event("level_start", meta);
+    }
+
+    public static iXRResult EventLevelStart(string levelName, string metaString)
+    {
+        var meta = new Dictionary<string, string>
+        {
+            ["verb"] = "started",
+            ["level_name"] = levelName
+        };
+        if (!string.IsNullOrEmpty(metaString))
+        {
+            foreach (var pair in metaString.Split(','))
+            {
+                var keyValue = pair.Split('=');
+                if (keyValue.Length == 2)
+                {
+                    meta[keyValue[0]] = keyValue[1];
+                }
+            }
+        }
+        
+        // Store the start time using Unity's Time.time
+        levelStartTimes[levelName] = Time.time;
+        
+        return Event("level_start", meta);
+    }
+
+    public static iXRResult EventLevelComplete(string levelName, string score, Dictionary<string, string> meta = null)
+    {
+        meta = meta ?? new Dictionary<string, string>();
+        meta["verb"] = "completed";
+        meta["level_name"] = levelName;
+        meta["score"] = score;
+        
+        // Calculate and add duration if start time exists, otherwise use "0"
+        if (levelStartTimes.TryGetValue(levelName, out float startTime))
+        {
+            float duration = Time.time - startTime;
+            meta["duration"] = duration.ToString(CultureInfo.InvariantCulture);
+            levelStartTimes.Remove(levelName);
+        }
+        else
+        {
+            meta["duration"] = "0";
+        }
+        
+        return Event("level_complete", meta);
+    }
+
+    public static iXRResult EventLevelComplete(string levelName, string score, string metaString)
+    {
+        var meta = new Dictionary<string, string>
+        {
+            ["verb"] = "completed",
+            ["level_name"] = levelName,
+            ["score"] = score
+        };
+        
+        // Calculate and add duration if start time exists, otherwise use "0"
+        if (levelStartTimes.TryGetValue(levelName, out float startTime))
+        {
+            float duration = Time.time - startTime;
+            meta["duration"] = duration.ToString(CultureInfo.InvariantCulture);
+            levelStartTimes.Remove(levelName);
+        }
+        else
+        {
+            meta["duration"] = "0";
+        }
+        
+        if (!string.IsNullOrEmpty(metaString))
+        {
+            foreach (var pair in metaString.Split(','))
+            {
+                var keyValue = pair.Split('=');
+                if (keyValue.Length == 2)
+                {
+                    meta[keyValue[0]] = keyValue[1];
+                }
+            }
+        }
+        
+        return Event("level_complete", meta);
     }
 }
