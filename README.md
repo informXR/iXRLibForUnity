@@ -53,7 +53,7 @@ Follow the visual instructions below for clarification on how to get to the Orga
 
 ### Application ID Location - Web App
 Simply use the provided tutorials with the 'Get Started Button' shown below, and choose the 'Content Developer' path.
-![Visual Tutorial to get App ID](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/PressGetStarted.png?raw=true "Press Get Started")
+![Visual Tutorial to get App ID](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/PubAppTour1.png?raw=true "Press Get Started")
 
 ## Sending Data
 
