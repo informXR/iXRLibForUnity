@@ -43,12 +43,15 @@ To get started with the informXR SDK, you'll need to configure your application 
 1. On the top menu choose `informXR > Configuration`.
 2. Enter the Application ID, Organization ID, and Authorization Secret. These can be retrieved from the [informXR Web Application](https://app.informxr.io/) which requires a **free account** to continue.
      * Organization ID and Authorization Secret: Available under `Settings > Organization Codes`.
-     * Application ID: Available in the Web Dashboard under your application settings.
+     * Application ID: Available in the Web Dashboard under your application settings. Please use the "Get Started" tutorial button on the Home page and choose the 'Developer' option for step-by-step instructions.
      * Follow the visual guides below for clarity.
 
 ### Organization ID and Authorization Secret Location - Web App
 ![Visual Tutorial to get to Settings](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/GotoSettings.png?raw=true "Go to Settings")
 ![Visual Tutorial to get to Organization Codes](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/goToOrganizationCodes.png?raw=true "Go to Organization Codes")
+
+### Application ID Location - Web App
+![Visual Tutorial to get App ID](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/PressGetStarted.png?raw=true "Press Get Started")
 
 ## Sending Data
 
