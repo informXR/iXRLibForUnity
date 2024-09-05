@@ -64,122 +64,132 @@ This tutorial will include the full steps to publishing your application with in
 
 ## Sending Data
 
-### Feature 1: Event Tracking & Debug Logging
+### Event Methods
 
-Integrate event logging by calling the following methods from within your code:
-- iXR.TelemetryEntry(string name, string data) - iXR.TelemetryEntry("Battery", "Level=100")
-    - name (String) - a string that we will leave open (examples are OS version, XRDM Version, Geolocation, Battery Level, Battery Status, RAM Usage, CPU Usage, Object Tracking, FPS)
-    - data (String) - a comma-separated string of name=value pairs of whatever the developer wants to provide
-
-### Event Recording
-- iXR.Event(string message, string meta) - iXR.Event("Placement Complete", "Item=Ready")
-    - name (String) - a string that we will leave open, but will provide recommendations for the value
-    - meta (String)- a comma-separated string of name=value pairs of whatever the developer wants to provide
-- iXR.Event(string message, string meta, GameObject gameObject)
-    - Automatically adds the gameObject's coordinates to the meta
-
-### Log Functions
-- iXR.LogCritical(string text)
-    - Logs a critical message
-- iXR.LogError(string text)
-    - Logs an error message
-- iXR.LogWarn(string text)
-    - Logs a warning message
-- iXR.LogInfo(string text)
-    - Logs an info message
-- iXR.LogDebug(string text)
-    - Logs a debug message
-
-### Wrapper Functions
-
-#### EventAssessmentStart
+#### Event
 ```csharp
-iXRSend.EventAssessmentStart(string assessment_name, Dictionary<string, string> meta)
+iXR.Event(string name)
+iXR.Event(string name, Dictionary<string, string> meta)
+iXR.Event(string name, Dictionary<string, string> meta, Vector3 locationData)
 ```
-This function wraps the `Event` method to create a standardized assessment start event.
+Records an event with optional metadata and location data.
 
 **Parameters:**
-- `assessment_name` (string): The name of the assessment.
-- `meta` (Dictionary<string, string>): Additional metadata for the event.
+- `name` (string): The name of the event. Suggested to be in snake_case for analytics purposes.
+- `meta` (Dictionary<string, string>): Optional. Name-value pairs of additional information.
+- `locationData` (Vector3): Optional. (x, y, z) coordinates indicating location in 3D space.
 
-**Example:**
+**Note:** The system automatically collects timestamp and origin ("user" by default) for each event.
+
+#### Event Wrapper Functions
+
+##### EventLevelStart
 ```csharp
-iXRSend.EventAssessmentStart("1", new Dictionary<string, string> { { "victory", "uncertain" } });
+iXR.EventLevelStart(string level_name)
+iXR.EventLevelStart(string level_name, Dictionary<string, string> meta)
 ```
-This results in:
+Records the start of a level.
+
+##### EventLevelComplete
 ```csharp
-iXRSend.Event("assessment_start", "assessment_name=1,victory=uncertain");
+iXR.EventLevelComplete(string level_name, int score)
+iXR.EventLevelComplete(string level_name, int score, Dictionary<string, string> meta)
 ```
+Records the completion of a level.
 
-#### EventInteractionComplete
+**Note:** Duration is automatically calculated if EventLevelStart was used with the same level_name.
+
+##### EventAssessmentStart
 ```csharp
-iXRSend.EventInteractionComplete(string interaction_name, string score, string duration, Dictionary<string, string> meta)
+iXR.EventAssessmentStart(string assessment_name)
+iXR.EventAssessmentStart(string assessment_name, Dictionary<string, string> meta)
 ```
-This function wraps the `Event` method to create a standardized interaction complete event.
+Records the start of an assessment.
 
-**Parameters:**
-- `interaction_name` (string): The name of the interaction.
-- `score` (string): The score achieved in the interaction.
-- `duration` (string): The duration of the interaction in milliseconds.
-- `meta` (Dictionary<string, string>): Additional metadata for the event.
-
-**Example:**
+##### EventAssessmentComplete
 ```csharp
-iXRSend.EventInteractionComplete("place apple", "90", "84846", new Dictionary<string, string> { { "success", "true" } });
+iXR.EventAssessmentComplete(string assessment_name, int score)
+iXR.EventAssessmentComplete(string assessment_name, int score, Dictionary<string, string> meta)
 ```
-This results in:
+Records the completion of an assessment.
+
+**Note:** Duration is automatically calculated if EventAssessmentStart was used with the same assessment_name.
+
+##### EventInteractionStart
 ```csharp
-iXRSend.Event("assessment_complete", "verb=completed,interaction_name=place apple,score=90,duration=84846,success=true");
+iXR.EventInteractionStart(string interaction_name)
+iXR.EventInteractionStart(string interaction_name, Dictionary<string, string> meta)
 ```
+Records the start of an interaction.
 
-#### EventAssessmentComplete
+##### EventInteractionComplete
 ```csharp
-iXRSend.EventAssessmentComplete(string assessment_name, string score, string duration, Dictionary<string, string> meta)
+iXR.EventInteractionComplete(string interaction_name, int score)
+iXR.EventInteractionComplete(string interaction_name, int score, Dictionary<string, string> meta)
 ```
-This function wraps the `Event` method to create a standardized assessment complete event.
+Records the completion of an interaction.
 
-**Parameters:**
-- `assessment_name` (string): The name of the assessment.
-- `score` (string): The score achieved in the assessment.
-- `duration` (string): The duration of the assessment in milliseconds.
-- `meta` (Dictionary<string, string>): Additional metadata for the event.
+**Note:** Duration is automatically calculated if EventInteractionStart was used with the same interaction_name.
 
-**Example:**
+### Log Methods
+
+#### Log
 ```csharp
-iXRSend.EventAssessmentComplete("1", "4", "84846", new Dictionary<string, string> { { "success", "true" }, { "score_min", "0" }, { "score_max", "5" } });
+iXR.Log(LogLevel level, string text)
 ```
-This results in:
+Logs a message with the specified log level.
+
+#### Wrapper Functions
 ```csharp
-iXRSend.Event("assessment_complete", "verb=completed,assessment_name=1,score=4,duration=84846,success=true,score_min=0,score_max=5");
+iXR.LogDebug(string text)
+iXR.LogInfo(string text)
+iXR.LogWarn(string text)
+iXR.LogError(string text)
+iXR.LogCritical(string text)
 ```
+Log messages at specific levels.
 
-### Feature 2: Session Storage
-- iXR.StorageSetEntry(name text, StorageEntry text)
-    - name (String) - The name, `session` is a good option to start with
-    - StorageEntry (String)- Store any data as a string value. JSON is a good solution in many cases
+### Storage Methods
 
-- iXR.StorageGetEntry(name text)
-    - name (String) - The name, `session` is a good option to start with
+#### SetStorageEntry
+```csharp
+iXR.SetStorageEntry(Dictionary<string, string> data, string name = "state", bool keepLatest = true, string origin = null, bool sessionData = false)
+```
+Stores data in the session storage.
 
-- iXR.StorageRemoveEntry(name text)
-    - name (String) - The name, `session` is a good option to start with
+#### GetStorageEntry
+```csharp
+iXR.GetStorageEntry(string name = "state", string origin = null, string[] tagsAny = null, string[] tagsAll = null, bool userOnly = false)
+```
+Retrieves stored data.
 
-### Feature 3: Headset Tracking
+#### RemoveStorageEntry
+```csharp
+iXR.RemoveStorageEntry(string name = "state")
+```
+Removes a storage entry.
 
-Enable real-time tracking of headsets and controllers:
-1. By default it is on. However, if not, in the Configuration UI click on Headset Tracking.
-2. The SDK will automatically start tracking the HMD and controllers.
+#### GetAllStorageEntries
+```csharp
+iXR.GetAllStorageEntries()
+```
+Retrieves all storage entries for the user/device.
 
-### Feature 4: Object Tracking
-To track specific objects:
-1. Select the object you want to track in your Unity scene.
-2. In the Inspector window, click Add Component.
-3. Choose `informXR > Track Object`.
+### Telemetry Methods
 
-### Feature 5: Other Services
-- iXR.AIProxy(prompt text)
-    - prompt (String) - The GTP prompt
+#### Telemetry
+```csharp
+iXR.Telemetry(string name, Dictionary<string, string> data)
+```
+Records telemetry data.
 
+### AI Integration Methods
+
+#### AIProxy
+```csharp
+iXR.AIProxy(string prompt, string pastMessages = "", string botId = "")
+```
+Sends an AI prompt and returns the response.
 
 ## FAQ
 
