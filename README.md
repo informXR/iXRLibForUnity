@@ -65,6 +65,7 @@ This tutorial will include the full steps to publishing your application with in
 ## Sending Data
 
 ### Event Methods
+The Event Methods are designed to track user progress and activity throughout the experience. These functions allow developers to record specific actions, milestones, or interactions within the application, providing valuable insights into user behavior and engagement. By leveraging these methods, developers can create a detailed log of a user's journey, enabling comprehensive analysis and performance tracking.
 
 #### Event
 ```csharp
@@ -82,8 +83,7 @@ Records an event with optional metadata and location data.
 **Note:** The system automatically includes a timestamp and origin ("user" by default, "system" for lib-generated events) with each event.
 
 ### Event Wrapper Functions
-
-These functions provide standardized ways to record common event types.
+The Event Wrapper Functions are specialized versions of the Event method, tailored for common scenarios in XR experiences. These functions help enforce consistency in event logging across different parts of the application and are crucial for powering integrations with Learning Management System (LMS) platforms. By using these standardized wrapper functions, developers ensure that key events like starting or completing levels, assessments, or interactions are recorded in a uniform format. This consistency not only simplifies data analysis but also facilitates seamless communication with external educational systems, enhancing the overall learning ecosystem.
 
 #### EventLevelStart
 ```csharp
@@ -129,6 +129,7 @@ iXR.EventInteractionComplete(string interaction_name, int score, Dictionary<stri
 **Note:** For all "Complete" events, the duration is automatically calculated if the corresponding "Start" event was recorded with the same name.
 
 ### Log Methods
+The Log Methods provide straightforward logging functionality, similar to syslogs. These functions are available to developers by default, even across enterprise users, allowing for consistent and accessible logging across different deployment scenarios.
 
 #### Log
 ```csharp
@@ -152,6 +153,7 @@ iXR.LogCritical(string message)
 - `message` (string): The content of the log message.
 
 ### Storage Methods
+The Storage Methods enable developers to store and retrieve learner/player progress, facilitating the creation of long-form training content. When users log in using ArborXR's facility or the developer's in-app solution, these methods allow users to continue their progress on different headsets, ensuring a seamless learning experience across multiple sessions or devices.
 
 #### SetStorageEntry
 ```csharp
@@ -195,6 +197,7 @@ iXR.GetAllStorageEntries()
 **Returns:** A dictionary containing all storage entries for the current user/device.
 
 ### Telemetry Methods
+The Telemetry Methods provide comprehensive tracking of the XR environment. By default, they capture headset and controller movements, but can be extended to track any custom objects in the virtual space. These functions also allow collection of system-level data such as frame rates or device temperatures. This versatile tracking enables developers to gain deep insights into user interactions and application performance, facilitating optimization and enhancing the overall XR experience.
 
 #### Telemetry
 ```csharp
@@ -206,6 +209,7 @@ iXR.Telemetry(string name, Dictionary<string, string> data)
 - `data` (Dictionary<string, string>): Key-value pairs of telemetry data.
 
 ### AI Integration Methods
+The Integrations Methods offer developers access to additional services, enabling customized experiences for enterprise users. Currently, this includes access to GPT services through the AIProxy method, allowing for advanced AI-powered interactions within the XR environment. More integration services are planned for future releases, further expanding the capabilities available to developers for creating tailored enterprise solutions.
 
 #### AIProxy
 ```csharp
