@@ -12,6 +12,7 @@ public class Authentication : SdkBehaviour
     private string _arborOrgId;
     private string _arborDeviceId;
     private string _arborAuthSecret;
+    private string _arborUserToken;
     private Partner _partner = Partner.eNone;
     private DateTime _lostFocus = DateTime.MaxValue;
     
@@ -37,7 +38,8 @@ public class Authentication : SdkBehaviour
     {
         _arborOrgId = Callback.Service.GetOrgId();
         _arborDeviceId = Callback.Service.GetDeviceId();
-        _arborAuthSecret = Callback.Service.GetAuthSecret();
+        _arborAuthSecret = Callback.Service.GetFingerprint();
+        _arborUserToken = Callback.Service.getAccessToken();
     }
     
     private sealed class Callback : IConnectionCallback
@@ -113,7 +115,10 @@ public class Authentication : SdkBehaviour
             Debug.LogError("iXRLib - Missing Auth Secret. Cannot authenticate.");
             return;
         }
-        
+
+        string userId = _arborUserToken;
+        if (string.IsNullOrEmpty(userId)) userId = Configuration.instance.userId;
+
         var result = iXRInit.Authenticate(Configuration.instance.appID, orgId, deviceId, authSecret, _partner);
         if (result == iXRResult.Ok)
         {
