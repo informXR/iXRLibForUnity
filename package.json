@@ -1,8 +1,8 @@
 {
-    "name": "com.informxr.unity-sdk",
+    "name": "com.informxr.unity",
     "version": "1.0.0",
-    "displayName": "iXRLib Unity SDK",
-    "description": "iXRLib Unity SDK for analytics",
+    "displayName": "iXRLib for Unity",
+    "description": "iXRLib analytics for Unity",
     "unity": "2021.3",
     "author": {
       "name": "informXR",
