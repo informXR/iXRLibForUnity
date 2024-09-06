@@ -39,7 +39,7 @@ public class Authentication : SdkBehaviour
     {
         _arborOrgId = Callback.Service.GetOrgId();
         _arborDeviceId = Callback.Service.GetDeviceId();
-        _arborAuthSecret = Callback.Service.GetAuthSecret();
+        _arborAuthSecret = Callback.Service.GetFingerprint();
     }
     
     private sealed class Callback : IConnectionCallback
