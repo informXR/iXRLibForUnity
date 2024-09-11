@@ -12,7 +12,7 @@ public class ConfigInspector : Editor
             "Application ID (required)", "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"), config.appID);
         config.orgID = EditorGUILayout.TextField(new GUIContent(
             "Organization ID (optional)", "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"), config.orgID);
-        config.authSecret = EditorGUILayout.TextField("Authorization Secret (optional)", config.authSecret);
+        config.fingerprint = EditorGUILayout.TextField("Fingerprint (optional)", config.fingerprint);
         
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Player Tracking", EditorStyles.boldLabel);
