@@ -472,4 +472,10 @@ public class iXR
         
         return Event("level_complete", meta);
     }
+
+    public static void SetUserId(string userId)
+    {
+	    iXRAuthentication.UserId = userId;
+	    Authentication.Authenticate();
+    }
 }
