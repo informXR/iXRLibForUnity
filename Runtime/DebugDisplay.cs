@@ -5,7 +5,7 @@ using UnityEngine;
 public class DebugDisplay : MonoBehaviour
 {
     public TextMeshProUGUI logText;
-    public int maxLines = 18;
+    private const int MaxLines = 15;
 
     private readonly Queue<string> _logQueue = new Queue<string>();
 
@@ -24,7 +24,7 @@ public class DebugDisplay : MonoBehaviour
     {
         string newLog = $"{Time.time} {type}: {logString}";
         _logQueue.Enqueue(newLog);
-        if (_logQueue.Count > maxLines)
+        if (_logQueue.Count > MaxLines)
         {
             _logQueue.Dequeue();
         }
