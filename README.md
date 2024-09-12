@@ -31,7 +31,7 @@ The informXR SDK for Unity empowers developers **for free** to seamlessly integr
 
 1. On the top menu choose `Window > Package Manager`.
 2. Click the **'+'** button in the top left and select 'Add Package from git URL'  
-3. Input `https://github.com/informXR/iXRLibUnitySDK.git`
+3. Input `https://github.com/informXR/iXRLibForUnity.git`
 4. Once the package is installed, you should see informXR appear in your Unity toolbar.
 
 ## Configuration
@@ -48,12 +48,12 @@ To get started with the informXR SDK, you'll need to configure your application 
 
 ### Organization ID and Authorization Secret Location - Web App
 Follow the visual instructions below for clarification on how to get to the Organization ID and Authorization Secret in Settings.
-![Visual Tutorial to get to Settings](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/GotoSettings.png?raw=true "Go to Settings")
-![Visual Tutorial to get to Organization Codes](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/goToOrganizationCodes.png?raw=true "Go to Organization Codes")
+![Visual Tutorial to get to Settings](https://github.com/informXR/iXRLibForUnity/blob/main/READMEFiles/GotoSettings.png?raw=true "Go to Settings")
+![Visual Tutorial to get to Organization Codes](https://github.com/informXR/iXRLibForUnity/blob/main/READMEFiles/goToOrganizationCodes.png?raw=true "Go to Organization Codes")
 
 ### Application ID Location - Web App
 Simply use the provided tutorials with the 'Get Started Button' shown below, and choose the 'Content Developer' path.
-![Visual Tutorial to get App ID](https://github.com/informXR/iXRLibUnitySDK/blob/main/READMEFiles/PubAppTour1.png?raw=true "Press Get Started")
+![Visual Tutorial to get App ID](https://github.com/informXR/iXRLibForUnity/blob/main/READMEFiles/PubAppTour1.png?raw=true "Press Get Started")
 
 ## Sending Data
 
