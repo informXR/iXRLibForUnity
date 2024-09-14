@@ -218,6 +218,16 @@ iXR.AIProxy(string prompt, string past_messages = "", string bot_id = "")
 
 **Note:** AIProxy calls are processed immediately and bypass the cache system. However, they still respect the SendRetriesOnFailure and SendRetryInterval settings.
 
+### Authentication Methods
+
+#### SetUserId
+```csharp
+iXR.SetUserId(string userId)
+```
+
+**Parameters:**
+- `userId` (string): The User ID used during authentication (setting this with trigger re-authentication).
+
 ## FAQ
 
 ### Q: How do I retrieve my Application ID and Authorization Secret?
