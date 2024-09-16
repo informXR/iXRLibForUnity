@@ -13,7 +13,7 @@ public class Authentication : SdkBehaviour
     private static Authentication _instance;
     private static string _orgId;
     private static string _deviceId;
-    private static string _fingerprint;
+    private static string _authSecret;
     private static string _userId;
     private static string _appId;
     private static Partner _partner = Partner.eNone;
@@ -44,7 +44,7 @@ public class Authentication : SdkBehaviour
         _partner = Partner.eArborXR;
         _orgId = orgId;
         _deviceId = Callback.Service.GetDeviceId();
-        _fingerprint = Callback.Service.GetFingerprint();
+        _authSecret = Callback.Service.GetFingerprint();
         _userId = Callback.Service.GetAccessToken();
     }
     
@@ -111,8 +111,8 @@ public class Authentication : SdkBehaviour
             return false;
         }
 
-        _fingerprint = Configuration.instance.fingerprint;
-        if (string.IsNullOrEmpty(_fingerprint))
+        _authSecret = Configuration.instance.authSecret;
+        if (string.IsNullOrEmpty(_authSecret))
         {
             Debug.LogError("iXRLib - Missing Auth Secret. Cannot authenticate.");
             return false;
@@ -125,7 +125,7 @@ public class Authentication : SdkBehaviour
 
     public static void Authenticate()
     {
-        var result = iXRInit.Authenticate(_appId, _orgId, _deviceId, _fingerprint, _partner);
+        var result = iXRInit.Authenticate(_appId, _orgId, _deviceId, _authSecret, _partner);
         if (result == iXRResult.Ok)
         {
             Debug.Log("iXRLib - Authenticated successfully");

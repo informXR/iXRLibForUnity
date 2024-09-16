@@ -21,7 +21,7 @@ public class Configuration : ScriptableObject
     
     [Tooltip("Required")] public string appID;
     [Tooltip("Optional")] public string orgID;
-    [Tooltip("Optional")] public string fingerprint;
+    [Tooltip("Optional")] public string authSecret;
     
     public bool headsetTracking;
     public int trackingUpdatesPerMinute = 4;
