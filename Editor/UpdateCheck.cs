@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using UnityEditor;
-using System.Net.Http;
 using System.Threading.Tasks;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
@@ -9,7 +8,7 @@ using UnityEditor.PackageManager.Requests;
 public class UpdateCheck
 {
     private const string PackageUrl = "https://github.com/informXR/iXRLibUnitySDK.git";
-    private const string PackageName = "com.informxr.unity-sdk";
+    private const string PackageName = "com.informxr.unity";
     private const string SkippedVersionKey = "SkippedPackageVersion";
     private const int UpdateCheckFrequencyDays = 1;
     public const string UpdateCheckPref = "iXR_updateCheck";
@@ -38,7 +37,7 @@ public class UpdateCheck
         {
             if (forced)
             {
-                EditorUtility.DisplayDialog("Up-to-date", "You have the latest version of the package.", "OK");
+                EditorUtility.DisplayDialog("Up-to-date", "You have the latest version of 'iXRLib for Unity'.", "OK");
             }
         }
         else
