@@ -39,7 +39,6 @@ public class DebugDisplay : MonoBehaviour
     
     private void ToggleCanvas(InputAction.CallbackContext context)
     {
-        Debug.Log("TOGGLE!!!");
         // Toggle the Canvas visibility
         canvasToToggle.enabled = !canvasToToggle.enabled;
     }
