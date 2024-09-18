@@ -228,6 +228,11 @@ iXR.SetUserId(string userId)
 **Parameters:**
 - `userId` (string): The User ID used during authentication (setting this with trigger re-authentication).
 
+## How-To
+
+### Debug Window
+This feature routes all debug messages to a window within the VR space. To use this feature, simply drag the DebugCanvas Prefab from 'iXRLib for Unity'/Assets/Prefabs, to whatever object in the scene you want this window attached to (i.e. Left Controller).
+
 ## FAQ
 
 ### Q: How do I retrieve my Application ID and Authorization Secret?
