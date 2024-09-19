@@ -228,6 +228,13 @@ iXR.SetUserId(string userId)
 **Parameters:**
 - `userId` (string): The User ID used during authentication (setting this with trigger re-authentication).
 
+## Debug Window
+The Debug Window is a little bonus feature from the iXRLib developers. 
+To help with general debugging, this feature routes a copy of all iXRLib messages (Logs, Events, etc) to a window within the VR space that you can easily attached to an object like one of the controllers. This enables developers to view logs in VR without having to repeatedly take on and off your headset while debugging. If enabled, this feature can be disabled at runtime by pressing the `Primary Controller Button`.
+
+### Setup
+To use this feature, simply drag the `DebugCanvas` Prefab from `iXRLib for Unity/Assets/Prefabs`, to whatever object in the scene you want this window attached to (i.e. `Left Controller`).
+
 ## FAQ
 
 ### Q: How do I retrieve my Application ID and Authorization Secret?
