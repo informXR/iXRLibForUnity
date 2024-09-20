@@ -87,7 +87,7 @@ public class Authentication : SdkBehaviour
     private static bool GetDataFromConfig()
     {
         const string appIdPattern = "^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$";
-        if (!Regex.IsMatch(Configuration.instance.appID, appIdPattern))
+        if (string.IsNullOrEmpty(Configuration.instance.appID) || !Regex.IsMatch(Configuration.instance.appID, appIdPattern))
         {
             Debug.LogError("iXRLib - Invalid Application ID. Cannot authenticate.");
             return false;
