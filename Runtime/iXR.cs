@@ -107,6 +107,14 @@ public class iXR
 	{
 		return iXRSend.AddTelemetryEntry(name, data);
 	}
+	public static iXRResult TelemetryEntrySynchronous(string name, string data)
+	{
+		return iXRLibInterop.AddTelemetryEntrySynchronous(name, data);
+	}
+	public static iXRResult TelemetryEntry(string name, string data)
+	{
+		return iXRLibInterop.AddTelemetryEntry(name, data);
+	}
 	// Storage
 	public static string StorageGetDefaultEntry()
 	{
