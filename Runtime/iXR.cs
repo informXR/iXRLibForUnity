@@ -203,16 +203,16 @@ public class iXR
 
 	// Modified EventInteractionComplete methods.
 
-	public static iXRResult EventInteractionComplete(string interactionId, string interactionName, string score, Dictionary<string, string> meta = null)
+	public static iXRResult EventInteractionComplete(string interactionId, string interactionName, string result, LMSType eLmsType = LMSType.Null, Dictionary<string, string> meta = null)
     {
         meta = meta ?? new Dictionary<string, string>();
 		// ---
-		return iXRSend.EventInteractionComplete(interactionId, interactionName, score, meta);
+		return iXRSend.EventInteractionComplete(interactionId, interactionName, result, eLmsType, meta);
     }
 
-	public static iXRResult EventInteractionComplete(string interactionId, string interactionName, string score, string metaString)
+	public static iXRResult EventInteractionComplete(string interactionId, string interactionName, string result, LMSType eLmsType = LMSType.Null, string metaString = null)
 	{
-		return iXRSend.EventInteractionComplete(interactionId, interactionName, score, metaString);
+		return iXRSend.EventInteractionComplete(interactionId, interactionName, result, eLmsType, metaString);
 	}
 
 	public static iXRResult EventLevelStart(string levelName, Dictionary<string, string> meta = null)
