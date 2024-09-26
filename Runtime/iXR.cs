@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using iXRLib;
+using Microsoft.MixedReality.Toolkit.Experimental.UI;
 using UnityEngine;
 
 public class iXR
@@ -237,5 +237,15 @@ public class iXR
 	public static iXRResult EventLevelComplete(string levelName, string score, string metaString)
 	{
 		return iXRSend.EventLevelComplete(levelName, score, metaString);
+	}
+
+	public static void PresentKeyboard()
+	{
+		NonNativeKeyboard.Instance.PresentKeyboard();
+	}
+
+	public static string GetKeyboardText()
+	{
+		return NonNativeKeyboard.Instance.InputField.text;
 	}
 }
