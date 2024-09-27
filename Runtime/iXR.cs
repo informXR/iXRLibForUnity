@@ -189,30 +189,30 @@ public class iXR
 		return iXRSend.EventAssessmentComplete(assessmentName, score, metaString);
 	}
 
-	public static iXRResult EventInteractionStart(string interactionId, string interactionName, Dictionary<string, string> meta = null)
+	public static iXRResult EventInteractionStart(string interactionName, Dictionary<string, string> meta = null)
     {
         meta = meta ?? new Dictionary<string, string>();
 		// ---
-		return iXRSend.EventInteractionStart(interactionId, interactionName, meta);
+		return iXRSend.EventInteractionStart(interactionName, meta);
     }
 
-	public static iXRResult EventInteractionStart(string interactionId, string interactionName, string metaString)
+	public static iXRResult EventInteractionStart(string interactionName, string metaString)
 	{
-		return iXRSend.EventInteractionStart(interactionId, interactionName, metaString);
+		return iXRSend.EventInteractionStart(interactionName, metaString);
 	}
 
 	// Modified EventInteractionComplete methods.
 
-	public static iXRResult EventInteractionComplete(string interactionId, string interactionName, string result, LMSType eLmsType = LMSType.Null, Dictionary<string, string> meta = null)
+	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails, LMSType eLmsType = LMSType.Null, Dictionary<string, string> meta = null)
     {
         meta = meta ?? new Dictionary<string, string>();
 		// ---
-		return iXRSend.EventInteractionComplete(interactionId, interactionName, result, eLmsType, meta);
+		return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, eLmsType, meta);
     }
 
-	public static iXRResult EventInteractionComplete(string interactionId, string interactionName, string result, LMSType eLmsType = LMSType.Null, string metaString = null)
+	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails, LMSType eLmsType = LMSType.Null, string metaString = null)
 	{
-		return iXRSend.EventInteractionComplete(interactionId, interactionName, result, eLmsType, metaString);
+		return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, eLmsType, metaString);
 	}
 
 	public static iXRResult EventLevelStart(string levelName, Dictionary<string, string> meta = null)
