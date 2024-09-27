@@ -12,6 +12,7 @@ public static class Initialize
         iXRInit.Start();
         SetConfigValues();
         Authentication.Initialize();
+        KeyboardPositioner.Initialize();
         TrackSystemInfo.Initialize();
 #if UNITY_ANDROID
         TrackInputDevices.Initialize();
