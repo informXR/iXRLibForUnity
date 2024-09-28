@@ -20,7 +20,7 @@ The informXR SDK for Unity empowers developers **for free** to seamlessly integr
 
 ### Key SDK Features
 
-- **Event Tracking**: Get error logs and user interactions based events within your XR applications.
+- **Event Tracking**: Get error logs and user interaction-based events within your XR applications.
 - **HMD and Controller Tracking**: Real-time tracking of head-mounted displays (HMD) and controllers for a comprehensive XR experience.   
 - **Object Tracking**: Track specific objects within your XR environment to monitor interactions and movements.
 - **System Information Tracking**: Capture system-level data, such as device specifications and performance metrics.  
@@ -29,9 +29,9 @@ The informXR SDK for Unity empowers developers **for free** to seamlessly integr
 
 ### Steps to Install
 
-1. On the top menu choose `Window > Package Manager`.
-2. Click the **'+'** button in the top left and select 'Add Package from git URL'  
-3. Input `https://github.com/informXR/iXRLibForUnity.git`
+1. On the top menu, choose `Window > Package Manager`.
+2. Click the **'+'** button in the top left and select 'Add Package from git URL'.
+3. Input `https://github.com/informXR/iXRLibForUnity.git`.
 4. Once the package is installed, you should see informXR appear in your Unity toolbar.
 
 ## Configuration
@@ -40,7 +40,7 @@ The informXR SDK for Unity empowers developers **for free** to seamlessly integr
 
 To get started with the informXR SDK, you'll need to configure your application with the necessary authentication details.
 
-1. On the top menu choose `informXR > Configuration`.
+1. On the top menu, choose `informXR > Configuration`.
 2. Enter the Application ID, Organization ID, and Authorization Secret. These can be retrieved from the [informXR Web Application](https://app.informxr.io/) which requires a **free account** to continue.
      * Organization ID and Authorization Secret: Available under `Settings > Organization Codes`.
      * Application ID: Available in the Web Dashboard under your application settings. Please use the 'Get Started' tutorial button on the Home page and then choose the 'Content Developer' path for step-by-step instructions.
@@ -62,11 +62,11 @@ The Event Methods are designed to track user progress and activity throughout th
 
 #### Event
 ```csharp
-public void iXR.Event( string name) 
-    
-public void iXR.Event( string name, Dictionary<string, string> meta = null)
+public void iXR.Event(string name) 
 
-public void iXR.Event( string name, Dictionary<string, string> meta = null, Vector3 location_data = null)
+public void iXR.Event(string name, Dictionary<string, string> meta = null)
+
+public void iXR.Event(string name, Dictionary<string, string> meta = null, Vector3 location_data = null)
 ```
 Records an event with optional metadata and location data.
 
@@ -82,28 +82,21 @@ The Event Wrapper Functions are specialized versions of the Event method, tailor
 
 #### EventLevelStart
 ```csharp
-public void iXR.EventEventLevelStart( string levelName ) 
-    
-public void iXR.EventLevelStart( string levelName, Dictionary<string, string> meta = null )
-public void iXR.EventLevelStart( string levelName, metaString = "" )
+public void iXR.EventLevelStart(string levelName) 
+
+public void iXR.EventLevelStart(string levelName, Dictionary<string, string> meta = null)
+public void iXR.EventLevelStart(string levelName, string metaString = "")
 ```
 Note: The meta/metaString parameter is optional and can be a string or a dictionary.
 
-
-#### EventLevelStart
-```csharp
-iXR.EventLevelStart(string levelName)
-iXR.EventLevelStart(string levelName, Dictionary<string, string> meta)
-```
-
 #### EventLevelComplete
 ```csharp
-public void iXR.EventLevelComplete( string levelName, int score )
- 
-public void iXR.EventLevelComplete( string levelName, int score, Dictionary<string, string> meta = null )
-public void iXR.EventLevelComplete( string levelName, int score, metaString = "" )
+public void iXR.EventLevelComplete(string levelName, int score)
+
+public void iXR.EventLevelComplete(string levelName, int score, Dictionary<string, string> meta = null)
+public void iXR.EventLevelComplete(string levelName, int score, string metaString = "")
 ```
-Note: If you use iXR.EventLevelStart first, it will automatically record the duration of the level, and give metrics for users who start but never end the level.
+Note: If you use iXR.EventLevelStart first, it will automatically record the duration of the level and provide metrics for users who start but never end the level.
 
 #### Assessments (LMS Compatible)
 Assessments are intended to track the overall performance of a learner across multiple Objectives and Interactions. 
@@ -112,10 +105,10 @@ Assessments are intended to track the overall performance of a learner across mu
 
 #### EventAssessmentStart
 ```csharp
-public void iXR.EventAssessmentStart( string assessmentName ) 
-    
-public void iXR.EventAssessmentStart( string assessmentName, Dictionary<string, string> meta = null )
-public void iXR.EventAssessmentStart( string assessmentName, metaString = "" )
+public void iXR.EventAssessmentStart(string assessmentName) 
+
+public void iXR.EventAssessmentStart(string assessmentName, Dictionary<string, string> meta = null)
+public void iXR.EventAssessmentStart(string assessmentName, string metaString = "")
 ```
 
 #### EventAssessmentComplete
@@ -128,10 +121,10 @@ public enum ResultOptions
     Incomplete
 }
 
-iXR.EventAssessmentComplete(string assessmentName, int score, ResultOptions result = ResultOptions.Complete )
+public void iXR.EventAssessmentComplete(string assessmentName, int score, ResultOptions result = ResultOptions.Complete)
 
-iXR.EventAssessmentComplete(string assessmentName, int score, ResultOptions result = ResultOptions.Complete, Dictionary<string, string> meta)
-iXR.EventAssessmentComplete(string assessmentName, int score, ResultOptions result = ResultOptions.Complete, metaString = "" )
+public void iXR.EventAssessmentComplete(string assessmentName, int score, ResultOptions result = ResultOptions.Complete, Dictionary<string, string> meta = null)
+public void iXR.EventAssessmentComplete(string assessmentName, int score, ResultOptions result = ResultOptions.Complete, string metaString = "")
 ```
 
 #### Objectives (LMS Compatible)
@@ -141,10 +134,10 @@ Objectives are intended to track the performance of a learner on a specific task
 
 #### EventObjectiveStart
 ```csharp
-iXR.EventObjectiveStart(string objectiveName)
+public void iXR.EventObjectiveStart(string objectiveName)
 
-iXR.EventObjectiveStart(string objectiveName, Dictionary<string, string> meta)
-iXR.EventObjectiveStart(string objectiveName, metaString = "" )
+public void iXR.EventObjectiveStart(string objectiveName, Dictionary<string, string> meta)
+public void iXR.EventObjectiveStart(string objectiveName, string metaString = "")
 ```
 
 #### EventObjectiveComplete
@@ -157,26 +150,26 @@ public enum ResultOptions
     Incomplete
 }
 
-iXR.EventObjectiveComplete(string objectiveName, int score )
+iXR.EventObjectiveComplete(string objectiveName, int score)
 
-iXR.EventObjectiveComplete(string objectiveName, int score, ResultOptions result = ResultOptions.Complete )
+public void iXR.EventObjectiveComplete(string objectiveName, int score, ResultOptions result = ResultOptions.Complete)
 
-iXR.EventObjectiveComplete(string objectiveName, int score, ResultOptions result = ResultOptions.Complete, Dictionary<string, string> meta)
-iXR.EventObjectiveComplete(string objectiveName, int score, ResultOptions result = ResultOptions.Complete, metaString = "" )
+public void iXR.EventObjectiveComplete(string objectiveName, int score, ResultOptions result = ResultOptions.Complete, Dictionary<string, string> meta = null)
+public void iXR.EventObjectiveComplete(string objectiveName, int score, ResultOptions result = ResultOptions.Complete, string metaString = "")
 ```
 
 #### Interactions (LMS Compatible)
 Interactions are intended to track the performance of a learner on a specific task or interaction. 
 * This gives you the ability to record the learner's performance on a specific interaction and choices they make.
-* Because of this the options are a bit different than Assessments or Objectives, and you should look at our documentation carefully to use Interactions to their full advantage.
+* Because of this, the options are a bit different than Assessments or Objectives, and you should look at our documentation carefully to use Interactions to their full advantage.
 * You can have multiple Interactions per Assessment. Note: SCORM limits to 255 Interactions per Assessment.
 
 #### EventInteractionStart
 ```csharp
-iXR.EventInteractionStart(string interactionName)
+public void iXR.EventInteractionStart(string interactionName)
 
-iXR.EventInteractionStart(string interactionName, Dictionary<string, string> meta)
-iXR.EventInteractionStart(string interactionName, metaString = "" )
+public void iXR.EventInteractionStart(string interactionName, Dictionary<string, string> meta)
+public void iXR.EventInteractionStart(string interactionName, string metaString = "")
 ```
 
 #### EventInteractionComplete
@@ -190,22 +183,22 @@ public enum InteractionType
    Number // integer
 }
 
-iXR.EventInteractionComplete(string interactionName, string result)
+public void iXR.EventInteractionComplete(string interactionName, string result)
 
-iXR.EventInteractionComplete(string interactionName, string result, string result_details = null)
+public void iXR.EventInteractionComplete(string interactionName, string result, string result_details = null)
 
-iXR.EventInteractionComplete(string interactionName, string result, string result_details = null, InteractionType type = InteractionType.Text = null)
+public void iXR.EventInteractionComplete(string interactionName, string result, string result_details = null, InteractionType type = InteractionType.Text)
 
-iXR.EventInteractionComplete(string interactionName, string result, string result_details = null, InteractionType type = InteractionType.Text = null, Dictionary<string, string> meta = null )
-iXR.EventInteractionComplete(string interactionName, string result, string result_details = null, InteractionType type = InteractionType.Text = null, metaString = "" )
+public void iXR.EventInteractionComplete(string interactionName, string result, string result_details = null, InteractionType type = InteractionType.Text, Dictionary<string, string> meta = null)
+public void iXR.EventInteractionComplete(string interactionName, string result, string result_details = null, InteractionType type = InteractionType.Text, string metaString = "")
 ```
 
 **Parameters for all Event Wrapper Functions:**
 - `levelName/assessmentName/objectiveName/interactionName` (string): The identifier for the level, assessment, objective, or interaction.
 - `score` (int): The numerical score achieved. While typically between 1-100, any integer is valid. In metadata, you can also set a minScore and maxScore to define the range of scores for this objective.
 - `result` (ResultOptions for Assessment and Objective): The basic result of the assessment or objective.
-- `result` (Interactions): The result for the interaction are based on the InteractionType.
-- `result_details` (string): Optional. Additional details about the result. For interactions this can be a single character or a string. For example: "a", "b", "c" or "correct", "incorrect".
+- `result` (Interactions): The result for the interaction is based on the InteractionType.
+- `result_details` (string): Optional. Additional details about the result. For interactions, this can be a single character or a string. For example: "a", "b", "c" or "correct", "incorrect".
 - `type` (InteractionType): Optional. The type of interaction for this event.
 - `meta` (Dictionary<string, string>): Optional. Additional key-value pairs describing the event.
 
@@ -216,7 +209,7 @@ The Log Methods provide straightforward logging functionality, similar to syslog
 
 #### Log
 ```csharp
-iXR.Log(LogLevel level, string message)
+public void iXR.Log(LogLevel level, string message)
 ```
 
 **Parameters:**
@@ -225,11 +218,11 @@ iXR.Log(LogLevel level, string message)
 
 #### Log Wrapper Functions
 ```csharp
-iXR.LogDebug(string message)
-iXR.LogInfo(string message)
-iXR.LogWarn(string message)
-iXR.LogError(string message)
-iXR.LogCritical(string message)
+public void iXR.LogDebug(string message)
+public void iXR.LogInfo(string message)
+public void iXR.LogWarn(string message)
+public void iXR.LogError(string message)
+public void iXR.LogCritical(string message)
 ```
 
 **Parameters:**
@@ -240,7 +233,7 @@ The Storage Methods enable developers to store and retrieve learner/player progr
 
 #### SetStorageEntry
 ```csharp
-iXR.SetStorageEntry(Dictionary<string, string> data, string name = "state", bool keep_latest = true, string origin = null, bool session_data = false)
+public void iXR.SetStorageEntry(Dictionary<string, string> data, string name = "state", bool keep_latest = true, string origin = null, bool session_data = false)
 ```
 
 **Parameters:**
@@ -252,7 +245,7 @@ iXR.SetStorageEntry(Dictionary<string, string> data, string name = "state", bool
 
 #### GetStorageEntry
 ```csharp
-iXR.GetStorageEntry(string name = "state", string origin = null, string[] tags_any = null, string[] tags_all = null, bool user_only = false)
+public Dictionary<string, string> iXR.GetStorageEntry(string name = "state", string origin = null, string[] tags_any = null, string[] tags_all = null, bool user_only = false)
 ```
 
 **Parameters:**
@@ -266,7 +259,7 @@ iXR.GetStorageEntry(string name = "state", string origin = null, string[] tags_a
 
 #### RemoveStorageEntry
 ```csharp
-iXR.RemoveStorageEntry(string name = "state")
+public void iXR.RemoveStorageEntry(string name = "state")
 ```
 
 **Parameters:**
@@ -274,7 +267,7 @@ iXR.RemoveStorageEntry(string name = "state")
 
 #### GetAllStorageEntries
 ```csharp
-iXR.GetAllStorageEntries()
+public Dictionary<string, string> iXR.GetAllStorageEntries()
 ```
 
 **Returns:** A dictionary containing all storage entries for the current user/device.
@@ -284,7 +277,7 @@ The Telemetry Methods provide comprehensive tracking of the XR environment. By d
 
 #### Telemetry
 ```csharp
-iXR.Telemetry(string name, Dictionary<string, string> data)
+public void iXR.Telemetry(string name, Dictionary<string, string> data)
 ```
 
 **Parameters:**
@@ -292,11 +285,11 @@ iXR.Telemetry(string name, Dictionary<string, string> data)
 - `data` (Dictionary<string, string>): Key-value pairs of telemetry data.
 
 ### AI Integration Methods
-The Integrations Methods offer developers access to additional services, enabling customized experiences for enterprise users. Currently, this includes access to GPT services through the AIProxy method, allowing for advanced AI-powered interactions within the XR environment. More integration services are planned for future releases, further expanding the capabilities available to developers for creating tailored enterprise solutions.
+The Integration Methods offer developers access to additional services, enabling customized experiences for enterprise users. Currently, this includes access to GPT services through the AIProxy method, allowing for advanced AI-powered interactions within the XR environment. More integration services are planned for future releases, further expanding the capabilities available to developers for creating tailored enterprise solutions.
 
 #### AIProxy
 ```csharp
-iXR.AIProxy(string prompt, string past_messages = "", string bot_id = "")
+public string iXR.AIProxy(string prompt, string past_messages = "", string bot_id = "")
 ```
 
 **Parameters:**
@@ -312,11 +305,17 @@ iXR.AIProxy(string prompt, string past_messages = "", string bot_id = "")
 
 #### SetUserId
 ```csharp
-iXR.SetUserId(string userId)
+public void iXR.SetUserId(string userId)
+```
+
+#### SetUserMeta
+```csharp
+public void iXR.SetUserMeta(string metaString)
 ```
 
 **Parameters:**
 - `userId` (string): The User ID used during authentication (setting this with trigger re-authentication).
+- `metaString` (string): A string of key-value pairs in JSON format.
 
 ## Debug Window
 The Debug Window is a little bonus feature from the iXRLib developers. 
