@@ -77,6 +77,8 @@ Records an event with optional metadata and location data.
 
 **Note:** The system automatically includes a timestamp and origin ("user" by default, "system" for lib-generated events) with each event.
 
+...
+
 ### Event Wrapper Functions
 The Event Wrapper Functions are specialized versions of the Event method, tailored for common scenarios in XR experiences. These functions help enforce consistency in event logging across different parts of the application and are crucial for powering integrations with Learning Management System (LMS) platforms. By using these standardized wrapper functions, developers ensure that key events like starting or completing levels, assessments, or interactions are recorded in a uniform format. This consistency not only simplifies data analysis but also facilitates seamless communication with external educational systems, enhancing the overall learning ecosystem.
 
@@ -98,7 +100,7 @@ public void iXR.EventLevelComplete(string levelName, int score, string metaStrin
 ```
 Note: If you use iXR.EventLevelStart first, it will automatically record the duration of the level and provide metrics for users who start but never end the level.
 
-#### Assessments (LMS Compatible)
+### 🎓 Assessments (LMS Compatible)
 Assessments are intended to track the overall performance of a learner across multiple Objectives and Interactions. 
 * Think of it as the learner's score for a specific course or curriculum.
 * When the Assessment is complete, it will automatically record and close out the Assessment in the various LMS platforms we support.
@@ -127,7 +129,7 @@ public void iXR.EventAssessmentComplete(string assessmentName, int score, Result
 public void iXR.EventAssessmentComplete(string assessmentName, int score, ResultOptions result = ResultOptions.Complete, string metaString = "")
 ```
 
-#### Objectives (LMS Compatible)
+### 🎯 Objectives (LMS Compatible)
 Objectives are intended to track the performance of a learner on a specific task or objective. 
 * Think of it as the learner's score for a specific section of a course or curriculum.
 * You can have multiple Objectives per Assessment. Note: SCORM limits to 255 Objectives per Assessment.
@@ -158,12 +160,13 @@ public void iXR.EventObjectiveComplete(string objectiveName, int score, ResultOp
 public void iXR.EventObjectiveComplete(string objectiveName, int score, ResultOptions result = ResultOptions.Complete, string metaString = "")
 ```
 
-#### Interactions (LMS Compatible)
+### 🔄 Interactions (LMS Compatible)
 Interactions are intended to track the performance of a learner on a specific task or interaction. 
 * This gives you the ability to record the learner's performance on a specific interaction and choices they make.
 * Because of this, the options are a bit different than Assessments or Objectives, and you should look at our documentation carefully to use Interactions to their full advantage.
 * You can have multiple Interactions per Assessment. Note: SCORM limits to 255 Interactions per Assessment.
 
+...
 #### EventInteractionStart
 ```csharp
 public void iXR.EventInteractionStart(string interactionName)
