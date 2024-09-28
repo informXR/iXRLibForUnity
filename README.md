@@ -62,9 +62,11 @@ The Event Methods are designed to track user progress and activity throughout th
 
 #### Event
 ```csharp
-iXR.Event(string name)
-iXR.Event(string name, Dictionary<string, string> meta)
-iXR.Event(string name, Dictionary<string, string> meta, Vector3 location_data)
+public void iXR.Event( string name) 
+    
+public void iXR.Event( string name, Dictionary<string, string> meta = null)
+
+public void iXR.Event( string name, Dictionary<string, string> meta = null, Vector3 location_data = null)
 ```
 Records an event with optional metadata and location data.
 
@@ -80,43 +82,131 @@ The Event Wrapper Functions are specialized versions of the Event method, tailor
 
 #### EventLevelStart
 ```csharp
-iXR.EventLevelStart(string level_name)
-iXR.EventLevelStart(string level_name, Dictionary<string, string> meta)
+public void iXR.EventEventLevelStart( string levelName ) 
+    
+public void iXR.EventLevelStart( string levelName, Dictionary<string, string> meta = null )
+public void iXR.EventLevelStart( string levelName, metaString = "" )
+```
+Note: The meta/metaString parameter is optional and can be a string or a dictionary.
+
+
+#### EventLevelStart
+```csharp
+iXR.EventLevelStart(string levelName)
+iXR.EventLevelStart(string levelName, Dictionary<string, string> meta)
 ```
 
 #### EventLevelComplete
 ```csharp
-iXR.EventLevelComplete(string level_name, int score)
-iXR.EventLevelComplete(string level_name, int score, Dictionary<string, string> meta)
+public void iXR.EventLevelComplete( string levelName, int score )
+ 
+public void iXR.EventLevelComplete( string levelName, int score, Dictionary<string, string> meta = null )
+public void iXR.EventLevelComplete( string levelName, int score, metaString = "" )
 ```
+Note: If you use iXR.EventLevelStart first, it will automatically record the duration of the level, and give metrics for users who start but never end the level.
+
+#### Assessments (LMS Compatible)
+Assessments are intended to track the overall performance of a learner across multiple Objectives and Interactions. 
+* Think of it as the learner's score for a specific course or curriculum.
+* When the Assessment is complete, it will automatically record and close out the Assessment in the various LMS platforms we support.
 
 #### EventAssessmentStart
 ```csharp
-iXR.EventAssessmentStart(string assessment_name)
-iXR.EventAssessmentStart(string assessment_name, Dictionary<string, string> meta)
+public void iXR.EventAssessmentStart( string assessmentName ) 
+    
+public void iXR.EventAssessmentStart( string assessmentName, Dictionary<string, string> meta = null )
+public void iXR.EventAssessmentStart( string assessmentName, metaString = "" )
 ```
 
 #### EventAssessmentComplete
 ```csharp
-iXR.EventAssessmentComplete(string assessment_name, int score)
-iXR.EventAssessmentComplete(string assessment_name, int score, Dictionary<string, string> meta)
+public enum ResultOptions
+{
+    Pass,
+    Fail,
+    Complete,
+    Incomplete
+}
+
+iXR.EventAssessmentComplete(string assessmentName, int score, ResultOptions result = ResultOptions.Complete )
+
+iXR.EventAssessmentComplete(string assessmentName, int score, ResultOptions result = ResultOptions.Complete, Dictionary<string, string> meta)
+iXR.EventAssessmentComplete(string assessmentName, int score, ResultOptions result = ResultOptions.Complete, metaString = "" )
 ```
+
+#### Objectives (LMS Compatible)
+Objectives are intended to track the performance of a learner on a specific task or objective. 
+* Think of it as the learner's score for a specific section of a course or curriculum.
+* You can have multiple Objectives per Assessment. Note: SCORM limits to 255 Objectives per Assessment.
+
+#### EventObjectiveStart
+```csharp
+iXR.EventObjectiveStart(string objectiveName)
+
+iXR.EventObjectiveStart(string objectiveName, Dictionary<string, string> meta)
+iXR.EventObjectiveStart(string objectiveName, metaString = "" )
+```
+
+#### EventObjectiveComplete
+```csharp
+public enum ResultOptions
+{
+    Pass,
+    Fail,
+    Complete,
+    Incomplete
+}
+
+iXR.EventObjectiveComplete(string objectiveName, int score )
+
+iXR.EventObjectiveComplete(string objectiveName, int score, ResultOptions result = ResultOptions.Complete )
+
+iXR.EventObjectiveComplete(string objectiveName, int score, ResultOptions result = ResultOptions.Complete, Dictionary<string, string> meta)
+iXR.EventObjectiveComplete(string objectiveName, int score, ResultOptions result = ResultOptions.Complete, metaString = "" )
+```
+
+#### Interactions (LMS Compatible)
+Interactions are intended to track the performance of a learner on a specific task or interaction. 
+* This gives you the ability to record the learner's performance on a specific interaction and choices they make.
+* Because of this the options are a bit different than Assessments or Objectives, and you should look at our documentation carefully to use Interactions to their full advantage.
+* You can have multiple Interactions per Assessment. Note: SCORM limits to 255 Interactions per Assessment.
 
 #### EventInteractionStart
 ```csharp
-iXR.EventInteractionStart(string interaction_name)
-iXR.EventInteractionStart(string interaction_name, Dictionary<string, string> meta)
+iXR.EventInteractionStart(string interactionName)
+
+iXR.EventInteractionStart(string interactionName, Dictionary<string, string> meta)
+iXR.EventInteractionStart(string interactionName, metaString = "" )
 ```
 
 #### EventInteractionComplete
 ```csharp
-iXR.EventInteractionComplete(string interaction_name, int score)
-iXR.EventInteractionComplete(string interaction_name, int score, Dictionary<string, string> meta)
+public enum InteractionType
+{
+   Bool, // 1 or 0
+   Select, // true or false and the result_details value should be a single letter or for multiple choice a,b,c
+   Text, // a string 
+   Rating, // a single digit value
+   Number // integer
+}
+
+iXR.EventInteractionComplete(string interactionName, string result)
+
+iXR.EventInteractionComplete(string interactionName, string result, string result_details = null)
+
+iXR.EventInteractionComplete(string interactionName, string result, string result_details = null, InteractionType type = InteractionType.Text = null)
+
+iXR.EventInteractionComplete(string interactionName, string result, string result_details = null, InteractionType type = InteractionType.Text = null, Dictionary<string, string> meta = null )
+iXR.EventInteractionComplete(string interactionName, string result, string result_details = null, InteractionType type = InteractionType.Text = null, metaString = "" )
 ```
 
 **Parameters for all Event Wrapper Functions:**
-- `level_name/assessment_name/interaction_name` (string): The identifier for the level, assessment, or interaction. Use snake_case for consistency.
-- `score` (int): The numerical score achieved. While typically between 1-100, any integer is valid.
+- `levelName/assessmentName/objectiveName/interactionName` (string): The identifier for the level, assessment, objective, or interaction.
+- `score` (int): The numerical score achieved. While typically between 1-100, any integer is valid. In metadata, you can also set a minScore and maxScore to define the range of scores for this objective.
+- `result` (ResultOptions for Assessment and Objective): The basic result of the assessment or objective.
+- `result` (Interactions): The result for the interaction are based on the InteractionType.
+- `result_details` (string): Optional. Additional details about the result. For interactions this can be a single character or a string. For example: "a", "b", "c" or "correct", "incorrect".
+- `type` (InteractionType): Optional. The type of interaction for this event.
 - `meta` (Dictionary<string, string>): Optional. Additional key-value pairs describing the event.
 
 **Note:** For all "Complete" events, the duration is automatically calculated if the corresponding "Start" event was recorded with the same name.
