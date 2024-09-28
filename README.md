@@ -166,7 +166,6 @@ Interactions are intended to track the performance of a learner on a specific ta
 * Because of this, the options are a bit different than Assessments or Objectives, and you should look at our documentation carefully to use Interactions to their full advantage.
 * You can have multiple Interactions per Assessment. Note: SCORM limits to 255 Interactions per Assessment.
 
-...
 #### EventInteractionStart
 ```csharp
 public void iXR.EventInteractionStart(string interactionName)
