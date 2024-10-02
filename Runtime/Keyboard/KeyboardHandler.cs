@@ -1,4 +1,5 @@
 ﻿using System;
+using iXRLib;
 using Microsoft.MixedReality.Toolkit.Experimental.UI;
 using UnityEngine;
 
@@ -21,7 +22,6 @@ public class KeyboardHandler : MonoBehaviour
         if (keyboard != null)
         {
             Instantiate(keyboard, Camera.main.transform);
-            iXR.PresentKeyboard();
         }
         else
         {
@@ -33,14 +33,8 @@ public class KeyboardHandler : MonoBehaviour
 
     private static void HandleTextSubmitted(object sender, EventArgs e)
     {
-        var keyboard = (NonNativeKeyboard)sender;
-        
-        //TODO validate input
-        
-        // if valid, close keyboard
         NonNativeKeyboard.Instance.Close();
-        
-        // if not valid, tell user to try again
-        iXR.PresentKeyboard("Please Try Again");
+        var keyboard = (NonNativeKeyboard)sender;
+        Authentication.KeyboardAuthenticate(keyboard.InputField.text);
     }
 }
