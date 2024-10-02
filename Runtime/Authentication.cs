@@ -75,7 +75,7 @@ public class Authentication : SdkBehaviour
         {
 			if (iXRAuthentication.TokenExpirationImminent())
             {
-                Authenticate();
+                ReAuthenticate();
             }
         }
         else
@@ -123,7 +123,7 @@ public class Authentication : SdkBehaviour
         return true;
     }
 
-    public static void Authenticate()
+    private static void Authenticate()
     {
         var result = iXRInit.Authenticate(_appId, _orgId, _deviceId, _authSecret, _partner);
         if (result == iXRResult.Ok)
@@ -133,6 +133,19 @@ public class Authentication : SdkBehaviour
         else
         {
             Debug.LogError($"iXRLib - Authentication failed : {result}");
+        }
+    }
+
+    private static void ReAuthenticate()
+    {
+        var result = iXRInit.ReAuthenticate(false);
+        if (result == iXRResult.Ok)
+        {
+            Debug.Log("iXRLib - ReAuthenticated successfully");
+        }
+        else
+        {
+            Debug.LogError($"iXRLib - ReAuthentication failed : {result}");
         }
     }
 

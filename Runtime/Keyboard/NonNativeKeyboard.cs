@@ -85,6 +85,9 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.UI
         //[Experimental]
         public TMP_InputField InputField = null;
 
+        public TMP_Text Prompt;
+        public TMP_Text EmailDomain;
+
         /// <summary>
         /// Move the axis slider based on the camera forward and the keyboard plane projection.
         /// </summary>
@@ -799,7 +802,7 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.UI
                 // Send text entered event and close the keyboard
                 OnTextSubmitted?.Invoke(this, EventArgs.Empty);
 
-                Close();
+                //Close();
             }
             else
             {

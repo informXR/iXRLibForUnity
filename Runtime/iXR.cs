@@ -239,13 +239,19 @@ public class iXR
 		return iXRSend.EventLevelComplete(levelName, score, metaString);
 	}
 
-	public static void PresentKeyboard()
+	public static void PresentKeyboard(string promptText = null)
 	{
-		NonNativeKeyboard.Instance.PresentKeyboard();
-	}
+		// if text input, set prompt text, show regular keyboard
+		//NonNativeKeyboard.Instance.Prompt.text = promptText ?? "some text I get from the backend";
+		//NonNativeKeyboard.Instance.PresentKeyboard();
+		
+		// if PIN input, set prompt text, show alphanum keyboard
+		NonNativeKeyboard.Instance.Prompt.text = promptText ?? "Enter PIN";
+		NonNativeKeyboard.Instance.PresentKeyboard(NonNativeKeyboard.LayoutType.Symbol);
 
-	public static string GetKeyboardText()
-	{
-		return NonNativeKeyboard.Instance.InputField.text;
+		// if email input, set prompt text, show email keyboard
+		//NonNativeKeyboard.Instance.Prompt.text = promptText ?? "Enter E-mail address";
+		//NonNativeKeyboard.Instance.EmailDomain.text = "@informxr.com";
+		//NonNativeKeyboard.Instance.PresentKeyboard(NonNativeKeyboard.LayoutType.Email);
 	}
 }
