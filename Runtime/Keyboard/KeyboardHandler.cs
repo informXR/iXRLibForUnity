@@ -1,5 +1,4 @@
 ﻿using System;
-using iXRLib;
 using Microsoft.MixedReality.Toolkit.Experimental.UI;
 using UnityEngine;
 

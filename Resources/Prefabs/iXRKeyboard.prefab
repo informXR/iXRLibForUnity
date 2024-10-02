@@ -9792,7 +9792,6 @@ MonoBehaviour:
   InputField: {fileID: 5813637763583783260}
   Prompt: {fileID: 1339314491226565068}
   EmailDomain: {fileID: 3058539076440298498}
-  InputFieldSlide: {fileID: 0}
   SliderEnabled: 1
   SubmitOnEnter: 1
   AlphaKeyboard: {fileID: 6401095429287433169}
