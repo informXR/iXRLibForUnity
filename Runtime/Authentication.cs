@@ -67,7 +67,7 @@ public class Authentication : SdkBehaviour
         {
             SetSessionData();
             Authenticate();
-            //if (iXRAuthentication.AuthMechanism.ContainsKey("prompt"))
+            if (iXRAuthentication.AuthMechanism.ContainsKey("prompt"))
             {
                 KeyboardAuthenticate();
             }
@@ -128,22 +128,25 @@ public class Authentication : SdkBehaviour
         return true;
     }
 
-    public static void KeyboardAuthenticate(string inputValue = null)
+    public static void KeyboardAuthenticate(string keyboardInput = null)
     {
         string prompt = _failedAuthAttempts > 0 ? $"Authentication Failed ({_failedAuthAttempts}). " : null;
-        //prompt += iXRAuthentication.AuthMechanism["prompt"];
+        prompt += iXRAuthentication.AuthMechanism["prompt"];
         
-        if (inputValue != null)
+        if (keyboardInput != null)
         {
-            iXRAuthentication.AuthMechanism["prompt"] = inputValue;
+            string originalPrompt = iXRAuthentication.AuthMechanism["prompt"];
+            iXRAuthentication.AuthMechanism["prompt"] = keyboardInput;
             if (Authenticate())
             {
-                //_failedAuthAttempts = 0;
-                //return;
+                _failedAuthAttempts = 0;
+                return;
             }
+
+            iXRAuthentication.AuthMechanism["prompt"] = originalPrompt;
         }
         
-        string keyboardType = null;// iXRAuthentication.AuthMechanism["type"];
+        string keyboardType = iXRAuthentication.AuthMechanism["type"];
         iXRAuthentication.AuthMechanism.TryGetValue("email", out string emailDomain);
         iXR.PresentKeyboard(prompt, keyboardType, emailDomain);
         _failedAuthAttempts++;
