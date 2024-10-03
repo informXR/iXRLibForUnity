@@ -239,19 +239,23 @@ public class iXR
 		return iXRSend.EventLevelComplete(levelName, score, metaString);
 	}
 
-	public static void PresentKeyboard(string promptText = null)
+	public static void PresentKeyboard(string promptText = null, string keyboardType = null, string emailDomain = null)
 	{
-		// if text input, set prompt text, show regular keyboard
-		//NonNativeKeyboard.Instance.Prompt.text = promptText ?? "some text I get from the backend";
-		//NonNativeKeyboard.Instance.PresentKeyboard();
-		
-		// if PIN input, set prompt text, show alphanum keyboard
-		NonNativeKeyboard.Instance.Prompt.text = promptText ?? "Enter PIN";
-		NonNativeKeyboard.Instance.PresentKeyboard(NonNativeKeyboard.LayoutType.Symbol);
-
-		// if email input, set prompt text, show email keyboard
-		//NonNativeKeyboard.Instance.Prompt.text = promptText ?? "Enter E-mail address";
-		//NonNativeKeyboard.Instance.EmailDomain.text = "@informxr.com";
-		//NonNativeKeyboard.Instance.PresentKeyboard(NonNativeKeyboard.LayoutType.Email);
+		if (keyboardType is "text" or null)
+		{
+			NonNativeKeyboard.Instance.Prompt.text = promptText ?? "Enter Login";
+			NonNativeKeyboard.Instance.PresentKeyboard();
+		}
+		else if (keyboardType == "assessmentPin")
+		{
+			NonNativeKeyboard.Instance.Prompt.text = promptText ?? "Enter PIN";
+			NonNativeKeyboard.Instance.PresentKeyboard(NonNativeKeyboard.LayoutType.Symbol);
+		}
+		else if (keyboardType == "email")
+		{
+			NonNativeKeyboard.Instance.Prompt.text = promptText ?? "Enter E-Mail";
+			NonNativeKeyboard.Instance.EmailDomain.text = emailDomain;
+			NonNativeKeyboard.Instance.PresentKeyboard(NonNativeKeyboard.LayoutType.Email);
+		}
 	}
 }

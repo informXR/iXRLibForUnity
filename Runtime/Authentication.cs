@@ -17,6 +17,7 @@ public class Authentication : SdkBehaviour
     private static string _userId;
     private static string _appId;
     private static Partner _partner = Partner.eNone;
+    private static int _failedAuthAttempts;
     
     public static void Initialize()
     {
@@ -66,6 +67,10 @@ public class Authentication : SdkBehaviour
         {
             SetSessionData();
             Authenticate();
+            if (iXRAuthentication.AuthMechanism.ContainsKey("prompt"))
+            {
+                KeyboardAuthenticate();
+            }
         }
     }
     
@@ -123,17 +128,41 @@ public class Authentication : SdkBehaviour
         return true;
     }
 
-    private static void Authenticate()
+    public static void KeyboardAuthenticate(string keyboardInput = null)
+    {
+        string prompt = _failedAuthAttempts > 0 ? $"Authentication Failed ({_failedAuthAttempts}). " : null;
+        prompt += iXRAuthentication.AuthMechanism["prompt"];
+        
+        if (keyboardInput != null)
+        {
+            string originalPrompt = iXRAuthentication.AuthMechanism["prompt"];
+            iXRAuthentication.AuthMechanism["prompt"] = keyboardInput;
+            if (Authenticate())
+            {
+                _failedAuthAttempts = 0;
+                return;
+            }
+
+            iXRAuthentication.AuthMechanism["prompt"] = originalPrompt;
+        }
+        
+        string keyboardType = iXRAuthentication.AuthMechanism["type"];
+        iXRAuthentication.AuthMechanism.TryGetValue("email", out string emailDomain);
+        iXR.PresentKeyboard(prompt, keyboardType, emailDomain);
+        _failedAuthAttempts++;
+    }
+
+    private static bool Authenticate()
     {
         var result = iXRInit.Authenticate(_appId, _orgId, _deviceId, _authSecret, _partner);
         if (result == iXRResult.Ok)
         {
             Debug.Log("iXRLib - Authenticated successfully");
+            return true;
         }
-        else
-        {
-            Debug.LogError($"iXRLib - Authentication failed : {result}");
-        }
+
+        Debug.LogError($"iXRLib - Authentication failed : {result}");
+        return false;
     }
 
     private static void ReAuthenticate()
