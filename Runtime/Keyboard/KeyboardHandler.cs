@@ -21,7 +21,7 @@ public class KeyboardHandler : MonoBehaviour
         if (keyboard != null)
         {
             Instantiate(keyboard, Camera.main.transform);
-            iXR.PresentKeyboard();
+            //iXR.PresentKeyboard();
         }
         else
         {
