@@ -10,6 +10,17 @@ public class iXR
     private static Dictionary<string, float> interactionStartTimes = new Dictionary<string, float>();
     private static Dictionary<string, float> levelStartTimes = new Dictionary<string, float>();
 
+	// Alias the LMSType enum from iXRLib.iXRLibInterop
+	public enum InteractionType
+	{
+		Null = iXRLib.LMSType.Null,
+		Bool = iXRLib.LMSType.Bool,
+		Select = iXRLib.LMSType.Select,
+		Text = iXRLib.LMSType.Text,
+		Rating = iXRLib.LMSType.Rating,
+		Number = iXRLib.LMSType.Number
+	}
+
     // Logging
     public static iXRResult LogDebugSynchronous(string bstrText)
 	{
@@ -203,16 +214,16 @@ public class iXR
 
 	// Modified EventInteractionComplete methods.
 
-	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails, LMSType eLmsType = LMSType.Null, Dictionary<string, string> meta = null)
+	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails, InteractionType eInteractionType = InteractionType.Null, Dictionary<string, string> meta = null)
     {
         meta = meta ?? new Dictionary<string, string>();
 		// ---
-		return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, eLmsType, meta);
+		return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, (iXRLib.LMSType)eInteractionType, meta);
     }
 
-	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails, LMSType eLmsType = LMSType.Null, string metaString = null)
+	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails, InteractionType eInteractionType = InteractionType.Null, string metaString = null)
 	{
-		return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, eLmsType, metaString);
+		return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, (iXRLib.LMSType)eInteractionType, metaString);
 	}
 
 	public static iXRResult EventLevelStart(string levelName, Dictionary<string, string> meta = null)
