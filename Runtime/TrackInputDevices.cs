@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using iXRLib;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -32,13 +33,17 @@ public class TrackInputDevices : MonoBehaviour
 
     private void Start()
     {
+        iXRBase.CaptureTimeStamp();
         InvokeRepeating(nameof(InitializeInputDevices), 0, 1); // Check for input devices every second
         InvokeRepeating(nameof(UpdateLocationData), 0, positionUpdateIntervalSeconds);
+        iXRBase.UnCaptureTimeStamp();
     }
     
     private void Update()
     {
+        iXRBase.CaptureTimeStamp();
         CheckTriggers(); // Always check for triggers
+        iXRBase.UnCaptureTimeStamp();
     }
 
     private void UpdateLocationData()

@@ -151,6 +151,7 @@ public class Authentication : SdkBehaviour
 
     private static void SetSessionData()
     {
+        iXRBase.CaptureTimeStamp();
         //TODO Device Type
         
         iXRAuthentication.Partner = _partner;
@@ -180,6 +181,7 @@ public class Authentication : SdkBehaviour
         iXRAuthentication.UnityVersion = Application.unityVersion;
 
         SetIPAddress();
+        iXRBase.UnCaptureTimeStamp();
     }
 
     private static void SetIPAddress()
