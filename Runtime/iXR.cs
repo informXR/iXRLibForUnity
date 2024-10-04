@@ -10,24 +10,6 @@ public class iXR
     private static Dictionary<string, float> interactionStartTimes = new Dictionary<string, float>();
     private static Dictionary<string, float> levelStartTimes = new Dictionary<string, float>();
 
-    // Add this enum definition
-    public enum InteractionType
-    {
-        Bool,
-        Select,
-        Text,
-        Rating,
-        Number
-    }
-
-	public enum ResultOptions
-	{
-		Pass,
-		Fail,
-		Complete,
-		Incomplete
-	}
-
     // Logging
     public static iXRResult LogDebugSynchronous(string bstrText)
 	{
@@ -221,16 +203,16 @@ public class iXR
 
 	// Modified EventInteractionComplete methods.
 
-	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails, InteractionType interactionType = InteractionType.Text, Dictionary<string, string> meta = null)
+	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails, LMSType eLmsType = LMSType.Null, Dictionary<string, string> meta = null)
     {
         meta = meta ?? new Dictionary<string, string>();
 		// ---
-		return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, (LMSType)interactionType, meta);
+		return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, eLmsType, meta);
     }
 
-	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails, InteractionType interactionType = InteractionType.Text, string metaString = null)
+	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails, LMSType eLmsType = LMSType.Null, string metaString = null)
 	{
-		return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, (LMSType)interactionType, metaString);
+		return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, eLmsType, metaString);
 	}
 
 	public static iXRResult EventLevelStart(string levelName, Dictionary<string, string> meta = null)
