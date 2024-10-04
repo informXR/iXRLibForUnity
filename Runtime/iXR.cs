@@ -20,6 +20,14 @@ public class iXR
         Number
     }
 
+	public enum ResultOptions
+	{
+		Pass,
+		Fail,
+		Complete,
+		Incomplete
+	}
+
     // Logging
     public static iXRResult LogDebugSynchronous(string bstrText)
 	{
