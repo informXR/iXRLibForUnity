@@ -66,5 +66,4 @@ public class DebugDisplay : MonoBehaviour
     {
         return Configuration.instance.debugDisplay;
     }    
-
 }
