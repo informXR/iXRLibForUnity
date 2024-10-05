@@ -25,12 +25,7 @@ public class DebugDisplay : MonoBehaviour
             return;
         }
     }
-
-    private bool IsDebugDisplayEnabled()
-    {
-        return Configuration.instance.debugDisplay;
-    }    
-
+    
     private void OnEnable()
     {
         // Subscribe to Unity's log callback
@@ -66,4 +61,10 @@ public class DebugDisplay : MonoBehaviour
         
         logText.text = string.Join("\n", _logQueue.ToArray());
     }
+
+    private bool IsDebugDisplayEnabled()
+    {
+        return Configuration.instance.debugDisplay;
+    }    
+
 }
