@@ -15,9 +15,21 @@ public class DebugDisplay : MonoBehaviour
 
     private void Awake()
     {
+
+        // Check if debug display is enabled in the config
+        if (!IsDebugDisplayEnabled())
+        {
+            gameObject.SetActive(false);
+            return;
+        }        
         // Instantiate the input actions
         _playerInputActions = new PlayerInputActions();
     }
+
+    private bool IsDebugDisplayEnabled()
+    {
+        return Configuration.instance.debugDisplay;
+    }    
 
     private void OnEnable()
     {
