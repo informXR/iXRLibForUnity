@@ -130,7 +130,7 @@ public class Authentication : SdkBehaviour
 
     public static void KeyboardAuthenticate(string keyboardInput = null)
     {
-        string prompt = _failedAuthAttempts > 0 ? $"Authentication Failed ({_failedAuthAttempts}). " : null;
+        string prompt = _failedAuthAttempts > 0 ? $"Authentication Failed ({_failedAuthAttempts})\n" : null;
         prompt += iXRAuthentication.AuthMechanism["prompt"];
         string keyboardType = iXRAuthentication.AuthMechanism["type"];
         
