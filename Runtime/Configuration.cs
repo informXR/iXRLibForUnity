@@ -39,4 +39,14 @@ public class Configuration : ScriptableObject
     public int pruneSentItemsOlderThanHours = 12;
     public int maximumCachedItems = 1024;
     public bool retainLocalAfterSent;
+
+    // Developer options
+    public bool debugDisplay = false;
+    public DebugDisplaySide debugDisplaySide = DebugDisplaySide.Left;
+
+    public enum DebugDisplaySide
+    {
+        Left,
+        Right
+    }
 }

@@ -17,8 +17,15 @@ public class DebugDisplay : MonoBehaviour
     {
         // Instantiate the input actions
         _playerInputActions = new PlayerInputActions();
-    }
 
+        // Check if debug display is enabled in the config
+        if (!IsDebugDisplayEnabled())
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+    }
+    
     private void OnEnable()
     {
         // Subscribe to Unity's log callback
@@ -54,4 +61,9 @@ public class DebugDisplay : MonoBehaviour
         
         logText.text = string.Join("\n", _logQueue.ToArray());
     }
+
+    private bool IsDebugDisplayEnabled()
+    {
+        return Configuration.instance.debugDisplay;
+    }    
 }

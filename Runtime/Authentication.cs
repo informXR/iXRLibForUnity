@@ -130,23 +130,20 @@ public class Authentication : SdkBehaviour
 
     public static void KeyboardAuthenticate(string keyboardInput = null)
     {
-        string prompt = _failedAuthAttempts > 0 ? $"Authentication Failed ({_failedAuthAttempts}). " : null;
+        string prompt = _failedAuthAttempts > 0 ? $"Authentication Failed ({_failedAuthAttempts})\n" : null;
         prompt += iXRAuthentication.AuthMechanism["prompt"];
+        string keyboardType = iXRAuthentication.AuthMechanism["type"];
         
         if (keyboardInput != null)
         {
-            string originalPrompt = iXRAuthentication.AuthMechanism["prompt"];
-            iXRAuthentication.AuthMechanism["prompt"] = keyboardInput;
+            iXRAuthentication.AuthMechanism[keyboardType] = keyboardInput;
             if (Authenticate())
             {
                 _failedAuthAttempts = 0;
                 return;
             }
-
-            iXRAuthentication.AuthMechanism["prompt"] = originalPrompt;
         }
         
-        string keyboardType = iXRAuthentication.AuthMechanism["type"];
         iXRAuthentication.AuthMechanism.TryGetValue("email", out string emailDomain);
         iXR.PresentKeyboard(prompt, keyboardType, emailDomain);
         _failedAuthAttempts++;
