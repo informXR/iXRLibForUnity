@@ -10,15 +10,15 @@ public class iXR
     private static Dictionary<string, float> interactionStartTimes = new Dictionary<string, float>();
     private static Dictionary<string, float> levelStartTimes = new Dictionary<string, float>();
 
-	// Alias the LMSType enum from iXRLib.iXRLibInterop
+	// Alias the InteractionType enum from iXRLib.iXRLibInterop
 	public enum InteractionType
 	{
-		Null = iXRLib.LMSType.Null,
-		Bool = iXRLib.LMSType.Bool,
-		Select = iXRLib.LMSType.Select,
-		Text = iXRLib.LMSType.Text,
-		Rating = iXRLib.LMSType.Rating,
-		Number = iXRLib.LMSType.Number
+		Null = iXRLib.InteractionType.Null,
+		Bool = iXRLib.InteractionType.Bool,
+		Select = iXRLib.InteractionType.Select,
+		Text = iXRLib.InteractionType.Text,
+		Rating = iXRLib.InteractionType.Rating,
+		Number = iXRLib.InteractionType.Number
 	}
 
     // Logging
@@ -175,81 +175,95 @@ public class iXR
 	}
 
 	// Event wrapper functions.
-
+	// ---
 	public static iXRResult EventAssessmentStart(string assessmentName, Dictionary<string, string> meta = null)
 	{
 		meta = meta ?? new Dictionary<string, string>();
 		// ---
 		return iXRSend.EventAssessmentStart(assessmentName, meta);
 	}
-
 	public static iXRResult EventAssessmentStart(string assessmentName, string metaString)
 	{
 		return iXRSend.EventAssessmentStart(assessmentName, metaString);
 	}
-
-	public static iXRResult EventAssessmentComplete(string assessmentName, string score, Dictionary<string, string> meta = null)
+	// ---
+	public static iXRResult EventAssessmentComplete(string assessmentName, string score, ResultOptions result = ResultOptions.Complete, Dictionary<string, string> meta = null)
 	{
 		meta = meta ?? new Dictionary<string, string>();
 		// ---
-		return iXRSend.EventAssessmentComplete(assessmentName, score, meta);
+		return iXRSend.EventAssessmentComplete(assessmentName, score, result, meta);
 	}
-
-	public static iXRResult EventAssessmentComplete(string assessmentName, string score, string metaString)
+	public static iXRResult EventAssessmentComplete(string assessmentName, string score, ResultOptions result = ResultOptions.Complete, string metaString)
 	{
-		return iXRSend.EventAssessmentComplete(assessmentName, score, metaString);
+		return iXRSend.EventAssessmentComplete(assessmentName, score, result, metaString);
 	}
-
+	// ---
+	public static iXRResult EventObjectiveStart(string objectiveName, Dictionary<string, string> meta = null)
+	{
+		meta = meta ?? new Dictionary<string, string>();
+		// ---
+		return iXRSend.EventObjectiveStart(objectiveName, meta);
+	}
+	public static iXRResult EventObjectiveStart(string objectiveName, string metaString)
+	{
+		return iXRSend.EventObjectiveStart(objectiveName, metaString);
+	}
+	// ---
+	public static iXRResult EventObjectiveComplete(string objectiveName, string score, ResultOptions result = ResultOptions.Complete, Dictionary<string, string> meta = null)
+	{
+		meta = meta ?? new Dictionary<string, string>();
+		// ---
+		return iXRSend.EventObjectiveComplete(objectiveName, score, result, meta);
+	}
+	public static iXRResult EventObjectiveComplete(string objectiveName, string score, ResultOptions result = ResultOptions.Complete, string metaString)
+	{
+		return iXRSend.EventObjectiveComplete(objectiveName, score, result, metaString);
+	}
+	// ---
 	public static iXRResult EventInteractionStart(string interactionName, Dictionary<string, string> meta = null)
     {
         meta = meta ?? new Dictionary<string, string>();
 		// ---
 		return iXRSend.EventInteractionStart(interactionName, meta);
     }
-
 	public static iXRResult EventInteractionStart(string interactionName, string metaString)
 	{
 		return iXRSend.EventInteractionStart(interactionName, metaString);
 	}
-
 	// Modified EventInteractionComplete methods.
-
-	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails, InteractionType eInteractionType = InteractionType.Null, Dictionary<string, string> meta = null)
+	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails = null, InteractionType eInteractionType = InteractionType.Null, Dictionary<string, string> meta = null)
     {
         meta = meta ?? new Dictionary<string, string>();
 		// ---
-		return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, (iXRLib.LMSType)eInteractionType, meta);
+		return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, (iXRLib.InteractionType)eInteractionType, meta);
     }
-
-	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails, InteractionType eInteractionType = InteractionType.Null, string metaString = null)
+	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails = null, InteractionType eInteractionType = InteractionType.Null, string metaString = null)
 	{
-		return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, (iXRLib.LMSType)eInteractionType, metaString);
+		return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, (iXRLib.InteractionType)eInteractionType, metaString);
 	}
-
+	// ---
 	public static iXRResult EventLevelStart(string levelName, Dictionary<string, string> meta = null)
     {
         meta = meta ?? new Dictionary<string, string>();
 		// ---
 		return iXRSend.EventLevelStart(levelName, meta);
     }
-
 	public static iXRResult EventLevelStart(string levelName, string metaString)
 	{
 		return iXRSend.EventLevelStart(levelName, metaString);
 	}
-
+	// ---
 	public static iXRResult EventLevelComplete(string levelName, string score, Dictionary<string, string> meta = null)
     {
         meta = meta ?? new Dictionary<string, string>();
 		// ---
 		return iXRSend.EventLevelComplete(levelName, score, meta);
     }
-
 	public static iXRResult EventLevelComplete(string levelName, string score, string metaString)
 	{
 		return iXRSend.EventLevelComplete(levelName, score, metaString);
 	}
-
+	// ---
 	public static void PresentKeyboard(string promptText = null, string keyboardType = null, string emailDomain = null)
 	{
 		if (keyboardType is "text" or null)
