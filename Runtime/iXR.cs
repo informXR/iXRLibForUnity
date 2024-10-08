@@ -187,13 +187,13 @@ public class iXR
 		return iXRSend.EventAssessmentStart(assessmentName, metaString);
 	}
 	// ---
-	public static iXRResult EventAssessmentComplete(string assessmentName, string score, ResultOptions result = ResultOptions.Complete, Dictionary<string, string> meta = null)
+	public static iXRResult EventAssessmentComplete(string assessmentName, string score, Dictionary<string, string> meta = null, ResultOptions result = ResultOptions.Complete)
 	{
 		meta = meta ?? new Dictionary<string, string>();
 		// ---
 		return iXRSend.EventAssessmentComplete(assessmentName, score, result, meta);
 	}
-	public static iXRResult EventAssessmentComplete(string assessmentName, string score, ResultOptions result = ResultOptions.Complete, string metaString)
+	public static iXRResult EventAssessmentComplete(string assessmentName, string score, string metaString, ResultOptions result = ResultOptions.Complete)
 	{
 		return iXRSend.EventAssessmentComplete(assessmentName, score, result, metaString);
 	}
@@ -209,13 +209,13 @@ public class iXR
 		return iXRSend.EventObjectiveStart(objectiveName, metaString);
 	}
 	// ---
-	public static iXRResult EventObjectiveComplete(string objectiveName, string score, ResultOptions result = ResultOptions.Complete, Dictionary<string, string> meta = null)
+	public static iXRResult EventObjectiveComplete(string objectiveName, string score, Dictionary<string, string> meta = null, ResultOptions result = ResultOptions.Complete)
 	{
 		meta = meta ?? new Dictionary<string, string>();
 		// ---
 		return iXRSend.EventObjectiveComplete(objectiveName, score, result, meta);
 	}
-	public static iXRResult EventObjectiveComplete(string objectiveName, string score, ResultOptions result = ResultOptions.Complete, string metaString)
+	public static iXRResult EventObjectiveComplete(string objectiveName, string score, string metaString, ResultOptions result = ResultOptions.Complete)
 	{
 		return iXRSend.EventObjectiveComplete(objectiveName, score, result, metaString);
 	}
