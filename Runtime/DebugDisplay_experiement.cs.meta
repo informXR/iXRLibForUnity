@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Runtime/DebugDisplay_experiement.cs.meta
 guid: 87c3211987bbd4aeda9c920cb4466d91
-========
-guid: 2920d69062052dc4f9b300792d058acd
->>>>>>>> development:Runtime/DebugWindow/ScrollViewToggle.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

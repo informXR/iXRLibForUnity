@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 fileFormatVersion: 2
 guid: 39cb81c3761b44945bc9a54fa62f2b97
 PrefabImporter:
@@ -6,12 +5,3 @@ PrefabImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-=======
-fileFormatVersion: 2
-guid: 39cb81c3761b44945bc9a54fa62f2b97
-PrefabImporter:
-  externalObjects: {}
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
->>>>>>> SCORM_SUPPORT

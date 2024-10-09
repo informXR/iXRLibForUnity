@@ -1,4 +1,3 @@
-<<<<<<<< HEAD:Resources/Prefabs.meta
 fileFormatVersion: 2
 guid: eb7d8d8bb249d824393e309752c7f2a6
 folderAsset: yes
@@ -7,13 +6,3 @@ DefaultImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-========
-fileFormatVersion: 2
-guid: 93d3fa393bf27fe4f90d4abfd6999d1f
-folderAsset: yes
-DefaultImporter:
-  externalObjects: {}
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
->>>>>>>> SCORM_SUPPORT:Assets/Prefabs.meta
