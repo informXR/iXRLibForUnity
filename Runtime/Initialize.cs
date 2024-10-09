@@ -11,6 +11,7 @@ public static class Initialize
         //TestDiagnosticStringCallbackMechanism();
         iXRInit.Start();
         SetConfigValues();
+        KeyboardHandler.Initialize(); // Needs to come before Auth in case auth needs keyboard
         Authentication.Initialize();
         KeyboardHandler.Initialize();
         TrackSystemInfo.Initialize();

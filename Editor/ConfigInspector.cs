@@ -1,6 +1,13 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
+// Add the enum definition here, outside of any class
+public enum DebugDisplaySide
+{
+    Left,
+    Right
+}
+
 [CustomEditor(typeof(Configuration))]
 public class ConfigInspector : Editor
 {
@@ -47,7 +54,7 @@ public class ConfigInspector : Editor
             "Prune Sent Items Older Than Hours", "0 = Infinite, i.e. Never Prune"), config.pruneSentItemsOlderThanHours);
         config.maximumCachedItems = EditorGUILayout.IntField("Maximum Cached Items", config.maximumCachedItems);
         config.retainLocalAfterSent = EditorGUILayout.Toggle("Retain Local After Sent", config.retainLocalAfterSent);
-        
+
         if (GUILayout.Button("Reset To Sending Rule Defaults"))
         {
             config.sendRetriesOnFailure = 3;
@@ -63,6 +70,16 @@ public class ConfigInspector : Editor
             config.retainLocalAfterSent = false;
         }
 
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Developer Options", EditorStyles.boldLabel);
+        config.debugDisplay = EditorGUILayout.Toggle(new GUIContent(
+            "Debug Display", "Show a display on the HMD showing tracking data and logs"), config.debugDisplay);
+
+        // Update the debugDisplaySide dropdown to use the correct enum type
+        config.debugDisplaySide = (Configuration.DebugDisplaySide)EditorGUILayout.EnumPopup(new GUIContent(
+            "Debug Display Side", "Choose which side of the HMD to show the debug display"), config.debugDisplaySide);
+
         if (GUI.changed) EditorUtility.SetDirty(config);
     }
+    
 }
