@@ -10,16 +10,6 @@ public class iXR
     private static Dictionary<string, float> interactionStartTimes = new Dictionary<string, float>();
     private static Dictionary<string, float> levelStartTimes = new Dictionary<string, float>();
 
-	// Alias the ResultOptions enum from iXRLib.iXRLibInterop
-	public enum ResultOptions
-	{
-		//Null = iXRLib.ResultOptions.Null,
-		Pass = iXRLib.ResultOptions.Pass,
-		Fail = iXRLib.ResultOptions.Fail,
-		Complete = iXRLib.ResultOptions.Complete,
-		Incomplete = iXRLib.ResultOptions.Incomplete
-	}
-	
 	// Alias the InteractionType enum from iXRLib.iXRLibInterop
 	public enum InteractionType
 	{

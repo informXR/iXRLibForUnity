@@ -1,0 +1,34 @@
+{
+    "name": "PlayerInputActions",
+    "maps": [
+        {
+            "name": "New action map",
+            "id": "220e6ceb-2d71-4ffe-adf0-f1d65df7f8e3",
+            "actions": [
+                {
+                    "name": "ToggleDebugWindow",
+                    "type": "Button",
+                    "id": "1bdbccf3-2e8f-434b-9e9d-c7aad94059b8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "fdfbeb34-4bec-4c1f-8c72-125d50046af5",
+                    "path": "*/{PrimaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleDebugWindow",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
