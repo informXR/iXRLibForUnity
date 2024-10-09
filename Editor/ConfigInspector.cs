@@ -22,6 +22,11 @@ public class ConfigInspector : Editor
         config.authSecret = EditorGUILayout.TextField("Authorization Secret (optional)", config.authSecret);
         
         EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Debugging", EditorStyles.boldLabel);
+        config.debugWindow = EditorGUILayout.Toggle(new GUIContent(
+            "Show Debug Window", "Debug output will be displayed within the virtual space"), config.debugWindow);
+        
+        EditorGUILayout.Space();
         EditorGUILayout.LabelField("Player Tracking", EditorStyles.boldLabel);
         config.headsetTracking = EditorGUILayout.Toggle(new GUIContent(
             "Headset/Controller Tracking", "Track the Headset and Controllers"), config.headsetTracking);

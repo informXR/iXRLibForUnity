@@ -13,7 +13,9 @@ public static class Initialize
         SetConfigValues();
         KeyboardHandler.Initialize(); // Needs to come before Auth in case auth needs keyboard
         Authentication.Initialize();
+        KeyboardHandler.Initialize();
         TrackSystemInfo.Initialize();
+        DebugWindowPositioner.Initialize();
 #if UNITY_ANDROID
         TrackInputDevices.Initialize();
 #endif
