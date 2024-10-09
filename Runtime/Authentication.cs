@@ -132,15 +132,18 @@ public class Authentication : SdkBehaviour
     {
         if (keyboardInput != null)
         {
-            string originalPrompt = iXRAuthentication.AuthMechanism["prompt"];
-            iXRAuthentication.AuthMechanism["prompt"] = keyboardInput;
-            if (Authenticate())
+			System.Collections.Generic.Dictionary<string, string> localAuthMechanism = iXRAuthentication.AuthMechanism;
+			string originalPrompt = localAuthMechanism["prompt"];
+            localAuthMechanism["prompt"] = keyboardInput;
+			iXRAuthentication.SetAuthMechanism(localAuthMechanism);
+			if (Authenticate())
             {
                 _failedAuthAttempts = 0;
                 return;
             }
 
-            iXRAuthentication.AuthMechanism["prompt"] = originalPrompt;
+            localAuthMechanism["prompt"] = originalPrompt;
+			iXRAuthentication.SetAuthMechanism(localAuthMechanism);
         }
         
         iXRAuthentication.AuthMechanism.TryGetValue("email", out string emailDomain);
