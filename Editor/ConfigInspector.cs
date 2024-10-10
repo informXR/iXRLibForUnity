@@ -70,15 +70,6 @@ public class ConfigInspector : Editor
             config.retainLocalAfterSent = false;
         }
 
-        EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Developer Options", EditorStyles.boldLabel);
-        config.debugDisplay = EditorGUILayout.Toggle(new GUIContent(
-            "Debug Display", "Show a display on the HMD showing tracking data and logs"), config.debugDisplay);
-
-        // Update the debugDisplaySide dropdown to use the correct enum type
-        config.debugDisplaySide = (Configuration.DebugDisplaySide)EditorGUILayout.EnumPopup(new GUIContent(
-            "Debug Display Side", "Choose which side of the HMD to show the debug display"), config.debugDisplaySide);
-
         if (GUI.changed) EditorUtility.SetDirty(config);
     }
     
