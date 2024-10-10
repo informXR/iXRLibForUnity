@@ -1034,6 +1034,7 @@ GameObject:
   - component: {fileID: 6982807208053727076}
   - component: {fileID: 2260489868239985790}
   - component: {fileID: 3047683856683144909}
+  - component: {fileID: 8583666626166515074}
   m_Layer: 5
   m_Name: iXRDebugWindow
   m_TagString: Untagged
@@ -1108,7 +1109,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &2260489868239985790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1142,6 +1143,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   logText: {fileID: 6310769774897692558}
   scrollRect: {fileID: 5523552308901770695}
+--- !u!114 &8583666626166515074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6166950621211028194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 198491aacdbb4604972c636bec2bc236, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rectTransform: {fileID: 7223475281847984569}
 --- !u!1 &6739845463107323829
 GameObject:
   m_ObjectHideFlags: 0
