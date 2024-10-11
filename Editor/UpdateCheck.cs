@@ -1,13 +1,16 @@
 ﻿using System;
-using UnityEngine;
+using System.Net.Http;
 using UnityEditor;
 using System.Threading.Tasks;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
+using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class UpdateCheck
 {
     private const string PackageUrl = "https://github.com/informXR/iXRLibUnitySDK.git";
+    private const string VersionUrl = "https://api.github.com/repos/informXR/iXRLibForUnity/releases/latest";
     private const string PackageName = "com.informxr.unity";
     private const string SkippedVersionKey = "SkippedPackageVersion";
     private const int UpdateCheckFrequencyDays = 1;
@@ -31,7 +34,9 @@ public class UpdateCheck
             return;
         }
 
-        bool updateAvailable = await IsUpdateAvailable(currentVersion);
+        string latestVersion = CheckLatestVersion();
+        if (string.IsNullOrEmpty(latestVersion)) return;
+        bool updateAvailable = currentVersion != latestVersion;
         
         if (!updateAvailable)
         {
@@ -46,34 +51,6 @@ public class UpdateCheck
         }
         
         EditorPrefs.SetString(UpdateCheckPref, DateTime.UtcNow.AddDays(UpdateCheckFrequencyDays).ToString("G"));
-    }
-
-    private static async Task<bool> IsUpdateAvailable(string currentVersion)
-    {
-        ListRequest listRequest = Client.List(true); // true to include packages from the registry
-
-        while (!listRequest.IsCompleted)
-        {
-            await Task.Delay(100);
-        }
-
-        if (listRequest.Status == StatusCode.Success)
-        {
-            foreach (var package in listRequest.Result)
-            {
-                if (package.name == PackageName)
-                {
-                    return package.version != currentVersion;
-                }
-            }
-            Debug.LogWarning($"Package {PackageName} not found in the registry.");
-            return false;
-        }
-        else
-        {
-            Debug.LogError($"Failed to check for updates: {listRequest.Error.message}");
-            return false;
-        }
     }
 
     private static void ShowUpdateDialog(string currentVersion)
@@ -140,10 +117,37 @@ public class UpdateCheck
         return "";
     }
 
-    [Serializable]
-    private class GitHubRelease
+    private static string CheckLatestVersion()
     {
-        public string tag_name;
-        public string html_url;
+        try
+        {
+            using var client = new HttpClient();
+            
+            // Set User-Agent header required by GitHub API
+            client.DefaultRequestHeaders.Add("User-Agent", "Unity App");
+            
+            HttpResponseMessage response = client.GetAsync(VersionUrl).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonResponse = response.Content.ReadAsStringAsync().Result;
+                var releaseInfo = JsonUtility.FromJson<GitHubRelease>(jsonResponse);
+                Debug.Log("Latest release version: " + releaseInfo.tag_name);
+                return releaseInfo.tag_name.Replace("v", "");
+            }
+
+            Debug.LogError("Error: " + response.ReasonPhrase);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Exception occurred: " + ex.Message);
+        }
+
+        return "";
+    }
+
+    [Serializable]
+    public class GitHubRelease
+    {
+        public string tag_name; // Represents the version tag, e.g., "v1.0.0"
     }
 }
