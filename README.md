@@ -146,6 +146,7 @@ public void iXR.EventObjectiveStart(string objectiveName, string metaString = ""
 ```csharp
 public enum ResultOptions
 {
+    Null,
     Pass,
     Fail,
     Complete,
@@ -178,6 +179,7 @@ public void iXR.EventInteractionStart(string interactionName, string metaString 
 ```csharp
 public enum InteractionType
 {
+   Null, 
    Bool, // 1 or 0
    Select, // true or false and the result_details value should be a single letter or for multiple choice a,b,c
    Text, // a string 
