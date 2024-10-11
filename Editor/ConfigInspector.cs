@@ -1,6 +1,13 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
+// Add the enum definition here, outside of any class
+public enum DebugDisplaySide
+{
+    Left,
+    Right
+}
+
 [CustomEditor(typeof(Configuration))]
 public class ConfigInspector : Editor
 {
@@ -13,6 +20,11 @@ public class ConfigInspector : Editor
         config.orgID = EditorGUILayout.TextField(new GUIContent(
             "Organization ID (optional)", "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"), config.orgID);
         config.authSecret = EditorGUILayout.TextField("Authorization Secret (optional)", config.authSecret);
+        
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Debugging", EditorStyles.boldLabel);
+        config.debugWindow = EditorGUILayout.Toggle(new GUIContent(
+            "Show Debug Window", "Debug output will be displayed within the virtual space"), config.debugWindow);
         
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Player Tracking", EditorStyles.boldLabel);
@@ -42,7 +54,7 @@ public class ConfigInspector : Editor
             "Prune Sent Items Older Than Hours", "0 = Infinite, i.e. Never Prune"), config.pruneSentItemsOlderThanHours);
         config.maximumCachedItems = EditorGUILayout.IntField("Maximum Cached Items", config.maximumCachedItems);
         config.retainLocalAfterSent = EditorGUILayout.Toggle("Retain Local After Sent", config.retainLocalAfterSent);
-        
+
         if (GUILayout.Button("Reset To Sending Rule Defaults"))
         {
             config.sendRetriesOnFailure = 3;
@@ -60,4 +72,5 @@ public class ConfigInspector : Editor
 
         if (GUI.changed) EditorUtility.SetDirty(config);
     }
+    
 }

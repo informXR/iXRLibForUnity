@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
@@ -17,6 +17,7 @@ public class Authentication : SdkBehaviour
     private static string _userId;
     private static string _appId;
     private static Partner _partner = Partner.eNone;
+    private static int _failedAuthAttempts;
     
     public static void Initialize()
     {
@@ -66,6 +67,10 @@ public class Authentication : SdkBehaviour
         {
             SetSessionData();
             Authenticate();
+            if (iXRAuthentication.AuthMechanism.ContainsKey("prompt"))
+            {
+                KeyboardAuthenticate();
+            }
         }
     }
     
@@ -75,7 +80,7 @@ public class Authentication : SdkBehaviour
         {
 			if (iXRAuthentication.TokenExpirationImminent())
             {
-                Authenticate();
+                ReAuthenticate();
             }
         }
         else
@@ -87,7 +92,7 @@ public class Authentication : SdkBehaviour
     private static bool GetDataFromConfig()
     {
         const string appIdPattern = "^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$";
-        if (!Regex.IsMatch(Configuration.instance.appID, appIdPattern))
+        if (string.IsNullOrEmpty(Configuration.instance.appID) || !Regex.IsMatch(Configuration.instance.appID, appIdPattern))
         {
             Debug.LogError("iXRLib - Invalid Application ID. Cannot authenticate.");
             return false;
@@ -123,16 +128,54 @@ public class Authentication : SdkBehaviour
         return true;
     }
 
-    public static void Authenticate()
+    public static void KeyboardAuthenticate(string keyboardInput = null)
+    {
+        if (keyboardInput != null)
+        {
+			System.Collections.Generic.Dictionary<string, string> localAuthMechanism = iXRAuthentication.AuthMechanism;
+			string originalPrompt = localAuthMechanism["prompt"];
+            localAuthMechanism["prompt"] = keyboardInput;
+			iXRAuthentication.SetAuthMechanism(localAuthMechanism);
+			if (Authenticate())
+            {
+                _failedAuthAttempts = 0;
+                return;
+            }
+
+            localAuthMechanism["prompt"] = originalPrompt;
+			iXRAuthentication.SetAuthMechanism(localAuthMechanism);
+        }
+        
+        iXRAuthentication.AuthMechanism.TryGetValue("email", out string emailDomain);
+        string prompt = _failedAuthAttempts > 0 ? $"Authentication Failed ({_failedAuthAttempts})\n" : "";
+        prompt += iXRAuthentication.AuthMechanism["prompt"];
+        iXR.PresentKeyboard(prompt, iXRAuthentication.AuthMechanism["type"], emailDomain);
+        _failedAuthAttempts++;
+    }
+
+    private static bool Authenticate()
     {
         var result = iXRInit.Authenticate(_appId, _orgId, _deviceId, _authSecret, _partner);
         if (result == iXRResult.Ok)
         {
             Debug.Log("iXRLib - Authenticated successfully");
+            return true;
+        }
+
+        Debug.LogError($"iXRLib - Authentication failed : {result}");
+        return false;
+    }
+
+    private static void ReAuthenticate()
+    {
+        var result = iXRInit.ReAuthenticate(false);
+        if (result == iXRResult.Ok)
+        {
+            Debug.Log("iXRLib - ReAuthenticated successfully");
         }
         else
         {
-            Debug.LogError($"iXRLib - Authentication failed : {result}");
+            Debug.LogError($"iXRLib - ReAuthentication failed : {result}");
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using iXRLib;
 using UnityEngine;
 
 [DefaultExecutionOrder(100)] // Doesn't matter when this one runs
@@ -27,6 +28,7 @@ public class TrackSystemInfo : MonoBehaviour
 
     private void CheckSystemInfo()
     {
+        iXRBase.CaptureTimeStamp();
         var batteryData = new Dictionary<string, string>
         {
             ["Percentage"] = (int)(SystemInfo.batteryLevel * 100 + 0.5) + "%",
@@ -41,6 +43,7 @@ public class TrackSystemInfo : MonoBehaviour
             ["Total Unused Reserved"] = UnityEngine.Profiling.Profiler.GetTotalUnusedReservedMemoryLong().ToString()
         };
         iXR.TelemetryEntry("Memory", memoryData);
+        iXRBase.UnCaptureTimeStamp();
     }
     
     private void CheckFrameRate()
