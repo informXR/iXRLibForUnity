@@ -47,16 +47,16 @@ public class UpdateCheck
         }
         else
         {
-            ShowUpdateDialog(currentVersion);
+            ShowUpdateDialog(currentVersion, latestVersion);
         }
         
         EditorPrefs.SetString(UpdateCheckPref, DateTime.UtcNow.AddDays(UpdateCheckFrequencyDays).ToString("G"));
     }
 
-    private static void ShowUpdateDialog(string currentVersion)
+    private static void ShowUpdateDialog(string currentVersion, string latestVersion)
     {
         int option = EditorUtility.DisplayDialogComplex("Update Available",
-            $"A new version is available. Your current version is {currentVersion}. Would you like to update?",
+            $"Version {latestVersion} is available. Your current version is {currentVersion}. Would you like to update?",
             "Update", "Cancel", "Skip This Version");
 
         if (option == 0) // Update
