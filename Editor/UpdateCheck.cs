@@ -11,7 +11,7 @@ public class UpdateCheck
 {
     private const string PackageUrl = "https://github.com/informXR/iXRLibUnitySDK.git";
     private const string VersionUrl = "https://api.github.com/repos/informXR/iXRLibForUnity/releases/latest";
-    private const string PackageName = "com.informxr.unity";
+    private const string PackageName = "com.informxr.unity-sdk";
     private const string SkippedVersionKey = "SkippedPackageVersion";
     private const int UpdateCheckFrequencyDays = 1;
     public const string UpdateCheckPref = "iXR_updateCheck";
