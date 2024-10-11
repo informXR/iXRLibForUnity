@@ -1,6 +1,6 @@
 {
     "name": "com.informxr.unity",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "displayName": "iXRLib for Unity",
     "description": "iXRLib analytics for Unity",
     "unity": "2021.3",
