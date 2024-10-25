@@ -9,11 +9,11 @@ public class DraggableCanvas : MonoBehaviour, IDragHandler, IBeginDragHandler, I
     private void Awake()
     {
         _rectTransform = GetComponent<RectTransform>();
+        _originalZ = _rectTransform.localPosition.z;
     }
     
     public void OnBeginDrag(PointerEventData eventData)
     {
-        _originalZ = _rectTransform.position.z;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -26,9 +26,9 @@ public class DraggableCanvas : MonoBehaviour, IDragHandler, IBeginDragHandler, I
     public void OnEndDrag(PointerEventData eventData)
     {
         // Keep Z position constant
-        Vector3 position = _rectTransform.position;
+        Vector3 position = _rectTransform.localPosition;
         position.z = _originalZ;
-        _rectTransform.position = position;
+        _rectTransform.localPosition = position;
         
         _rectTransform.LookAt(Camera.main.transform);
         _rectTransform.Rotate(0, 180, 0); // Flip it to face the right direction
