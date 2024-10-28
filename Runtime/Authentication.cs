@@ -39,11 +39,10 @@ public class Authentication : SdkBehaviour
 
     private static void CheckArborInfo()
     {
-        string orgId = Callback.Service.GetOrgId();
-        if (string.IsNullOrEmpty(orgId)) return;
+        if (Callback.Service == null) return;
 
         _partner = Partner.eArborXR;
-        _orgId = orgId;
+        _orgId = Callback.Service.GetOrgId();
         _deviceId = Callback.Service.GetDeviceId();
         _authSecret = Callback.Service.GetFingerprint();
         _userId = Callback.Service.GetAccessToken();
