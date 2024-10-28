@@ -14,6 +14,6 @@ public class Menu
     [MenuItem("informXR/Documentation", priority = 2)]
     private static void Documentation()
     {
-        Application.OpenURL("https://www.informxr.com/about");
+        Application.OpenURL("https://github.com/informXR/iXRLibForUnity?tab=readme-ov-file#table-of-contents");
     }
 }
