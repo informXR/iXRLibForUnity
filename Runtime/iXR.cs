@@ -286,17 +286,17 @@ public class iXR
 	{
 		if (keyboardType is "text" or null)
 		{
-			NonNativeKeyboard.Instance.Prompt.text = promptText ?? "Enter Login";
+			NonNativeKeyboard.Instance.Prompt.text = promptText ?? "Please Enter Your Login";
 			NonNativeKeyboard.Instance.PresentKeyboard();
 		}
 		else if (keyboardType == "assessmentPin")
 		{
-			NonNativeKeyboard.Instance.Prompt.text = promptText ?? "Enter PIN";
+			NonNativeKeyboard.Instance.Prompt.text = promptText ?? "Enter your 6-digit PIN";
 			NonNativeKeyboard.Instance.PresentKeyboard(NonNativeKeyboard.LayoutType.Symbol);
 		}
 		else if (keyboardType == "email")
 		{
-			NonNativeKeyboard.Instance.Prompt.text = promptText ?? "Enter E-Mail";
+			NonNativeKeyboard.Instance.Prompt.text = promptText ?? "Enter your email";
 			NonNativeKeyboard.Instance.EmailDomain.text = emailDomain;
 			NonNativeKeyboard.Instance.PresentKeyboard(NonNativeKeyboard.LayoutType.Email);
 		}
