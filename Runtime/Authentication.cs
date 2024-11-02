@@ -145,7 +145,7 @@ public class Authentication : SdkBehaviour
 			iXRAuthentication.SetAuthMechanism(localAuthMechanism);
         }
         
-        iXRAuthentication.AuthMechanism.TryGetValue("email", out string emailDomain);
+        iXRAuthentication.AuthMechanism.TryGetValue("domain", out string emailDomain);
         string prompt = _failedAuthAttempts > 0 ? $"Authentication Failed ({_failedAuthAttempts})\n" : "";
         prompt += iXRAuthentication.AuthMechanism["prompt"];
         iXR.PresentKeyboard(prompt, iXRAuthentication.AuthMechanism["type"], emailDomain);
