@@ -321,6 +321,15 @@ public void iXR.SetUserMeta(string metaString)
 - `userId` (string): The User ID used during authentication (setting this with trigger re-authentication).
 - `metaString` (string): A string of key-value pairs in JSON format.
 
+## Exit Polls
+Deliver questionnaires to users to gather feedback.
+```csharp
+public void PollUser(string prompt, ExitPollHandler.PollType pollType)
+```
+**Poll Types:**
+- `Thumbs Up/Thumbs Down`
+- `Rating (1-5)`
+
 ## Debug Window
 The Debug Window is a little bonus feature from the iXRLib developers. 
 To help with general debugging, this feature routes a copy of all iXRLib messages (Logs, Events, etc) to a window within the VR space. This enables developers to view logs in VR without having to repeatedly take on and off your headset while debugging. If enabled, this feature can be disabled at runtime by pressing the `Primary Controller Button`.
