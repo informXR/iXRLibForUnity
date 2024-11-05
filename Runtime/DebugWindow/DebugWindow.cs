@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +7,8 @@ public class DebugWindow : MonoBehaviour
 {
     public TMP_Text logText;
     public ScrollRect scrollRect;
+    private readonly List<string> _logs = new();
+    private const int MaxLogs = 50;
     
     private void OnEnable()
     {
@@ -20,19 +23,16 @@ public class DebugWindow : MonoBehaviour
     
     private void HandleLog(string logString, string stackTrace, LogType type)
     {
-        string msgText = logText.text;
-        if (!string.IsNullOrEmpty(msgText)) msgText += "\n";
-        
         float roundedTime = Mathf.Round(Time.time * 100f) / 100f;
         string newLog = $"[{roundedTime}] {type}: {logString}";
-        msgText += newLog;
-        logText.text = msgText;
+        _logs.Add(newLog);
+        if (_logs.Count > MaxLogs) _logs.RemoveAt(0);
+        logText.text = string.Join("\n", _logs);
         
         // Force the layout to update immediately
         LayoutRebuilder.ForceRebuildLayoutImmediate(logText.rectTransform);
 
         // Scroll to the bottom to show the latest text
-        Canvas.ForceUpdateCanvases();
         scrollRect.verticalNormalizedPosition = 0f;
     }
 }
