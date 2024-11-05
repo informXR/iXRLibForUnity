@@ -16,6 +16,7 @@ public static class Initialize
         KeyboardHandler.Initialize();
         TrackSystemInfo.Initialize();
         DebugWindowPositioner.Initialize();
+        ExitPollHandler.Initialize();
 #if UNITY_ANDROID
         TrackInputDevices.Initialize();
 #endif

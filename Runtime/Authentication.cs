@@ -145,7 +145,7 @@ public class Authentication : SdkBehaviour
 			iXRAuthentication.SetAuthMechanism(localAuthMechanism);
         }
         
-        iXRAuthentication.AuthMechanism.TryGetValue("email", out string emailDomain);
+        iXRAuthentication.AuthMechanism.TryGetValue("domain", out string emailDomain);
         string prompt = _failedAuthAttempts > 0 ? $"Authentication Failed ({_failedAuthAttempts})\n" : "";
         prompt += iXRAuthentication.AuthMechanism["prompt"];
         iXR.PresentKeyboard(prompt, iXRAuthentication.AuthMechanism["type"], emailDomain);
@@ -185,7 +185,6 @@ public class Authentication : SdkBehaviour
         iXRAuthentication.Partner = _partner;
         if (!string.IsNullOrEmpty(_userId)) iXRAuthentication.UserId = _userId;
         
-        iXR.TelemetryEntry("OS Version", $"Version={SystemInfo.operatingSystem}");
         iXRAuthentication.OsVersion = SystemInfo.operatingSystem;
         
         var currentAssembly = Assembly.GetExecutingAssembly();
@@ -194,18 +193,14 @@ public class Authentication : SdkBehaviour
         {
             if (assemblyName.Name == "XRDM.SDK.External.Unity")
             {
-                iXR.TelemetryEntry("XRDM Version", $"Version={assemblyName.Version}");
                 iXRAuthentication.XrdmVersion = assemblyName.Version.ToString();
                 break;
             }
         }
         
         //TODO Geolocation
-
-        iXR.TelemetryEntry("Application Version", $"Version={Application.version}");
-        iXRAuthentication.AppVersion = Application.version;
         
-        iXR.TelemetryEntry("Unity Version", $"Version={Application.unityVersion}");
+        iXRAuthentication.AppVersion = Application.version;
         iXRAuthentication.UnityVersion = Application.unityVersion;
 
         SetIPAddress();

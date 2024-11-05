@@ -8,7 +8,7 @@ public class DebugWindowPositioner : MonoBehaviour
     {
         if (_instance != null) return;
         
-        var singletonObject = new GameObject("DebugPositioner");
+        var singletonObject = new GameObject("DebugWindowPositioner");
         _instance = singletonObject.AddComponent<DebugWindowPositioner>();
         DontDestroyOnLoad(singletonObject);
     }

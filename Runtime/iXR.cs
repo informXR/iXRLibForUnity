@@ -301,4 +301,9 @@ public class iXR
 			NonNativeKeyboard.Instance.PresentKeyboard(NonNativeKeyboard.LayoutType.Email);
 		}
 	}
+
+	public static void PollUser(string prompt, ExitPollHandler.PollType pollType)
+	{
+		ExitPollHandler.AddPoll(prompt, pollType);
+	}
 }
