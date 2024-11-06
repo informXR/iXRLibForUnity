@@ -135,7 +135,7 @@ public class Authentication : SdkBehaviour
 			string originalPrompt = localAuthMechanism["prompt"];
             localAuthMechanism["prompt"] = keyboardInput;
 			iXRAuthentication.SetAuthMechanism(localAuthMechanism);
-			if (Authenticate())
+			if (iXRInit.FinalAuthenticate() == iXRResult.Ok)
             {
                 _failedAuthAttempts = 0;
                 return;
