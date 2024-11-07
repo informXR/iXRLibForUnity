@@ -284,6 +284,7 @@ public class iXR
 	// ---
 	public static void PresentKeyboard(string promptText = null, string keyboardType = null, string emailDomain = null)
 	{
+		KeyboardHandler.ProcessingSubmit = false;
 		if (keyboardType is "text" or null)
 		{
 			NonNativeKeyboard.Instance.Prompt.text = promptText ?? "Please Enter Your Login";
