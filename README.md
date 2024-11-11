@@ -331,11 +331,11 @@ public void PollUser(string prompt, ExitPollHandler.PollType pollType)
 - `Rating (1-5)`
 
 ## Debug Window
-The Debug Window is a little bonus feature from the iXRLib developers. 
-To help with general debugging, this feature routes a copy of all iXRLib messages (Logs, Events, etc) to a window within the VR space. This enables developers to view logs in VR without having to repeatedly take on and off your headset while debugging. If enabled, this feature can be disabled at runtime by pressing the `Primary Controller Button`.
+The Debug Window is a little bonus feature from the iXRLib developers.
+To help with general debugging, this feature routes a copy of all iXRLib messages (Logs, Events, etc) to a window within the VR space. This enables developers to view logs in VR without having to repeatedly take on and off your headset while debugging.
 
 ### Setup
-To use this feature, simply check the `Show Debug Window` in the Inform XR Configuration.
+To use this feature, simply drag the `iXRDebugWindow` Prefab from `iXRLib for Unity/Resources/Prefabs`, to whatever object in the scene you want this window attached to (i.e. `Left Controller`).
 
 ## FAQ
 

@@ -1,9 +1,11 @@
-﻿﻿using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using iXRLib;
+using Microsoft.MixedReality.Toolkit.Experimental.UI;
 using UnityEngine;
 using XRDM.SDK.External.Unity;
 
@@ -127,7 +129,7 @@ public class Authentication : SdkBehaviour
         return true;
     }
 
-    public static void KeyboardAuthenticate(string keyboardInput = null)
+    public static async Task KeyboardAuthenticate(string keyboardInput = null)
     {
         if (keyboardInput != null)
         {
@@ -135,8 +137,10 @@ public class Authentication : SdkBehaviour
 			string originalPrompt = localAuthMechanism["prompt"];
             localAuthMechanism["prompt"] = keyboardInput;
 			iXRAuthentication.SetAuthMechanism(localAuthMechanism);
-			if (Authenticate())
+            iXRResult result = await Task.Run(iXRInit.FinalAuthenticate);
+			if (result == iXRResult.Ok)
             {
+                NonNativeKeyboard.Instance.Close();
                 _failedAuthAttempts = 0;
                 return;
             }
@@ -152,17 +156,16 @@ public class Authentication : SdkBehaviour
         _failedAuthAttempts++;
     }
 
-    private static bool Authenticate()
+    private static void Authenticate()
     {
         var result = iXRInit.Authenticate(_appId, _orgId, _deviceId, _authSecret, _partner);
         if (result == iXRResult.Ok)
         {
             Debug.Log("iXRLib - Authenticated successfully");
-            return true;
+            return;
         }
 
         Debug.LogError($"iXRLib - Authentication failed : {result}");
-        return false;
     }
 
     private static void ReAuthenticate()
