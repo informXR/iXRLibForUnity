@@ -41,13 +41,19 @@ public class Authentication : SdkBehaviour
 
     private static void CheckArborInfo()
     {
+        Debug.Log("iXRLib - TEST1");
         if (Callback.Service == null) return;
-
+        Debug.Log("iXRLib - TEST2");
         _partner = Partner.eArborXR;
+        Debug.Log("iXRLib - TEST3");
         _orgId = Callback.Service.GetOrgId();
+        Debug.Log("iXRLib - TEST4");
         _deviceId = Callback.Service.GetDeviceId();
+        Debug.Log("iXRLib - TEST5");
         _authSecret = Callback.Service.GetFingerprint();
+        Debug.Log("iXRLib - TEST6");
         _userId = Callback.Service.GetAccessToken();
+        Debug.Log("iXRLib - TEST7");
     }
     
     private sealed class Callback : IConnectionCallback
