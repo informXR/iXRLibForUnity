@@ -1,13 +1,22 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using iXRLib;
 using UnityEngine;
 
 public static class Initialize
 {
+#if UNITY_WEBGL && !UNITY_EDITOR
+    [DllImport("__Internal")]
+    private static extern void LoadIxrLib();
+#endif
+    
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void OnBeforeSceneLoad()
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        LoadIxrLib();
+#endif
         //TestDiagnosticStringCallbackMechanism();
         iXRInit.Start();
         SetConfigValues();
