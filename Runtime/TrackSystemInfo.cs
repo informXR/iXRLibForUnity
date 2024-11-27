@@ -48,7 +48,10 @@ public class TrackSystemInfo : MonoBehaviour
     
     private void CheckFrameRate()
     {
-        float frameRate = (Time.frameCount - _lastFrameCount) / (Time.time - _lastTime);
+        float timeDiff = Time.time - _lastTime;
+        if (timeDiff == 0) return;
+        
+        float frameRate = (Time.frameCount - _lastFrameCount) / timeDiff;
         var telemetryData = new Dictionary<string, string>
         {
             ["Per Second"] = frameRate.ToString(CultureInfo.InvariantCulture)
