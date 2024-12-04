@@ -183,8 +183,9 @@ public class Authentication : SdkBehaviour
 
     private static void SetSessionData()
     {
-        //TODO Device Type
-        
+#if UNITY_ANDROID
+        iXRAuthentication.DeviceModel = DeviceModel.deviceModel;
+#endif
         iXRAuthentication.Partner = _partner;
         if (!string.IsNullOrEmpty(_userId)) iXRAuthentication.UserId = _userId;
         
