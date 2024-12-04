@@ -20,6 +20,9 @@ public static class Initialize
         //TestDiagnosticStringCallbackMechanism();
         iXRInit.Start();
         SetConfigValues();
+#if UNITY_ANDROID
+        DeviceModel.Initialize();
+#endif
         KeyboardHandler.Initialize(); // Needs to come before Auth in case auth needs keyboard
         Authentication.Initialize();
         KeyboardHandler.Initialize();
