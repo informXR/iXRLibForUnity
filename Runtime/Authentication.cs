@@ -206,6 +206,7 @@ public class Authentication : SdkBehaviour
         
         iXRAuthentication.AppVersion = Application.version;
         iXRAuthentication.UnityVersion = Application.unityVersion;
+        iXRAuthentication.DataPath = Application.persistentDataPath;
 
         SetIPAddress();
     }
