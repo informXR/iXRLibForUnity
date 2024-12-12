@@ -3,10 +3,18 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ExitPoll : MonoBehaviour
+public interface IExitPoll
 {
-    public static ExitPoll Instance { get; private set; }
-    
+    event EventHandler OnTextSubmitted;
+    event EventHandler OnThumbsDown;
+    event EventHandler OnThumbsUp;
+    event EventHandler<ExitPoll.RatingEventArgs> OnRating;
+    TMP_Text prompt { get; }
+    void SetActive(bool active);
+}
+
+public class ExitPoll : MonoBehaviour, IExitPoll
+{
     public Button submitButton;
     public Button thumbsUpButton;
     public Button thumbsDownButton;
@@ -15,18 +23,13 @@ public class ExitPoll : MonoBehaviour
     public Button threeRatingButton;
     public Button fourRatingButton;
     public Button fiveRatingButton;
-    public TMP_Text prompt;
+    public TMP_Text prompt { get; private set; }
     
     public event EventHandler OnTextSubmitted = delegate { };
     public event EventHandler OnThumbsDown = delegate { };
     public event EventHandler OnThumbsUp = delegate { };
-    public event EventHandler<RatingEventArgs> OnRating = delegate { };
+    public event EventHandler<ExitPoll.RatingEventArgs> OnRating = delegate { };
 
-    private void Awake()
-    {
-        Instance = this;
-    }
-    
     private void Start()
     {
         submitButton?.onClick.AddListener(OnSubmitClick);
@@ -37,6 +40,11 @@ public class ExitPoll : MonoBehaviour
         threeRatingButton?.onClick.AddListener(OnThreeRatingClick);
         fourRatingButton?.onClick.AddListener(OnFourRatingClick);
         fiveRatingButton?.onClick.AddListener(OnFiveRatingClick);
+    }
+
+    public void SetActive(bool active)
+    {
+        gameObject.SetActive(active);
     }
     
     private void OnSubmitClick()
@@ -59,31 +67,31 @@ public class ExitPoll : MonoBehaviour
 
     private void OnOneRatingClick()
     {
-        OnRating?.Invoke(this, new RatingEventArgs(1));
+        OnRating?.Invoke(this, new ExitPoll.RatingEventArgs(1));
         gameObject.SetActive(false);
     }
     
     private void OnTwoRatingClick()
     {
-        OnRating?.Invoke(this, new RatingEventArgs(2));
+        OnRating?.Invoke(this, new ExitPoll.RatingEventArgs(2));
         gameObject.SetActive(false);
     }
     
     private void OnThreeRatingClick()
     {
-        OnRating?.Invoke(this, new RatingEventArgs(3));
+        OnRating?.Invoke(this, new ExitPoll.RatingEventArgs(3));
         gameObject.SetActive(false);
     }
     
     private void OnFourRatingClick()
     {
-        OnRating?.Invoke(this, new RatingEventArgs(4));
+        OnRating?.Invoke(this, new ExitPoll.RatingEventArgs(4));
         gameObject.SetActive(false);
     }
     
     private void OnFiveRatingClick()
     {
-        OnRating?.Invoke(this, new RatingEventArgs(5));
+        OnRating?.Invoke(this, new ExitPoll.RatingEventArgs(5));
         gameObject.SetActive(false);
     }
     

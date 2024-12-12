@@ -2,7 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExitPollHandler : MonoBehaviour
+public interface IExitPollHandler
+{
+    void Initialize(IIxrService ixrService);
+    void AddPoll(string prompt, ExitPollHandler.PollType pollType);
+}
+
+public class ExitPollHandler : MonoBehaviour, IExitPollHandler
 {
     public enum PollType
     {
@@ -10,35 +16,40 @@ public class ExitPollHandler : MonoBehaviour
         Rating
     }
     
-    private static ExitPollHandler _instance;
-    private static readonly List<Tuple<string, PollType>> Polls = new();
-    private static bool _isProcessing;
+    private IIxrService _ixrService;
+    private readonly List<Tuple<string, PollType>> _polls = new();
+    private bool _isProcessing;
+    private IExitPoll _currentPoll;
     
-    public static void Initialize()
+    public void Initialize(IIxrService ixrService)
     {
-        if (_instance != null) return;
-        
-        var singletonObject = new GameObject("ExitPollHandler");
-        _instance = singletonObject.AddComponent<ExitPollHandler>();
-        DontDestroyOnLoad(singletonObject);
+        _ixrService = ixrService;
     }
     
-    public static void AddPoll(string prompt, PollType pollType)
+    public void AddPoll(string prompt, PollType pollType)
     {
-        Polls.Add(new Tuple<string, PollType>(prompt, pollType));
+        _polls.Add(new Tuple<string, PollType>(prompt, pollType));
         
         if (!_isProcessing) ProcessPoll();
     }
 
-    private static void CreatePoll(PollType pollType)
+    private void CreatePoll(PollType pollType)
     {
         string pollPath = "";
         if (pollType == PollType.Rating) pollPath = "Prefabs/iXRExitPollRating";
         else if (pollType == PollType.Thumbs) pollPath = "Prefabs/iXRExitPollThumbs";
-        GameObject exitPoll = Resources.Load<GameObject>(pollPath);
-        if (exitPoll != null)
+        
+        GameObject exitPollPrefab = Resources.Load<GameObject>(pollPath);
+        if (exitPollPrefab != null)
         {
-            Instantiate(exitPoll, Camera.main.transform);
+            var exitPollObject = Instantiate(exitPollPrefab, Camera.main.transform);
+            _currentPoll = exitPollObject.GetComponent<ExitPoll>();
+            if (_currentPoll == null)
+            {
+                Debug.LogError("Exit poll prefab does not contain ExitPoll component");
+                return;
+            }
+            WireButtonHandlers();
         }
         else
         {
@@ -46,45 +57,49 @@ public class ExitPollHandler : MonoBehaviour
         }
     }
 
-    private static void ProcessPoll()
+    private void ProcessPoll()
     {
         _isProcessing = true;
 
-        Tuple<string, PollType> poll = Polls[0];
+        var poll = _polls[0];
         CreatePoll(poll.Item2);
-        ExitPoll.Instance.prompt.text = poll.Item1;
-        WireButtonHandlers();
-        Polls.RemoveAt(0);
+        if (_currentPoll != null)
+        {
+            _currentPoll.prompt.text = poll.Item1;
+        }
+        _polls.RemoveAt(0);
     }
 
-    private static void WireButtonHandlers()
+    private void WireButtonHandlers()
     {
-        ExitPoll.Instance.OnThumbsUp += HandleThumbsUp;
-        ExitPoll.Instance.OnThumbsDown += HandleThumbsDown;
-        ExitPoll.Instance.OnRating += HandleRating;
+        if (_currentPoll == null) return;
+        
+        _currentPoll.OnThumbsUp += HandleThumbsUp;
+        _currentPoll.OnThumbsDown += HandleThumbsDown;
+        _currentPoll.OnRating += HandleRating;
     }
     
-    private static void HandleThumbsUp(object sender, EventArgs e)
+    private void HandleThumbsUp(object sender, EventArgs e)
     {
         var poll = (ExitPoll)sender;
-        iXR.Event(poll.prompt.text, "answer=up");
-        if (Polls.Count > 0) ProcessPoll();
+        _ixrService.Event(poll.prompt.text, "answer=up");
+        if (_polls.Count > 0) ProcessPoll();
         _isProcessing = false;
     }
     
-    private static void HandleThumbsDown(object sender, EventArgs e)
+    private void HandleThumbsDown(object sender, EventArgs e)
     {
         var poll = (ExitPoll)sender;
-        iXR.Event(poll.prompt.text, "answer=down");
-        if (Polls.Count > 0) ProcessPoll();
+        _ixrService.Event(poll.prompt.text, "answer=down");
+        if (_polls.Count > 0) ProcessPoll();
         _isProcessing = false;
     }
     
-    private static void HandleRating(object sender, ExitPoll.RatingEventArgs e)
+    private void HandleRating(object sender, ExitPoll.RatingEventArgs e)
     {
         var poll = (ExitPoll)sender;
-        iXR.Event(poll.prompt.text, $"answer={e.rating}");
-        if (Polls.Count > 0) ProcessPoll();
+        _ixrService.Event(poll.prompt.text, $"answer={e.rating}");
+        if (_polls.Count > 0) ProcessPoll();
         _isProcessing = false;
     }
 }

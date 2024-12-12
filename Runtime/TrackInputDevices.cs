@@ -4,10 +4,12 @@ using iXRLib;
 using UnityEngine;
 using UnityEngine.XR;
 
-[DefaultExecutionOrder(100)] // Doesn't matter when this one runs
-public class TrackInputDevices : MonoBehaviour
+[DefaultExecutionOrder(100)]
+public class TrackInputDevices : MonoBehaviour, ITrackInputDevices
 {
-    public float positionUpdateIntervalSeconds = (float)(60.0 / Configuration.instance.trackingUpdatesPerMinute);
+    private IIxrService _ixrService;
+    private IConfigurationService _configService;
+    private float _positionUpdateIntervalSeconds;
     
     private InputDevice _rightController;
     private InputDevice _leftController;
@@ -20,29 +22,19 @@ public class TrackInputDevices : MonoBehaviour
     private readonly Dictionary<InputFeatureUsage<bool>, bool> _rightTriggerValues = new();
     private readonly Dictionary<InputFeatureUsage<bool>, bool> _leftTriggerValues = new();
 
-    private static TrackInputDevices _instance;
-    
-    public static void Initialize()
+    public void Initialize(IIxrService ixrService)
     {
-        if (_instance != null || !Configuration.instance.headsetTracking) return;
-        
-        var singletonObject = new GameObject("TrackInputDevices");
-        _instance = singletonObject.AddComponent<TrackInputDevices>();
-        DontDestroyOnLoad(singletonObject);
+        _ixrService = ixrService;
+        _configService = ServiceLocator.GetService<IConfigurationService>();
+        _positionUpdateIntervalSeconds = (float)(60.0 / _configService.GetConfiguration().trackingUpdatesPerMinute);
+        InvokeRepeating(nameof(InitializeInputDevices), 0, 1);
+        InvokeRepeating(nameof(UpdateLocationData), 0, _positionUpdateIntervalSeconds);
     }
 
-    private void Start()
-    {
-        iXRBase.CaptureTimeStamp();
-        InvokeRepeating(nameof(InitializeInputDevices), 0, 1); // Check for input devices every second
-        InvokeRepeating(nameof(UpdateLocationData), 0, positionUpdateIntervalSeconds);
-        iXRBase.UnCaptureTimeStamp();
-    }
-    
     private void Update()
     {
         iXRBase.CaptureTimeStamp();
-        CheckTriggers(); // Always check for triggers
+        CheckTriggers();
         iXRBase.UnCaptureTimeStamp();
     }
 
@@ -53,7 +45,7 @@ public class TrackInputDevices : MonoBehaviour
         UpdateLocationData(_hmd);
     }
 
-    private static void UpdateLocationData(InputDevice device)
+    private void UpdateLocationData(InputDevice device)
     {
         if (!device.isValid) return;
         
@@ -70,15 +62,7 @@ public class TrackInputDevices : MonoBehaviour
             ["y"] = position.y.ToString(CultureInfo.InvariantCulture),
             ["z"] = position.z.ToString(CultureInfo.InvariantCulture)
         };
-        var rotationDict = new Dictionary<string, string>
-        {
-            ["x"] = rotation.x.ToString(CultureInfo.InvariantCulture),
-            ["y"] = rotation.y.ToString(CultureInfo.InvariantCulture),
-            ["z"] = rotation.z.ToString(CultureInfo.InvariantCulture),
-            ["w"] = rotation.w.ToString(CultureInfo.InvariantCulture)
-        };
-        iXR.TelemetryEntry(deviceName + " Position", positionDict);
-        iXR.TelemetryEntry(deviceName + " Rotation", rotationDict);
+        _ixrService.TelemetryEntry(deviceName + " Position", positionDict);
     }
 
     private void CheckTriggers()
@@ -101,7 +85,7 @@ public class TrackInputDevices : MonoBehaviour
                 {
                     [trigger.name] = "Pressed"
                 };
-                iXR.TelemetryEntry($"Right Controller {trigger.name}", telemetryData);
+                _ixrService.TelemetryEntry($"Right Controller {trigger.name}", telemetryData);
                 _rightTriggerValues[trigger] = pressed;
             }
         }
@@ -116,7 +100,7 @@ public class TrackInputDevices : MonoBehaviour
                 {
                     [trigger.name] = "Pressed"
                 };
-                iXR.TelemetryEntry($"Left Controller {trigger.name}", telemetryData);
+                _ixrService.TelemetryEntry($"Left Controller {trigger.name}", telemetryData);
                 _leftTriggerValues[trigger] = pressed;
             }
         }

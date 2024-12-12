@@ -6,6 +6,7 @@ using UnityEngine;
 public class KeyboardHandler : MonoBehaviour
 {
     private static KeyboardHandler _instance;
+    private static IAuthenticationService _authService;
     public static bool ProcessingSubmit;
     private const string ProcessingText = "Processing";
     
@@ -15,6 +16,7 @@ public class KeyboardHandler : MonoBehaviour
         
         var singletonObject = new GameObject("KeyboardHandler");
         _instance = singletonObject.AddComponent<KeyboardHandler>();
+        _authService = ServiceLocator.GetService<IAuthenticationService>();
         DontDestroyOnLoad(singletonObject);
     }
     
@@ -39,7 +41,7 @@ public class KeyboardHandler : MonoBehaviour
         
         StartCoroutine(ProcessingVisual());
         var keyboard = (NonNativeKeyboard)sender;
-        await Authentication.KeyboardAuthenticate(keyboard.InputField.text);
+        await _authService.KeyboardAuthenticate(keyboard.InputField.text);
     }
     
     private static IEnumerator ProcessingVisual()

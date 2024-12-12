@@ -4,60 +4,57 @@ using iXRLib;
 using UnityEngine;
 
 [DefaultExecutionOrder(100)] // Doesn't matter when this one runs
-public class TrackSystemInfo : MonoBehaviour
+public class TrackSystemInfo : MonoBehaviour, ITrackSystemInfo
 {
-    private int _lastFrameCount;
-    private float _lastTime;
-    private const int FrameRateCheckIntervalSeconds = 10;
-    private static TrackSystemInfo _instance;
-    
-    public static void Initialize()
+    private IIxrService _ixrService;
+    private float _lastCpuUsage;
+    private float _lastMemoryUsage;
+
+    public void Initialize()
     {
-        if (_instance != null) return;
-        
-        var singletonObject = new GameObject("TrackSystemInfo");
-        _instance = singletonObject.AddComponent<TrackSystemInfo>();
-        DontDestroyOnLoad(singletonObject);
-    }
-    
-    private void Start()
-    {
-        InvokeRepeating(nameof(CheckSystemInfo), 0, 60); // Call every 60 seconds
-        InvokeRepeating(nameof(CheckFrameRate), 0, FrameRateCheckIntervalSeconds);
+        _ixrService = ServiceLocator.GetService<IIxrService>();
+        InvokeRepeating(nameof(UpdateSystemInfo), 0, 60);
     }
 
-    private void CheckSystemInfo()
+    private void UpdateSystemInfo()
     {
-        iXRBase.CaptureTimeStamp();
-        var batteryData = new Dictionary<string, string>
+        var cpuUsage = GetCPUUsage();
+        if (Mathf.Abs(cpuUsage - _lastCpuUsage) > 0.01f)
         {
-            ["Percentage"] = (int)(SystemInfo.batteryLevel * 100 + 0.5) + "%",
-            ["Status"] = SystemInfo.batteryStatus.ToString()
-        };
-        iXR.TelemetryEntry("Battery", batteryData);
-        
-        var memoryData = new Dictionary<string, string>
+            var cpuDict = new Dictionary<string, string>
+            {
+                ["usage"] = cpuUsage.ToString(CultureInfo.InvariantCulture)
+            };
+            _ixrService.TelemetryEntry("CPU Usage", cpuDict);
+            _lastCpuUsage = cpuUsage;
+        }
+
+        var memoryUsage = GetMemoryUsage();
+        if (Mathf.Abs(memoryUsage - _lastMemoryUsage) > 0.01f)
         {
-            ["Total Allocated"] = UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong().ToString(),
-            ["Total Reserved"] = UnityEngine.Profiling.Profiler.GetTotalReservedMemoryLong().ToString(),
-            ["Total Unused Reserved"] = UnityEngine.Profiling.Profiler.GetTotalUnusedReservedMemoryLong().ToString()
+            var memoryDict = new Dictionary<string, string>
+            {
+                ["usage"] = memoryUsage.ToString(CultureInfo.InvariantCulture)
+            };
+            _ixrService.TelemetryEntry("Memory Usage", memoryDict);
+            _lastMemoryUsage = memoryUsage;
+        }
+
+        var batteryDict = new Dictionary<string, string>
+        {
+            ["level"] = SystemInfo.batteryLevel.ToString(CultureInfo.InvariantCulture),
+            ["status"] = SystemInfo.batteryStatus.ToString()
         };
-        iXR.TelemetryEntry("Memory", memoryData);
-        iXRBase.UnCaptureTimeStamp();
+        _ixrService.TelemetryEntry("Battery", batteryDict);
     }
-    
-    private void CheckFrameRate()
+
+    private static float GetCPUUsage()
     {
-        float timeDiff = Time.time - _lastTime;
-        if (timeDiff == 0) return;
-        
-        float frameRate = (Time.frameCount - _lastFrameCount) / timeDiff;
-        var telemetryData = new Dictionary<string, string>
-        {
-            ["Per Second"] = frameRate.ToString(CultureInfo.InvariantCulture)
-        };
-        iXR.TelemetryEntry("Frame Rate", telemetryData);
-        _lastFrameCount = Time.frameCount;
-        _lastTime = Time.time;
+        return 0; // TODO: Implement CPU usage tracking
+    }
+
+    private static float GetMemoryUsage()
+    {
+        return UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong() / (float)UnityEngine.Profiling.Profiler.GetTotalReservedMemoryLong();
     }
 }
