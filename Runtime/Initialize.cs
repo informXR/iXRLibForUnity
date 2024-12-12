@@ -27,6 +27,7 @@ public static class Initialize
         Authentication.Initialize();
         KeyboardHandler.Initialize();
         TrackSystemInfo.Initialize();
+        EyeTracking.Initialize();
         ExitPollHandler.Initialize();
 #if UNITY_ANDROID
         TrackInputDevices.Initialize();
