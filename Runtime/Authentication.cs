@@ -184,7 +184,7 @@ public class Authentication : SdkBehaviour
     private static void SetSessionData()
     {
 #if UNITY_ANDROID
-        iXRAuthentication.DeviceModel = DeviceModel.deviceModel;
+        if (!string.IsNullOrEmpty(DeviceModel.deviceModel)) iXRAuthentication.DeviceModel = DeviceModel.deviceModel;
 #endif
         iXRAuthentication.Partner = _partner;
         if (!string.IsNullOrEmpty(_userId)) iXRAuthentication.UserId = _userId;
@@ -206,6 +206,7 @@ public class Authentication : SdkBehaviour
         
         iXRAuthentication.AppVersion = Application.version;
         iXRAuthentication.UnityVersion = Application.unityVersion;
+        iXRAuthentication.DataPath = Application.persistentDataPath;
 
         SetIPAddress();
     }
