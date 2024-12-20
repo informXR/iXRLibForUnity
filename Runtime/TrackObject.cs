@@ -2,16 +2,18 @@ using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 
-[DefaultExecutionOrder(100)] // Doesn't matter when this one runs
+[DefaultExecutionOrder(100)]
 [AddComponentMenu("informXR/Track Object")]
 public class TrackObject : MonoBehaviour
 {
     private Vector3 _currentPosition;
     private Quaternion _currentRotation;
+    private IIxrService _ixrService;
 
     private void Start()
     {
-        float positionUpdateIntervalSeconds = (float)(60.0 / Configuration.instance.trackingUpdatesPerMinute);
+        _ixrService = ServiceLocator.GetService<IIxrService>();
+        float positionUpdateIntervalSeconds = (float)(60.0 / ServiceLocator.GetService<IConfigurationService>().GetConfiguration().trackingUpdatesPerMinute);
         InvokeRepeating(nameof(UpdateLocation), 0, positionUpdateIntervalSeconds);
     }
 
@@ -28,6 +30,6 @@ public class TrackObject : MonoBehaviour
             ["y"] = transform.position.y.ToString(CultureInfo.InvariantCulture),
             ["z"] = transform.position.z.ToString(CultureInfo.InvariantCulture)
         };
-        iXR.TelemetryEntry(name + " Position", positionDict);
+        _ixrService.TelemetryEntry(name + " Position", positionDict);
     }
 }
