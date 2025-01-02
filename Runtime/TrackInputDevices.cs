@@ -86,9 +86,11 @@ public class TrackInputDevices : MonoBehaviour, ITrackInputDevices
             _rightTriggerValues.TryGetValue(trigger, out bool current);
             if (pressed != current)
             {
+                string action = "Pressed";
+                if (!pressed) action = "Released";
                 var telemetryData = new Dictionary<string, string>
                 {
-                    [trigger.name] = "Pressed"
+                    [trigger.name] = action
                 };
                 _ixrService.TelemetryEntry($"Right Controller {trigger.name}", telemetryData);
                 _rightTriggerValues[trigger] = pressed;
@@ -101,9 +103,11 @@ public class TrackInputDevices : MonoBehaviour, ITrackInputDevices
             _leftTriggerValues.TryGetValue(trigger, out bool current);
             if (pressed != current)
             {
+                string action = "Pressed";
+                if (!pressed) action = "Released";
                 var telemetryData = new Dictionary<string, string>
                 {
-                    [trigger.name] = "Pressed"
+                    [trigger.name] = action
                 };
                 _ixrService.TelemetryEntry($"Left Controller {trigger.name}", telemetryData);
                 _leftTriggerValues[trigger] = pressed;
