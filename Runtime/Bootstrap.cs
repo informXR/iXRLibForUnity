@@ -28,6 +28,7 @@ public class Bootstrap : MonoBehaviour
         var configService = new ConfigurationService();
         
         // Initialize MonoBehaviour services first
+        CreateServiceObject<ExceptionLogger>("ExceptionLogger");
         //var exitPollHandler = CreateServiceObject<ExitPollHandler>("ExitPollHandler");
         var authService = CreateServiceObject<AuthenticationService>("AuthenticationService");
         var trackInputDevices = CreateServiceObject<TrackInputDevices>("TrackInputDevices");
