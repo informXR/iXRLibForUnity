@@ -10,20 +10,8 @@ public class ExitPollHandler : MonoBehaviour
         Rating
     }
     
-    private static ExitPollHandler _instance;
     private static readonly List<Tuple<string, PollType>> Polls = new();
     private static bool _isProcessing;
-    private static IIxrService _ixrService;
-    
-    public static void Initialize()
-    {
-        if (_instance != null) return;
-        
-        var singletonObject = new GameObject("ExitPollHandler");
-        _instance = singletonObject.AddComponent<ExitPollHandler>();
-        DontDestroyOnLoad(singletonObject);
-        _ixrService = ServiceLocator.GetService<IIxrService>();
-    }
     
     public static void AddPoll(string prompt, PollType pollType)
     {
@@ -69,7 +57,7 @@ public class ExitPollHandler : MonoBehaviour
     private static void HandleThumbsUp(object sender, EventArgs e)
     {
         var poll = (ExitPoll)sender;
-        _ixrService.Event(poll.prompt.text, "answer=up");
+        iXR.Event(poll.prompt.text, "answer=up");
         if (Polls.Count > 0) ProcessPoll();
         _isProcessing = false;
     }
@@ -77,7 +65,7 @@ public class ExitPollHandler : MonoBehaviour
     private static void HandleThumbsDown(object sender, EventArgs e)
     {
         var poll = (ExitPoll)sender;
-        _ixrService.Event(poll.prompt.text, "answer=down");
+        iXR.Event(poll.prompt.text, "answer=down");
         if (Polls.Count > 0) ProcessPoll();
         _isProcessing = false;
     }
@@ -85,7 +73,7 @@ public class ExitPollHandler : MonoBehaviour
     private static void HandleRating(object sender, ExitPoll.RatingEventArgs e)
     {
         var poll = (ExitPoll)sender;
-        _ixrService.Event(poll.prompt.text, $"answer={e.rating}");
+        iXR.Event(poll.prompt.text, $"answer={e.rating}");
         if (Polls.Count > 0) ProcessPoll();
         _isProcessing = false;
     }

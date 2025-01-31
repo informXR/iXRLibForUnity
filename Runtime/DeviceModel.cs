@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class DeviceModel : MonoBehaviour
 {
-    private static DeviceModel _instance;
     public static string deviceModel;
 
     public static readonly Dictionary<string, string> ModelTranslation = new()
@@ -34,15 +33,6 @@ public class DeviceModel : MonoBehaviour
         { "P1 Pro", "DPVR P1 Pro" },
         { "P2", "DPVR P2" }
     };
-    
-    public static void Initialize()
-    {
-        if (_instance != null) return;
-        
-        var singletonObject = new GameObject("DeviceModel");
-        _instance = singletonObject.AddComponent<DeviceModel>();
-        DontDestroyOnLoad(singletonObject);
-    }
     
     private void Start()
     {

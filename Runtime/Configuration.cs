@@ -1,30 +1,24 @@
 ﻿using UnityEngine;
 
-public interface IConfigurationService
-{
-    Configuration GetConfiguration();
-}
-
-public class ConfigurationService : IConfigurationService
-{
-    private Configuration _instance;
-    
-    public Configuration GetConfiguration()
-    {
-        if (_instance != null) return _instance;
-            
-        _instance = Resources.Load<Configuration>("informXR");
-        if (_instance == null)
-        {
-            _instance = ScriptableObject.CreateInstance<Configuration>();
-        }
-            
-        return _instance;
-    }
-}
-
 public class Configuration : ScriptableObject
 {
+    private static Configuration _instance;
+    public static Configuration Instance
+    {
+        get
+        {
+            if (_instance != null) return _instance;
+            
+            _instance = Resources.Load<Configuration>("informXR");
+            if (_instance == null)
+            {
+                _instance = CreateInstance<Configuration>();
+            }
+            
+            return _instance;
+        }
+    }
+    
     [Tooltip("Required")] public string appID;
     [Tooltip("Optional")] public string orgID;
     [Tooltip("Optional")] public string authSecret;
