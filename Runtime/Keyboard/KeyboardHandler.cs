@@ -2,24 +2,11 @@
 using System.Collections;
 using Microsoft.MixedReality.Toolkit.Experimental.UI;
 using UnityEngine;
-using iXRLib;
 
 public class KeyboardHandler : MonoBehaviour
 {
-    private static KeyboardHandler _instance;
-    private static IAuthenticationService _authService;
     public static bool ProcessingSubmit;
     private const string ProcessingText = "Processing";
-    
-    public static void Initialize()
-    {
-        if (_instance != null) return;
-        
-        var singletonObject = new GameObject("KeyboardHandler");
-        _instance = singletonObject.AddComponent<KeyboardHandler>();
-        _authService = ServiceLocator.GetService<IAuthenticationService>();
-        DontDestroyOnLoad(singletonObject);
-    }
     
     private void Start()
     {
@@ -27,19 +14,13 @@ public class KeyboardHandler : MonoBehaviour
         if (keyboard != null)
         {
             Instantiate(keyboard, Camera.main.transform);
-            Debug.Log("iXRLib - Loaded keyboard prefab");
         }
         else
         {
-            Debug.LogError("iXRLib - Failed to load keyboard prefab");
+            Debug.LogError("Failed to load keyboard prefab");
         }
         
         NonNativeKeyboard.Instance.OnTextSubmitted += HandleTextSubmitted;
-        
-        if (iXRAuthentication.AuthMechanism.ContainsKey("prompt"))
-        {
-            _authService.KeyboardAuthenticate();
-        }
     }
 
     private async void HandleTextSubmitted(object sender, EventArgs e)
@@ -48,7 +29,7 @@ public class KeyboardHandler : MonoBehaviour
         
         StartCoroutine(ProcessingVisual());
         var keyboard = (NonNativeKeyboard)sender;
-        await _authService.KeyboardAuthenticate(keyboard.InputField.text);
+        await Authentication.KeyboardAuthenticate(keyboard.InputField.text);
     }
     
     private static IEnumerator ProcessingVisual()

@@ -4,17 +4,10 @@ using iXRLib;
 using UnityEngine;
 using UnityEngine.XR;
 
-public interface ITrackInputDevices
+[DefaultExecutionOrder(100)] // Doesn't matter when this one runs
+public class TrackInputDevices : MonoBehaviour
 {
-    void Initialize(IIxrService ixrService);
-}
-
-[DefaultExecutionOrder(100)]
-public class TrackInputDevices : MonoBehaviour, ITrackInputDevices
-{
-    private IIxrService _ixrService;
-    private IConfigurationService _configService;
-    private float _positionUpdateIntervalSeconds;
+    public float positionUpdateIntervalSeconds = (float)(60.0 / Configuration.Instance.trackingUpdatesPerMinute);
     
     private InputDevice _rightController;
     private InputDevice _leftController;
@@ -27,19 +20,18 @@ public class TrackInputDevices : MonoBehaviour, ITrackInputDevices
     private readonly Dictionary<InputFeatureUsage<bool>, bool> _rightTriggerValues = new();
     private readonly Dictionary<InputFeatureUsage<bool>, bool> _leftTriggerValues = new();
 
-    public void Initialize(IIxrService ixrService)
+    private void Start()
     {
-        _ixrService = ixrService;
-        _configService = ServiceLocator.GetService<IConfigurationService>();
-        _positionUpdateIntervalSeconds = (float)(60.0 / _configService.GetConfiguration().trackingUpdatesPerMinute);
-        InvokeRepeating(nameof(InitializeInputDevices), 0, 1);
-        InvokeRepeating(nameof(UpdateLocationData), 0, _positionUpdateIntervalSeconds);
+        iXRBase.CaptureTimeStamp();
+        InvokeRepeating(nameof(InitializeInputDevices), 0, 1); // Check for input devices every second
+        InvokeRepeating(nameof(UpdateLocationData), 0, positionUpdateIntervalSeconds);
+        iXRBase.UnCaptureTimeStamp();
     }
-
+    
     private void Update()
     {
         iXRBase.CaptureTimeStamp();
-        CheckTriggers();
+        CheckTriggers(); // Always check for triggers
         iXRBase.UnCaptureTimeStamp();
     }
 
@@ -50,7 +42,7 @@ public class TrackInputDevices : MonoBehaviour, ITrackInputDevices
         UpdateLocationData(_hmd);
     }
 
-    private void UpdateLocationData(InputDevice device)
+    private static void UpdateLocationData(InputDevice device)
     {
         if (!device.isValid) return;
         
@@ -67,7 +59,15 @@ public class TrackInputDevices : MonoBehaviour, ITrackInputDevices
             ["y"] = position.y.ToString(CultureInfo.InvariantCulture),
             ["z"] = position.z.ToString(CultureInfo.InvariantCulture)
         };
-        _ixrService.TelemetryEntry(deviceName + " Position", positionDict);
+        var rotationDict = new Dictionary<string, string>
+        {
+            ["x"] = rotation.x.ToString(CultureInfo.InvariantCulture),
+            ["y"] = rotation.y.ToString(CultureInfo.InvariantCulture),
+            ["z"] = rotation.z.ToString(CultureInfo.InvariantCulture),
+            ["w"] = rotation.w.ToString(CultureInfo.InvariantCulture)
+        };
+        iXR.TelemetryEntry(deviceName + " Position", positionDict);
+        iXR.TelemetryEntry(deviceName + " Rotation", rotationDict);
     }
 
     private void CheckTriggers()
@@ -92,7 +92,7 @@ public class TrackInputDevices : MonoBehaviour, ITrackInputDevices
                 {
                     [trigger.name] = action
                 };
-                _ixrService.TelemetryEntry($"Right Controller {trigger.name}", telemetryData);
+                iXR.TelemetryEntry($"Right Controller {trigger.name}", telemetryData);
                 _rightTriggerValues[trigger] = pressed;
             }
         }
@@ -109,7 +109,7 @@ public class TrackInputDevices : MonoBehaviour, ITrackInputDevices
                 {
                     [trigger.name] = action
                 };
-                _ixrService.TelemetryEntry($"Left Controller {trigger.name}", telemetryData);
+                iXR.TelemetryEntry($"Left Controller {trigger.name}", telemetryData);
                 _leftTriggerValues[trigger] = pressed;
             }
         }
