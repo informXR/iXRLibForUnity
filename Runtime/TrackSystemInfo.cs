@@ -1,11 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using iXRLib;
 using UnityEngine;
 
 [DefaultExecutionOrder(100)] // Doesn't matter when this one runs
 public class TrackSystemInfo : MonoBehaviour
 {
+#if UNITY_WEBGL
+    [DllImport("__Internal")]
+    private static extern void JSCaptureTimeStamp();
+    [DllImport("__Internal")]
+    private static extern void JSUnCaptureTimeStamp();
+#endif
     private int _lastFrameCount;
     private float _lastTime;
     private const int FrameRateCheckIntervalSeconds = 10;
@@ -18,7 +25,11 @@ public class TrackSystemInfo : MonoBehaviour
 
     private void CheckSystemInfo()
     {
+#if UNITY_WEBGL
+        JSCaptureTimeStamp();
+#else
         iXRBase.CaptureTimeStamp();
+#endif
         var batteryData = new Dictionary<string, string>
         {
             ["Percentage"] = (int)(SystemInfo.batteryLevel * 100 + 0.5) + "%",
@@ -33,7 +44,11 @@ public class TrackSystemInfo : MonoBehaviour
             ["Total Unused Reserved"] = UnityEngine.Profiling.Profiler.GetTotalUnusedReservedMemoryLong().ToString()
         };
         iXR.TelemetryEntry("Memory", memoryData);
+#if UNITY_WEBGL
+        JSUnCaptureTimeStamp();
+#else
         iXRBase.UnCaptureTimeStamp();
+#endif
     }
     
     private void CheckFrameRate()

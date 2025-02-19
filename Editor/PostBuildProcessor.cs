@@ -6,7 +6,7 @@ using UnityEngine;
 public class PostBuildProcessor
 {
     private const string PackageName = "com.informxr.unity";
-    private const string FileToCopy = "Assets/Plugins/WebGL/ixrlib.min.js";
+    private const string FileToCopy = "Plugins/WebGL/iXRLibForWebXR.js";
 
     [PostProcessBuild]
     public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject)
