@@ -8,20 +8,23 @@ public static class Initialize
 {
 #if UNITY_WEBGL && !UNITY_EDITOR
     [DllImport("__Internal")]
-    private static extern void LoadIxrLib();
+    private static extern void iXRLibLoad();
 #endif
     
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void OnBeforeSceneLoad()
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
-        LoadIxrLib();
+        iXRLibLoad();
+#else
+        iXRInit.Start();
 #endif
         //TestDiagnosticStringCallbackMechanism();
-        iXRInit.Start();
+#if !UNITY_WEBGL
         SetConfigValues();
-        ObjectAttacher.Attach<ExceptionLogger>("ExceptionLogger");
+#endif
 #if UNITY_ANDROID
+        ObjectAttacher.Attach<ExceptionLogger>("ExceptionLogger");
         ObjectAttacher.Attach<DeviceModel>("DeviceModel");
 #endif
         ObjectAttacher.Attach<KeyboardHandler>("KeyboardHandler"); // Needs to come before Auth in case auth needs keyboard

@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using iXRLib;
 using Microsoft.MixedReality.Toolkit.Experimental.UI;
 using UnityEngine;
@@ -12,6 +13,18 @@ using XRDM.SDK.External.Unity;
 [DefaultExecutionOrder(1)]
 public class Authentication : SdkBehaviour
 {
+#if UNITY_WEBGL
+    [DllImport("__Internal")]
+    private static extern void JSAuthenticate(string appId, string orgId, string deviceId, string authSecret, string partner);
+    [DllImport("__Internal")]
+    private static extern void JSReAuthenticate(bool obtainAuthSecret);
+    [DllImport("__Internal")]
+    private static extern bool JSTokenExpirationImminent();
+
+    [DllImport("__Internal")]
+    private static extern void JSForceSendUnsent();
+#endif
+    
     private static string _orgId;
     private static string _deviceId;
     private static string _authSecret;
@@ -54,6 +67,9 @@ public class Authentication : SdkBehaviour
 #if UNITY_ANDROID
         CheckArborInfo();
 #endif
+#if UNITY_WEBGL
+        Authenticate();
+#else
         if (GetDataFromConfig())
         {
             SetSessionData();
@@ -63,20 +79,29 @@ public class Authentication : SdkBehaviour
                 KeyboardAuthenticate();
             }
         }
+#endif
     }
     
     private void OnApplicationFocus(bool hasFocus)
     {
         if (hasFocus)
         {
+#if UNITY_WEBGL
+            if (JSTokenExpirationImminent())
+#else
 			if (iXRAuthentication.TokenExpirationImminent())
+#endif
             {
                 ReAuthenticate();
             }
         }
         else
         {
+#if UNITY_WEBGL
+            JSForceSendUnsent();
+#else
             iXRInit.ForceSendUnsent();
+#endif
         }
     }
 
@@ -148,6 +173,9 @@ public class Authentication : SdkBehaviour
 
     private static void Authenticate()
     {
+#if UNITY_WEBGL
+        JSAuthenticate("TODO", "TODO", "iXRLibForWebXR_js", "TODO", "arborxr");
+#else
         var result = iXRInit.Authenticate(_appId, _orgId, _deviceId, _authSecret, _partner);
         if (result == iXRResult.Ok)
         {
@@ -156,10 +184,14 @@ public class Authentication : SdkBehaviour
         }
 
         Debug.LogError($"iXRLib - Authentication failed : {result}");
+#endif
     }
 
     private static void ReAuthenticate()
     {
+#if UNITY_WEBGL
+        JSReAuthenticate(false);
+#else
         var result = iXRInit.ReAuthenticate(false);
         if (result == iXRResult.Ok)
         {
@@ -169,6 +201,7 @@ public class Authentication : SdkBehaviour
         {
             Debug.LogError($"iXRLib - ReAuthentication failed : {result}");
         }
+#endif
     }
 
     private static void SetSessionData()

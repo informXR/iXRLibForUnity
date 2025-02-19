@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using iXRLib;
 using UnityEngine;
 using UnityEngine.XR;
@@ -7,6 +8,12 @@ using UnityEngine.XR;
 [DefaultExecutionOrder(100)] // Doesn't matter when this one runs
 public class TrackInputDevices : MonoBehaviour
 {
+#if UNITY_WEBGL
+    [DllImport("__Internal")]
+    private static extern void JSCaptureTimeStamp();
+    [DllImport("__Internal")]
+    private static extern void JSUnCaptureTimeStamp();
+#endif
     public float positionUpdateIntervalSeconds = (float)(60.0 / Configuration.Instance.trackingUpdatesPerMinute);
     
     private InputDevice _rightController;
@@ -22,17 +29,33 @@ public class TrackInputDevices : MonoBehaviour
 
     private void Start()
     {
+#if UNITY_WEBGL
+        JSCaptureTimeStamp();
+#else
         iXRBase.CaptureTimeStamp();
+#endif
         InvokeRepeating(nameof(InitializeInputDevices), 0, 1); // Check for input devices every second
         InvokeRepeating(nameof(UpdateLocationData), 0, positionUpdateIntervalSeconds);
+#if UNITY_WEBGL
+        JSUnCaptureTimeStamp();
+#else
         iXRBase.UnCaptureTimeStamp();
+#endif
     }
     
     private void Update()
     {
+#if UNITY_WEBGL
+        JSCaptureTimeStamp();
+#else
         iXRBase.CaptureTimeStamp();
+#endif
         CheckTriggers(); // Always check for triggers
+#if UNITY_WEBGL
+        JSUnCaptureTimeStamp();
+#else
         iXRBase.UnCaptureTimeStamp();
+#endif
     }
 
     private void UpdateLocationData()
