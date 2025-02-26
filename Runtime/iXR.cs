@@ -96,6 +96,7 @@ public class iXR
     // Logging
     public static iXRResult LogDebug(string text, string meta = "")
     {
+	    meta = AddSceneData(meta);
 #if UNITY_WEBGL
 	    Dictionary<string, string> metaDict = StringToDict(meta);
 	    string metaString = JsonConvert.SerializeObject(metaDict);
@@ -108,6 +109,7 @@ public class iXR
 
     public static iXRResult LogDebugAsync(string text, string meta = "")
     {
+	    meta = AddSceneData(meta);
 #if UNITY_WEBGL
 	    return iXRResult.EventNotEnabled;
 #else
@@ -117,6 +119,7 @@ public class iXR
     
     public static iXRResult LogInfo(string text, string meta = "")
     {
+	    meta = AddSceneData(meta);
 #if UNITY_WEBGL
 	    Dictionary<string, string> metaDict = StringToDict(meta);
 	    string metaString = JsonConvert.SerializeObject(metaDict);
@@ -129,6 +132,7 @@ public class iXR
 
     public static iXRResult LogInfoAsync(string text, string meta = "")
     {
+	    meta = AddSceneData(meta);
 #if UNITY_WEBGL
 	    return iXRResult.EventNotEnabled;
 #else
@@ -138,6 +142,7 @@ public class iXR
     
     public static iXRResult LogWarn(string text, string meta = "")
     {
+	    meta = AddSceneData(meta);
 #if UNITY_WEBGL
 	    Dictionary<string, string> metaDict = StringToDict(meta);
 	    string metaString = JsonConvert.SerializeObject(metaDict);
@@ -150,6 +155,7 @@ public class iXR
 
     public static iXRResult LogWarnAsync(string text, string meta = "")
     {
+	    meta = AddSceneData(meta);
 #if UNITY_WEBGL
 	    return iXRResult.EventNotEnabled;
 #else
@@ -159,6 +165,7 @@ public class iXR
     
     public static iXRResult LogError(string text, string meta = "")
     {
+	    meta = AddSceneData(meta);
 #if UNITY_WEBGL
 	    Dictionary<string, string> metaDict = StringToDict(meta);
 	    string metaString = JsonConvert.SerializeObject(metaDict);
@@ -171,6 +178,7 @@ public class iXR
 
     public static iXRResult LogErrorAsync(string text, string meta = "")
     {
+	    meta = AddSceneData(meta);
 #if UNITY_WEBGL
 	    return iXRResult.EventNotEnabled;
 #else
@@ -180,6 +188,7 @@ public class iXR
     
     public static iXRResult LogCritical(string text, string meta = "")
     {
+	    meta = AddSceneData(meta);
 #if UNITY_WEBGL
 	    Dictionary<string, string> metaDict = StringToDict(meta);
 	    string metaString = JsonConvert.SerializeObject(metaDict);
@@ -192,6 +201,7 @@ public class iXR
 
     public static iXRResult LogCriticalAsync(string text, string meta = "")
     {
+	    meta = AddSceneData(meta);
 #if UNITY_WEBGL
 	    return iXRResult.EventNotEnabled;
 #else
@@ -202,6 +212,7 @@ public class iXR
     // ---
 	public static iXRResult Event(string name, Dictionary<string, string> meta)
 	{
+		AddSceneData(meta);
 #if UNITY_WEBGL
 		string metaString = JsonConvert.SerializeObject(meta);
 		JSEvent(name, metaString);
@@ -213,6 +224,7 @@ public class iXR
 
 	public static iXRResult EventAsync(string message, Dictionary<string, string> meta)
 	{
+		AddSceneData(meta);
 #if UNITY_WEBGL
 		return iXRResult.EventNotEnabled;
 #else
@@ -222,20 +234,19 @@ public class iXR
 
 	public static iXRResult Event(string name, Dictionary<string, string> meta, GameObject gameObject)
 	{
-		meta["x"] = gameObject.transform.position.x.ToString(CultureInfo.InvariantCulture);
-		meta["y"] = gameObject.transform.position.y.ToString(CultureInfo.InvariantCulture);
-		meta["z"] = gameObject.transform.position.z.ToString(CultureInfo.InvariantCulture);
+		AddSceneData(meta);
+		AddPositionData(meta, gameObject);
 		return Event(name, meta);
 	}
 	public static iXRResult EventAsync(string name, Dictionary<string, string> meta, GameObject gameObject)
 	{
-		meta["x"] = gameObject.transform.position.x.ToString(CultureInfo.InvariantCulture);
-		meta["y"] = gameObject.transform.position.y.ToString(CultureInfo.InvariantCulture);
-		meta["z"] = gameObject.transform.position.z.ToString(CultureInfo.InvariantCulture);
+		AddSceneData(meta);
+		AddPositionData(meta, gameObject);
 		return EventAsync(name, meta);
 	}
 	public static iXRResult Event(string name, string meta)
 	{
+		meta = AddSceneData(meta);
 #if UNITY_WEBGL
 		JSEvent(name, meta);
 		return iXRResult.Ok;
@@ -246,6 +257,7 @@ public class iXR
 
 	public static iXRResult EventAsync(string name, string meta)
 	{
+		meta = AddSceneData(meta);
 #if UNITY_WEBGL
 		return iXRResult.EventNotEnabled;
 #else
@@ -255,23 +267,20 @@ public class iXR
 
 	public static iXRResult Event(string name, string meta, GameObject gameObject)
 	{
-		if (!string.IsNullOrEmpty(meta)) meta += ",";
-		meta += $"x={gameObject.transform.position.x},";
-		meta += $"y={gameObject.transform.position.y},";
-		meta += $"z={gameObject.transform.position.z}";
+		meta = AddSceneData(meta);
+		meta = AddPositionData(meta, gameObject);
 		return Event(name, meta);
 	}
 	public static iXRResult EventAsync(string name, string meta, GameObject gameObject)
 	{
-		if (!string.IsNullOrEmpty(meta)) meta += ",";
-		meta += $"x={gameObject.transform.position.x},";
-		meta += $"y={gameObject.transform.position.y},";
-		meta += $"z={gameObject.transform.position.z}";
+		meta = AddSceneData(meta);
+		meta = AddPositionData(meta, gameObject);
 		return EventAsync(name, meta);
 	}
 	// ---
 	public static iXRResult TelemetryEntry(string name, Dictionary<string, string> meta)
 	{
+		AddSceneData(meta);
 #if UNITY_WEBGL
 		string metaString = JsonConvert.SerializeObject(meta);
 		JSAddTelemetryEntry(name, metaString);
@@ -283,6 +292,7 @@ public class iXR
 
 	public static iXRResult TelemetryEntryAsync(string name, Dictionary<string, string> meta)
 	{
+		AddSceneData(meta);
 #if UNITY_WEBGL
 		return iXRResult.EventNotEnabled;
 #else
@@ -292,6 +302,7 @@ public class iXR
 
 	public static iXRResult TelemetryEntry(string name, string meta)
 	{
+		meta = AddSceneData(meta);
 #if UNITY_WEBGL
 		JSAddTelemetryEntry(name, meta);
 		return iXRResult.Ok;
@@ -302,6 +313,7 @@ public class iXR
 
 	public static iXRResult TelemetryEntryAsync(string name, string meta)
 	{
+		meta = AddSceneData(meta);
 #if UNITY_WEBGL
 		return iXRResult.EventNotEnabled;
 #else
@@ -422,6 +434,7 @@ public class iXR
 	public static iXRResult EventAssessmentStart(string assessmentName, Dictionary<string, string> meta = null)
 	{
 		meta ??= new Dictionary<string, string>();
+		AddSceneData(meta);
 #if UNITY_WEBGL
 		string metaString = JsonConvert.SerializeObject(meta);
 		JSEventAssessmentStart(assessmentName, metaString);
@@ -432,6 +445,7 @@ public class iXR
 	}
 	public static iXRResult EventAssessmentStart(string assessmentName, string meta)
 	{
+		meta = AddSceneData(meta);
 #if UNITY_WEBGL
 		JSEventAssessmentStart(assessmentName, meta);
 		return iXRResult.Ok;
@@ -444,6 +458,7 @@ public class iXR
 	public static iXRResult EventAssessmentComplete(string assessmentName, string score, Dictionary<string, string> meta = null, ResultOptions result = ResultOptions.Complete)
 	{
 		meta ??= new Dictionary<string, string>();
+		AddSceneData(meta);
 #if UNITY_WEBGL
 		string metaString = JsonConvert.SerializeObject(meta);
 		JSEventAssessmentComplete(assessmentName, score, metaString, (int)result);
@@ -454,10 +469,11 @@ public class iXR
 		return iXRSend.EventAssessmentComplete(assessmentName, score, iXRLibResult, meta);
 #endif
 	}
-	public static iXRResult EventAssessmentComplete(string assessmentName, string score, string metaString, ResultOptions result = ResultOptions.Complete)
+	public static iXRResult EventAssessmentComplete(string assessmentName, string score, string meta, ResultOptions result = ResultOptions.Complete)
 	{
+		meta = AddSceneData(meta);
 #if UNITY_WEBGL
-		JSEventAssessmentComplete(assessmentName, score, metaString, (int)result);
+		JSEventAssessmentComplete(assessmentName, score, meta, (int)result);
 		return iXRResult.Ok;
 #else
 		// Convert the ResultOptions enum to iXRLib.ResultOptions
@@ -469,6 +485,7 @@ public class iXR
 	public static iXRResult EventObjectiveStart(string objectiveName, Dictionary<string, string> meta = null)
 	{
 		meta ??= new Dictionary<string, string>();
+		AddSceneData(meta);
 #if UNITY_WEBGL
 		string metaString = JsonConvert.SerializeObject(meta);
 		JSEventObjectiveStart(objectiveName, metaString);
@@ -479,6 +496,7 @@ public class iXR
 	}
 	public static iXRResult EventObjectiveStart(string objectiveName, string meta)
 	{
+		meta = AddSceneData(meta);
 #if UNITY_WEBGL
 		JSEventObjectiveStart(objectiveName, meta);
 		return iXRResult.Ok;
@@ -491,6 +509,7 @@ public class iXR
 	public static iXRResult EventObjectiveComplete(string objectiveName, string score, Dictionary<string, string> meta = null, ResultOptions result = ResultOptions.Complete)
 	{
 		meta ??= new Dictionary<string, string>();
+		AddSceneData(meta);
 #if UNITY_WEBGL
 		string metaString = JsonConvert.SerializeObject(meta);
 		JSEventObjectiveComplete(objectiveName, score, metaString, (int)result);
@@ -501,10 +520,11 @@ public class iXR
 		return iXRSend.EventObjectiveComplete(objectiveName, score, iXRLibResult, meta);
 #endif
 	}
-	public static iXRResult EventObjectiveComplete(string objectiveName, string score, string metaString, ResultOptions result = ResultOptions.Complete)
+	public static iXRResult EventObjectiveComplete(string objectiveName, string score, string meta, ResultOptions result = ResultOptions.Complete)
 	{
+		meta = AddSceneData(meta);
 #if UNITY_WEBGL
-		JSEventObjectiveComplete(objectiveName, score, metaString, (int)result);
+		JSEventObjectiveComplete(objectiveName, score, meta, (int)result);
 		return iXRResult.Ok;
 #else
 		// Convert the ResultOptions enum to iXRLib.ResultOptions
@@ -516,6 +536,7 @@ public class iXR
 	public static iXRResult EventInteractionStart(string interactionName, Dictionary<string, string> meta = null)
     {
         meta ??= new Dictionary<string, string>();
+        AddSceneData(meta);
 #if UNITY_WEBGL
 	    string metaString = JsonConvert.SerializeObject(meta);
 	    JSEventInteractionStart(interactionName, metaString);
@@ -526,6 +547,7 @@ public class iXR
     }
 	public static iXRResult EventInteractionStart(string interactionName, string meta)
 	{
+		meta = AddSceneData(meta);
 #if UNITY_WEBGL
 		JSEventInteractionStart(interactionName, meta);
 		return iXRResult.Ok;
@@ -538,6 +560,7 @@ public class iXR
 	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails = null, InteractionType eInteractionType = InteractionType.Null, Dictionary<string, string> meta = null)
     {
         meta ??= new Dictionary<string, string>();
+        AddSceneData(meta);
 #if UNITY_WEBGL
 	    string metaString = JsonConvert.SerializeObject(meta);
 	    JSEventInteractionComplete(interactionName, result, resultDetails, (int)eInteractionType, metaString);
@@ -550,6 +573,7 @@ public class iXR
     }
 	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails = null, InteractionType eInteractionType = InteractionType.Null, string meta = null)
 	{
+		meta = AddSceneData(meta);
 #if UNITY_WEBGL
 		JSEventInteractionComplete(interactionName, result, resultDetails, (int)eInteractionType, meta);
 		return iXRResult.Ok;
@@ -563,6 +587,7 @@ public class iXR
 	public static iXRResult EventLevelStart(string levelName, Dictionary<string, string> meta = null)
     {
         meta ??= new Dictionary<string, string>();
+        AddSceneData(meta);
 #if UNITY_WEBGL
 	    string metaString = JsonConvert.SerializeObject(meta);
 	    JSEventLevelStart(levelName, metaString);
@@ -573,6 +598,7 @@ public class iXR
     }
 	public static iXRResult EventLevelStart(string levelName, string meta)
 	{
+		meta = AddSceneData(meta);
 #if UNITY_WEBGL
 		JSEventLevelStart(levelName, meta);
 		return iXRResult.Ok;
@@ -585,6 +611,7 @@ public class iXR
 	public static iXRResult EventLevelComplete(string levelName, string score, Dictionary<string, string> meta = null)
     {
         meta ??= new Dictionary<string, string>();
+        AddSceneData(meta);
 #if UNITY_WEBGL
 	    string metaString = JsonConvert.SerializeObject(meta);
 	    JSEventLevelComplete(levelName, score, metaString);
@@ -595,6 +622,7 @@ public class iXR
     }
 	public static iXRResult EventLevelComplete(string levelName, string score, string meta)
 	{
+		meta = AddSceneData(meta);
 #if UNITY_WEBGL
 		JSEventLevelComplete(levelName, score, meta);
 		return iXRResult.Ok;
@@ -628,5 +656,33 @@ public class iXR
 	public static void PollUser(string prompt, ExitPollHandler.PollType pollType)
 	{
 		ExitPollHandler.AddPoll(prompt, pollType);
+	}
+	
+	private static void AddPositionData(Dictionary<string, string> meta, GameObject gameObject)
+	{
+		meta["x"] = gameObject.transform.position.x.ToString(CultureInfo.InvariantCulture);
+		meta["y"] = gameObject.transform.position.y.ToString(CultureInfo.InvariantCulture);
+		meta["z"] = gameObject.transform.position.z.ToString(CultureInfo.InvariantCulture);
+	}
+
+	private static string AddPositionData(string meta, GameObject gameObject)
+	{
+		if (!string.IsNullOrEmpty(meta)) meta += ",";
+		meta += $"x={gameObject.transform.position.x},";
+		meta += $"y={gameObject.transform.position.y},";
+		meta += $"z={gameObject.transform.position.z}";
+		return meta;
+	}
+	
+	private static void AddSceneData(Dictionary<string, string> meta)
+	{
+		meta["sceneName"] = SceneChangeDetector.CurrentSceneName;
+	}
+
+	private static string AddSceneData(string meta)
+	{
+		if (!string.IsNullOrEmpty(meta)) meta += ",";
+		meta += $"sceneName={SceneChangeDetector.CurrentSceneName}";
+		return meta;
 	}
 }

@@ -31,6 +31,7 @@ public static class Initialize
         ObjectAttacher.Attach<Authentication>("Authentication");
         ObjectAttacher.Attach<TrackSystemInfo>("TrackSystemInfo");
         ObjectAttacher.Attach<ExitPollHandler>("ExitPollHandler");
+        ObjectAttacher.Attach<SceneChangeDetector>("SceneChangeDetector");
 #if UNITY_ANDROID
         if (Configuration.Instance.headsetTracking)
         {
