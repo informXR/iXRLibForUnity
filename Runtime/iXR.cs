@@ -39,53 +39,78 @@ public class iXR
 	public static iXRResult LogCritical(string text) => iXRSend.LogCritical(text);
 
 	// ---
-	public static iXRResult EventSynchronous(string name, Dictionary<string, string> meta) =>
-		iXRSend.EventSynchronous(name, meta);
-	public static iXRResult Event(string message, Dictionary<string, string> meta) => iXRSend.Event(message, meta);
+	public static iXRResult EventSynchronous(string name, Dictionary<string, string> meta)
+	{
+		AddSceneData(meta);
+		return iXRSend.EventSynchronous(name, meta);
+	}
+
+	public static iXRResult Event(string message, Dictionary<string, string> meta)
+	{
+		AddSceneData(meta);
+		return iXRSend.Event(message, meta);
+	}
 
 	public static iXRResult EventSynchronous(string name, Dictionary<string, string> meta, GameObject gameObject)
 	{
-		meta["x"] = gameObject.transform.position.x.ToString(CultureInfo.InvariantCulture);
-		meta["y"] = gameObject.transform.position.y.ToString(CultureInfo.InvariantCulture);
-		meta["z"] = gameObject.transform.position.z.ToString(CultureInfo.InvariantCulture);
+		AddSceneData(meta);
+		AddPositionData(meta, gameObject);
 		return iXRSend.EventSynchronous(name, meta);
 	}
 	public static iXRResult Event(string message, Dictionary<string, string> meta, GameObject gameObject)
 	{
-		meta["x"] = gameObject.transform.position.x.ToString(CultureInfo.InvariantCulture);
-		meta["y"] = gameObject.transform.position.y.ToString(CultureInfo.InvariantCulture);
-		meta["z"] = gameObject.transform.position.z.ToString(CultureInfo.InvariantCulture);
+		AddSceneData(meta);
+		AddPositionData(meta, gameObject);
 		return iXRSend.Event(message, meta);
 	}
-	public static iXRResult EventSynchronous(string name, string meta) => iXRSend.EventSynchronous(name, meta);
-	public static iXRResult Event(string message, string meta) => iXRSend.Event(message, meta);
+	public static iXRResult EventSynchronous(string name, string meta)
+	{
+		meta = AddSceneData(meta);
+		return iXRSend.EventSynchronous(name, meta);
+	}
+
+	public static iXRResult Event(string message, string meta)
+	{
+		meta = AddSceneData(meta);
+		return iXRSend.Event(message, meta);
+	}
 
 	public static iXRResult EventSynchronous(string name, string meta, GameObject gameObject)
 	{
-		if (!string.IsNullOrEmpty(meta)) meta += ",";
-		meta += $"x={gameObject.transform.position.x},";
-		meta += $"y={gameObject.transform.position.y},";
-		meta += $"z={gameObject.transform.position.z}";
+		AddSceneData(meta);
+		meta = AddPositionData(meta, gameObject);
 		return iXRSend.EventSynchronous(name, meta);
 	}
 	public static iXRResult Event(string message, string meta, GameObject gameObject)
 	{
-		if (!string.IsNullOrEmpty(meta)) meta += ",";
-		meta += $"x={gameObject.transform.position.x},";
-		meta += $"y={gameObject.transform.position.y},";
-		meta += $"z={gameObject.transform.position.z}";
+		meta = AddSceneData(meta);
+		meta = AddPositionData(meta, gameObject);
 		return iXRSend.Event(message, meta);
 	}
 	// ---
-	public static iXRResult TelemetryEntrySynchronous(string name, Dictionary<string, string> data) =>
-		iXRSend.AddTelemetryEntrySynchronous(name, data);
+	public static iXRResult TelemetryEntrySynchronous(string name, Dictionary<string, string> meta)
+	{
+		AddSceneData(meta);
+		return iXRSend.AddTelemetryEntrySynchronous(name, meta);
+	}
 
-	public static iXRResult TelemetryEntry(string name, Dictionary<string, string> data) =>
-		iXRSend.AddTelemetryEntry(name, data);
+	public static iXRResult TelemetryEntry(string name, Dictionary<string, string> meta)
+	{
+		AddSceneData(meta);
+		return iXRSend.AddTelemetryEntry(name, meta);
+	}
 
-	public static iXRResult TelemetryEntrySynchronous(string name, string data) =>
-		iXRLibInterop.AddTelemetryEntrySynchronous(name, data);
-	public static iXRResult TelemetryEntry(string name, string data) => iXRLibInterop.AddTelemetryEntry(name, data);
+	public static iXRResult TelemetryEntrySynchronous(string name, string meta)
+	{
+		AddSceneData(meta);
+		return iXRLibInterop.AddTelemetryEntrySynchronous(name, meta);
+	}
+
+	public static iXRResult TelemetryEntry(string name, string meta)
+	{
+		AddSceneData(meta);
+		return iXRLibInterop.AddTelemetryEntry(name, meta);
+	}
 
 	// Storage
 	public static string StorageGetDefaultEntry() =>
@@ -127,88 +152,114 @@ public class iXR
 	public static iXRResult EventAssessmentStart(string assessmentName, Dictionary<string, string> meta = null)
 	{
 		meta = meta ?? new Dictionary<string, string>();
+		AddSceneData(meta);
 		return iXRSend.EventAssessmentStart(assessmentName, meta);
 	}
-	public static iXRResult EventAssessmentStart(string assessmentName, string metaString) =>
-		iXRSend.EventAssessmentStart(assessmentName, metaString);
+	public static iXRResult EventAssessmentStart(string assessmentName, string meta)
+	{
+		meta = AddSceneData(meta);
+		return iXRSend.EventAssessmentStart(assessmentName, meta);
+	}
 
 	// ---
 	public static iXRResult EventAssessmentComplete(string assessmentName, string score, Dictionary<string, string> meta = null, ResultOptions result = ResultOptions.Complete)
 	{
 		meta = meta ?? new Dictionary<string, string>();
+		AddSceneData(meta);
 		// Convert the ResultOptions enum to iXRLib.ResultOptions
 		iXRLib.ResultOptions iXRLibResult = (iXRLib.ResultOptions)result;
 		return iXRSend.EventAssessmentComplete(assessmentName, score, iXRLibResult, meta);
 	}
-	public static iXRResult EventAssessmentComplete(string assessmentName, string score, string metaString, ResultOptions result = ResultOptions.Complete)
+	public static iXRResult EventAssessmentComplete(string assessmentName, string score, string meta, ResultOptions result = ResultOptions.Complete)
 	{
+		meta = AddSceneData(meta);
 		// Convert the ResultOptions enum to iXRLib.ResultOptions
 		iXRLib.ResultOptions iXRLibResult = (iXRLib.ResultOptions)result;
-		return iXRSend.EventAssessmentComplete(assessmentName, score, iXRLibResult, metaString);
+		return iXRSend.EventAssessmentComplete(assessmentName, score, iXRLibResult, meta);
 	}
 	// ---
 	public static iXRResult EventObjectiveStart(string objectiveName, Dictionary<string, string> meta = null)
 	{
 		meta = meta ?? new Dictionary<string, string>();
+		AddSceneData(meta);
 		return iXRSend.EventObjectiveStart(objectiveName, meta);
 	}
-	public static iXRResult EventObjectiveStart(string objectiveName, string metaString) =>
-		iXRSend.EventObjectiveStart(objectiveName, metaString);
+	public static iXRResult EventObjectiveStart(string objectiveName, string meta)
+	{
+		meta = AddSceneData(meta);
+		return iXRSend.EventObjectiveStart(objectiveName, meta);
+	}
 
 	// ---
 	public static iXRResult EventObjectiveComplete(string objectiveName, string score, Dictionary<string, string> meta = null, ResultOptions result = ResultOptions.Complete)
 	{
 		meta = meta ?? new Dictionary<string, string>();
+		AddSceneData(meta);
 		// Convert the ResultOptions enum to iXRLib.ResultOptions
 		iXRLib.ResultOptions iXRLibResult = (iXRLib.ResultOptions)result;
 		return iXRSend.EventObjectiveComplete(objectiveName, score, iXRLibResult, meta);
 	}
-	public static iXRResult EventObjectiveComplete(string objectiveName, string score, string metaString, ResultOptions result = ResultOptions.Complete)
+	public static iXRResult EventObjectiveComplete(string objectiveName, string score, string meta, ResultOptions result = ResultOptions.Complete)
 	{
+		meta = AddSceneData(meta);
 		// Convert the ResultOptions enum to iXRLib.ResultOptions
 		iXRLib.ResultOptions iXRLibResult = (iXRLib.ResultOptions)result;
-		return iXRSend.EventObjectiveComplete(objectiveName, score, iXRLibResult, metaString);
+		return iXRSend.EventObjectiveComplete(objectiveName, score, iXRLibResult, meta);
 	}
 	// ---
 	public static iXRResult EventInteractionStart(string interactionName, Dictionary<string, string> meta = null)
     {
         meta = meta ?? new Dictionary<string, string>();
+        AddSceneData(meta);
 		return iXRSend.EventInteractionStart(interactionName, meta);
     }
-	public static iXRResult EventInteractionStart(string interactionName, string metaString) =>
-		iXRSend.EventInteractionStart(interactionName, metaString);
+	public static iXRResult EventInteractionStart(string interactionName, string meta)
+	{
+		meta = AddSceneData(meta);
+		return iXRSend.EventInteractionStart(interactionName, meta);
+	}
 
 	// Modified EventInteractionComplete methods.
 	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails = null, InteractionType eInteractionType = InteractionType.Null, Dictionary<string, string> meta = null)
     {
         meta = meta ?? new Dictionary<string, string>();
+        AddSceneData(meta);
         // Convert the InteractionType enum to iXRLib.InteractionType
         iXRLib.InteractionType iXRLibInteractionType = (iXRLib.InteractionType)eInteractionType;
         return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, iXRLibInteractionType, meta);
     }
-	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails = null, InteractionType eInteractionType = InteractionType.Null, string metaString = null)
+	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails = null, InteractionType eInteractionType = InteractionType.Null, string meta = null)
 	{
+		meta = AddSceneData(meta);
         // Convert the InteractionType enum to iXRLib.InteractionType
         iXRLib.InteractionType iXRLibInteractionType = (iXRLib.InteractionType)eInteractionType;
-        return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, iXRLibInteractionType, metaString);
+        return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, iXRLibInteractionType, meta);
 	}
 	// ---
 	public static iXRResult EventLevelStart(string levelName, Dictionary<string, string> meta = null)
-    {
+	{
         meta = meta ?? new Dictionary<string, string>();
+        AddSceneData(meta);
 		return iXRSend.EventLevelStart(levelName, meta);
     }
-	public static iXRResult EventLevelStart(string levelName, string metaString) =>
-		iXRSend.EventLevelStart(levelName, metaString);
+	public static iXRResult EventLevelStart(string levelName, string meta)
+	{
+		meta = AddSceneData(meta);
+		return iXRSend.EventLevelStart(levelName, meta);
+	}
 
 	// ---
 	public static iXRResult EventLevelComplete(string levelName, string score, Dictionary<string, string> meta = null)
     {
         meta = meta ?? new Dictionary<string, string>();
+        AddSceneData(meta);
 		return iXRSend.EventLevelComplete(levelName, score, meta);
     }
-	public static iXRResult EventLevelComplete(string levelName, string score, string metaString) =>
-		iXRSend.EventLevelComplete(levelName, score, metaString);
+	public static iXRResult EventLevelComplete(string levelName, string score, string meta)
+	{
+		meta = AddSceneData(meta);
+		return iXRSend.EventLevelComplete(levelName, score, meta);
+	}
 
 	// ---
 	public static void PresentKeyboard(string promptText = null, string keyboardType = null, string emailDomain = null)
@@ -235,5 +286,33 @@ public class iXR
 	public static void PollUser(string prompt, ExitPollHandler.PollType pollType)
 	{
 		ExitPollHandler.AddPoll(prompt, pollType);
+	}
+	
+	private static void AddPositionData(Dictionary<string, string> meta, GameObject gameObject)
+	{
+		meta["x"] = gameObject.transform.position.x.ToString(CultureInfo.InvariantCulture);
+		meta["y"] = gameObject.transform.position.y.ToString(CultureInfo.InvariantCulture);
+		meta["z"] = gameObject.transform.position.z.ToString(CultureInfo.InvariantCulture);
+	}
+
+	private static string AddPositionData(string meta, GameObject gameObject)
+	{
+		if (!string.IsNullOrEmpty(meta)) meta += ",";
+		meta += $"x={gameObject.transform.position.x},";
+		meta += $"y={gameObject.transform.position.y},";
+		meta += $"z={gameObject.transform.position.z}";
+		return meta;
+	}
+	
+	private static void AddSceneData(Dictionary<string, string> meta)
+	{
+		meta["sceneName"] = SceneChangeDetector.CurrentSceneName;
+	}
+
+	private static string AddSceneData(string meta)
+	{
+		if (!string.IsNullOrEmpty(meta)) meta += ",";
+		meta += $"sceneName={SceneChangeDetector.CurrentSceneName}";
+		return meta;
 	}
 }
