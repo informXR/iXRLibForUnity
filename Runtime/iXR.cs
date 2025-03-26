@@ -27,65 +27,65 @@ public class iXR
 	}
 
     // Logging
-    public static iXRResult LogDebugSynchronous(string text) => iXRSend.LogDebugSynchronous(text);
-    public static iXRResult LogDebug(string text) => iXRSend.LogDebug(text);
-	public static iXRResult LogInfoSynchronous(string text) => iXRSend.LogInfoSynchronous(text);
-	public static iXRResult LogInfo(string text) => iXRSend.LogInfo(text);
-	public static iXRResult LogWarnSynchronous(string text) => iXRSend.LogWarnSynchronous(text);
-	public static iXRResult LogWarn(string text) => iXRSend.LogWarn(text);
-	public static iXRResult LogErrorSynchronous(string text) => iXRSend.LogErrorSynchronous(text);
-	public static iXRResult LogError(string text) => iXRSend.LogError(text);
-	public static iXRResult LogCriticalSynchronous(string text) => iXRSend.LogCriticalSynchronous(text);
-	public static iXRResult LogCritical(string text) => iXRSend.LogCritical(text);
+    public static iXRResult LogDebug(string text) => iXRSend.LogDebug(text, "");
+    public static iXRResult LogDebugAsync(string text) => iXRSend.LogDebugDeferred(text, "");
+	public static iXRResult LogInfo(string text) => iXRSend.LogInfo(text, "");
+	public static iXRResult LogInfoAsync(string text) => iXRSend.LogInfoDeferred(text, "");
+	public static iXRResult LogWarn(string text) => iXRSend.LogWarn(text, "");
+	public static iXRResult LogWarnAsync(string text) => iXRSend.LogWarnDeferred(text, "");
+	public static iXRResult LogError(string text) => iXRSend.LogError(text, "");
+	public static iXRResult LogErrorAsync(string text) => iXRSend.LogErrorDeferred(text, "");
+	public static iXRResult LogCritical(string text) => iXRSend.LogCritical(text, "");
+	public static iXRResult LogCriticalAsync(string text) => iXRSend.LogCriticalDeferred(text, "");
 
 	// ---
-	public static iXRResult EventSynchronous(string name, Dictionary<string, string> meta) =>
-		iXRSend.EventSynchronous(name, meta);
-	public static iXRResult Event(string message, Dictionary<string, string> meta) => iXRSend.Event(message, meta);
+	public static iXRResult Event(string name, Dictionary<string, string> meta) => iXRSend.Event(name, meta);
+	public static iXRResult EventAsync(string message, Dictionary<string, string> meta) => iXRSend.EventDeferred(message, meta);
 
-	public static iXRResult EventSynchronous(string name, Dictionary<string, string> meta, GameObject gameObject)
+	public static iXRResult Event(string name, Dictionary<string, string> meta, GameObject gameObject)
 	{
 		meta["x"] = gameObject.transform.position.x.ToString(CultureInfo.InvariantCulture);
 		meta["y"] = gameObject.transform.position.y.ToString(CultureInfo.InvariantCulture);
 		meta["z"] = gameObject.transform.position.z.ToString(CultureInfo.InvariantCulture);
-		return iXRSend.EventSynchronous(name, meta);
+		return iXRSend.Event(name, meta);
 	}
-	public static iXRResult Event(string message, Dictionary<string, string> meta, GameObject gameObject)
+	public static iXRResult EventAsync(string message, Dictionary<string, string> meta, GameObject gameObject)
 	{
 		meta["x"] = gameObject.transform.position.x.ToString(CultureInfo.InvariantCulture);
 		meta["y"] = gameObject.transform.position.y.ToString(CultureInfo.InvariantCulture);
 		meta["z"] = gameObject.transform.position.z.ToString(CultureInfo.InvariantCulture);
-		return iXRSend.Event(message, meta);
+		return iXRSend.EventDeferred(message, meta);
 	}
-	public static iXRResult EventSynchronous(string name, string meta) => iXRSend.EventSynchronous(name, meta);
-	public static iXRResult Event(string message, string meta) => iXRSend.Event(message, meta);
+	public static iXRResult Event(string name, string meta) => iXRSend.Event(name, meta);
+	public static iXRResult EventAsync(string message, string meta) => iXRSend.EventDeferred(message, meta);
 
-	public static iXRResult EventSynchronous(string name, string meta, GameObject gameObject)
+	public static iXRResult Event(string name, string meta, GameObject gameObject)
 	{
 		if (!string.IsNullOrEmpty(meta)) meta += ",";
 		meta += $"x={gameObject.transform.position.x},";
 		meta += $"y={gameObject.transform.position.y},";
 		meta += $"z={gameObject.transform.position.z}";
-		return iXRSend.EventSynchronous(name, meta);
+		return iXRSend.Event(name, meta);
 	}
-	public static iXRResult Event(string message, string meta, GameObject gameObject)
+	public static iXRResult EventAsync(string message, string meta, GameObject gameObject)
 	{
 		if (!string.IsNullOrEmpty(meta)) meta += ",";
 		meta += $"x={gameObject.transform.position.x},";
 		meta += $"y={gameObject.transform.position.y},";
 		meta += $"z={gameObject.transform.position.z}";
-		return iXRSend.Event(message, meta);
+		return iXRSend.EventDeferred(message, meta);
 	}
 	// ---
-	public static iXRResult TelemetryEntrySynchronous(string name, Dictionary<string, string> data) =>
-		iXRSend.AddTelemetryEntrySynchronous(name, data);
-
 	public static iXRResult TelemetryEntry(string name, Dictionary<string, string> data) =>
 		iXRSend.AddTelemetryEntry(name, data);
 
-	public static iXRResult TelemetryEntrySynchronous(string name, string data) =>
-		iXRLibInterop.AddTelemetryEntrySynchronous(name, data);
-	public static iXRResult TelemetryEntry(string name, string data) => iXRLibInterop.AddTelemetryEntry(name, data);
+	public static iXRResult TelemetryEntryAsync(string name, Dictionary<string, string> data) =>
+		iXRSend.AddTelemetryEntryDeferred(name, data);
+
+	public static iXRResult TelemetryEntry(string name, string data) =>
+		iXRLibInterop.AddTelemetryEntry(name, data);
+	public static iXRResult TelemetryEntryAsync(string name, string data) =>
+		iXRLibInterop.AddTelemetryEntryDeferred(name, data);
 
 	// Storage
 	public static string StorageGetDefaultEntry() =>
@@ -110,17 +110,17 @@ public class iXR
 		iXRLibInterop.StorageRemoveMultipleEntries(sessionOnly);
 
 	// AI
-	public static iXRResult AIProxySynchronous(string prompt, string lMMProvider) =>
-		iXRLibInterop.AddAIProxySynchronous(prompt, "", lMMProvider);
-
-	public static iXRResult AIProxySynchronous(string prompt, string pastMessages, string lMMProvider) =>
-		iXRLibInterop.AddAIProxySynchronous(prompt, pastMessages, lMMProvider);
-
 	public static iXRResult AIProxy(string prompt, string lMMProvider) =>
 		iXRLibInterop.AddAIProxy(prompt, "", lMMProvider);
 
 	public static iXRResult AIProxy(string prompt, string pastMessages, string lMMProvider) =>
 		iXRLibInterop.AddAIProxy(prompt, pastMessages, lMMProvider);
+
+	public static iXRResult AIProxyAsync(string prompt, string lMMProvider) =>
+		iXRLibInterop.AddAIProxyDeferred(prompt, "", lMMProvider);
+
+	public static iXRResult AIProxyAsync(string prompt, string pastMessages, string lMMProvider) =>
+		iXRLibInterop.AddAIProxyDeferred(prompt, pastMessages, lMMProvider);
 
 	// Event wrapper functions.
 	// ---

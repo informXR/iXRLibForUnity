@@ -76,7 +76,7 @@ public class Authentication : SdkBehaviour
         }
         else
         {
-            iXRInit.ForceSendUnsentSynchronous();
+            iXRInit.ForceSendUnsent();
         }
     }
 
