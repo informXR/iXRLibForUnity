@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 using UnityEngine;
 
 [DefaultExecutionOrder(100)] // Doesn't matter when this one runs
@@ -15,7 +16,7 @@ public class TrackSystemInfo : MonoBehaviour
         InvokeRepeating(nameof(CheckFrameRate), 0, FrameRateCheckIntervalSeconds);
     }
 
-    private void CheckSystemInfo()
+    private async Task CheckSystemInfo()
     {
         var batteryData = new Dictionary<string, string>
         {
@@ -31,6 +32,7 @@ public class TrackSystemInfo : MonoBehaviour
             ["Total Unused Reserved"] = UnityEngine.Profiling.Profiler.GetTotalUnusedReservedMemoryLong().ToString()
         };
         iXR.TelemetryEntry("Memory", memoryData);
+        await iXR.Event("MyEvent", memoryData);
     }
     
     private void CheckFrameRate()

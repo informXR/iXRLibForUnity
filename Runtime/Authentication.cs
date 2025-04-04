@@ -29,6 +29,9 @@ public class Authentication : SdkBehaviour
     private static string _dataPath;
     private static string _ipAddress;
     private static int _failedAuthAttempts;
+
+    public static string Token;
+    public static string Secret;
     
     protected override void OnEnable()
     {
@@ -246,22 +249,22 @@ public class Authentication : SdkBehaviour
             partner = _partner.ToString().ToLower(),
             ipAddress = _ipAddress,
             deviceModel = _deviceModel,
-            Geolocation = new Dictionary<string, string>(),
+            geolocation = new Dictionary<string, string>(),
             osVersion = _osVersion,
             xrdmVersion = _xrdmVersion,
             appVersion = _appVersion,
-            AuthMechanism = new Dictionary<string, string>()
+            authMechanism = new Dictionary<string, string>()
         };
         
         string json = JsonConvert.SerializeObject(data, Formatting.Indented);
 
-        var fullUri = new Uri(new Uri(Configuration.Instance.restUrl), "/auth/token");
+        var fullUri = new Uri(new Uri(Configuration.Instance.restUrl), "/v1/auth/token");
         using var request = new UnityWebRequest(fullUri.ToString(), "POST");
         byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
-
+        
         var operation = request.SendWebRequest();
 
         while (!operation.isDone)
@@ -271,8 +274,8 @@ public class Authentication : SdkBehaviour
         {
             Debug.Log("iXRLib - Authenticated successfully");
             Response response = JsonConvert.DeserializeObject<Response>(request.downloadHandler.text);
-            Debug.Log(response.Secret);
-            Debug.Log(response.Token);
+            Token = response.Token;
+            Secret = response.Secret;
         }
         else
         {
@@ -293,11 +296,11 @@ public class Authentication : SdkBehaviour
         public string partner;
         public string ipAddress;
         public string deviceModel;
-        public Dictionary<string, string> Geolocation;
+        public Dictionary<string, string> geolocation;
         public string osVersion;
         public string xrdmVersion;
         public string appVersion;
-        public Dictionary<string, string> AuthMechanism;
+        public Dictionary<string, string> authMechanism;
     }
     
     public class Response
