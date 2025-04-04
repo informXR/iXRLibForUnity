@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
-using System.Threading.Tasks;
 using UnityEngine;
 
 [DefaultExecutionOrder(100)] // Doesn't matter when this one runs
@@ -16,14 +15,14 @@ public class TrackSystemInfo : MonoBehaviour
         InvokeRepeating(nameof(CheckFrameRate), 0, FrameRateCheckIntervalSeconds);
     }
 
-    private async Task CheckSystemInfo()
+    private void CheckSystemInfo()
     {
         var batteryData = new Dictionary<string, string>
         {
             ["Percentage"] = (int)(SystemInfo.batteryLevel * 100 + 0.5) + "%",
             ["Status"] = SystemInfo.batteryStatus.ToString()
         };
-        //iXR.TelemetryEntry("Battery", batteryData);
+        iXR.TelemetryEntry("Battery", batteryData);
         
         var memoryData = new Dictionary<string, string>
         {
@@ -31,10 +30,7 @@ public class TrackSystemInfo : MonoBehaviour
             ["Total Reserved"] = UnityEngine.Profiling.Profiler.GetTotalReservedMemoryLong().ToString(),
             ["Total Unused Reserved"] = UnityEngine.Profiling.Profiler.GetTotalUnusedReservedMemoryLong().ToString()
         };
-        //iXR.TelemetryEntry("Memory", memoryData);
-        await iXR.Event("MyEvent", memoryData);
-        await iXR.LogDebug("my log text", "this=working");
-        await iXR.TelemetryEntry("MyTelemetry", batteryData);
+        iXR.TelemetryEntry("Memory", memoryData);
     }
     
     private void CheckFrameRate()

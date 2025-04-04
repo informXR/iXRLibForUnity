@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.MixedReality.Toolkit.Experimental.UI;
@@ -60,31 +59,36 @@ public class iXR
     public static async Task LogDebug(string text, string meta = "")
     {
 	    meta = AddSceneData(meta);
-	    await LogAsync("debug", text, meta);
+	    var metaDict = StringToDict(meta);
+	    await LogAsync("debug", text, metaDict);
     }
     
-    public static iXRResult LogInfo(string text, string meta = "")
+    public static async Task LogInfo(string text, string meta = "")
     {
 	    meta = AddSceneData(meta);
-	    return iXRResult.Ok;//return iXRSend.LogInfo(text, meta);
+	    var metaDict = StringToDict(meta);
+	    await LogAsync("info", text, metaDict);
     }
     
-    public static iXRResult LogWarn(string text, string meta = "")
+    public static async Task LogWarn(string text, string meta = "")
     {
 	    meta = AddSceneData(meta);
-	    return iXRResult.Ok;//return iXRSend.LogWarn(text, meta);
+	    var metaDict = StringToDict(meta);
+	    await LogAsync("warn", text, metaDict);
     }
     
-    public static iXRResult LogError(string text, string meta = "")
+    public static async Task LogError(string text, string meta = "")
     {
 	    meta = AddSceneData(meta);
-	    return iXRResult.Ok;//return iXRSend.LogError(text, meta);
+	    var metaDict = StringToDict(meta);
+	    await LogAsync("error", text, metaDict);
     }
     
-    public static iXRResult LogCritical(string text, string meta = "")
+    public static async Task LogCritical(string text, string meta = "")
     {
 	    meta = AddSceneData(meta);
-	    return iXRResult.Ok;//return iXRSend.LogCritical(text, meta);
+	    var metaDict = StringToDict(meta);
+	    await LogAsync("critical", text, metaDict);
     }
 
     // ---
@@ -94,24 +98,26 @@ public class iXR
 		await EventAsync(name, meta);
 	}
 
-	public static iXRResult Event(string name, Dictionary<string, string> meta, GameObject gameObject)
+	public static async Task Event(string name, Dictionary<string, string> meta, GameObject gameObject)
 	{
 		AddSceneData(meta);
 		AddPositionData(meta, gameObject);
-		return iXRResult.Ok; //Event(name, meta);
+		await Event(name, meta);
 	}
 	
-	public static iXRResult Event(string name, string meta)
+	public static async Task Event(string name, string meta)
 	{
 		meta = AddSceneData(meta);
-		return iXRResult.Ok;//return iXRSend.Event(name, meta);
+		var metaDict = StringToDict(meta);
+		await Event(name, metaDict);
 	}
 
-	public static iXRResult Event(string name, string meta, GameObject gameObject)
+	public static async Task Event(string name, string meta, GameObject gameObject)
 	{
 		meta = AddSceneData(meta);
 		meta = AddPositionData(meta, gameObject);
-		return Event(name, meta);
+		var metaDict = StringToDict(meta);
+		await Event(name, metaDict);
 	}
 	// ---
 	public static async Task TelemetryEntry(string name, Dictionary<string, string> meta)
@@ -120,10 +126,11 @@ public class iXR
 		await TelemetryAsync(name, meta);
 	}
 
-	public static iXRResult TelemetryEntry(string name, string meta)
+	public static async Task TelemetryEntry(string name, string meta)
 	{
 		meta = AddSceneData(meta);
-		return iXRResult.Ok;//return iXRLibInterop.AddTelemetryEntry(name, meta);
+		var metaDict = StringToDict(meta);
+		await TelemetryAsync(name, metaDict);
 	}
 
 	// Storage
@@ -174,116 +181,116 @@ public class iXR
 	}*/
 
 	// Event wrapper functions.
-	public static iXRResult EventAssessmentStart(string assessmentName, Dictionary<string, string> meta = null)
+	public static async Task EventAssessmentStart(string assessmentName, Dictionary<string, string> meta = null)
 	{
 		meta ??= new Dictionary<string, string>();
 		AddSceneData(meta);
-		return iXRResult.Ok;//return iXRSend.EventAssessmentStart(assessmentName, meta);
+		//return iXRResult.Ok;//return iXRSend.EventAssessmentStart(assessmentName, meta);
 	}
-	public static iXRResult EventAssessmentStart(string assessmentName, string meta)
+	public static async Task EventAssessmentStart(string assessmentName, string meta)
 	{
 		meta = AddSceneData(meta);
-		return iXRResult.Ok;//return iXRSend.EventAssessmentStart(assessmentName, meta);
+		//return iXRResult.Ok;//return iXRSend.EventAssessmentStart(assessmentName, meta);
 	}
 
 	// ---
-	public static iXRResult EventAssessmentComplete(string assessmentName, string score, Dictionary<string, string> meta = null, ResultOptions result = ResultOptions.Complete)
+	public static async Task EventAssessmentComplete(string assessmentName, string score, Dictionary<string, string> meta = null, ResultOptions result = ResultOptions.Complete)
 	{
 		meta ??= new Dictionary<string, string>();
 		AddSceneData(meta);
 		// Convert the ResultOptions enum to iXRLib.ResultOptions
 		//iXRLib.ResultOptions iXRLibResult = (iXRLib.ResultOptions)result;
-		return iXRResult.Ok;//return iXRSend.EventAssessmentComplete(assessmentName, score, iXRLibResult, meta);
+		//return iXRResult.Ok;//return iXRSend.EventAssessmentComplete(assessmentName, score, iXRLibResult, meta);
 	}
-	public static iXRResult EventAssessmentComplete(string assessmentName, string score, string meta, ResultOptions result = ResultOptions.Complete)
+	public static async Task EventAssessmentComplete(string assessmentName, string score, string meta, ResultOptions result = ResultOptions.Complete)
 	{
 		meta = AddSceneData(meta);
 		// Convert the ResultOptions enum to iXRLib.ResultOptions
 		//iXRLib.ResultOptions iXRLibResult = (iXRLib.ResultOptions)result;
-		return iXRResult.Ok;//return iXRSend.EventAssessmentComplete(assessmentName, score, iXRLibResult, metaString);
+		//return iXRResult.Ok;//return iXRSend.EventAssessmentComplete(assessmentName, score, iXRLibResult, metaString);
 	}
 	// ---
-	public static iXRResult EventObjectiveStart(string objectiveName, Dictionary<string, string> meta = null)
+	public static async Task EventObjectiveStart(string objectiveName, Dictionary<string, string> meta = null)
 	{
 		meta ??= new Dictionary<string, string>();
 		AddSceneData(meta);
-		return iXRResult.Ok;//return iXRSend.EventObjectiveStart(objectiveName, meta);
+		//return iXRResult.Ok;//return iXRSend.EventObjectiveStart(objectiveName, meta);
 	}
-	public static iXRResult EventObjectiveStart(string objectiveName, string meta)
+	public static async Task EventObjectiveStart(string objectiveName, string meta)
 	{
 		meta = AddSceneData(meta);
-		return iXRResult.Ok;//return iXRSend.EventObjectiveStart(objectiveName, meta);
+		//return iXRResult.Ok;//return iXRSend.EventObjectiveStart(objectiveName, meta);
 	}
 
 	// ---
-	public static iXRResult EventObjectiveComplete(string objectiveName, string score, Dictionary<string, string> meta = null, ResultOptions result = ResultOptions.Complete)
+	public static async Task EventObjectiveComplete(string objectiveName, string score, Dictionary<string, string> meta = null, ResultOptions result = ResultOptions.Complete)
 	{
 		meta ??= new Dictionary<string, string>();
 		AddSceneData(meta);
 		// Convert the ResultOptions enum to iXRLib.ResultOptions
 		//iXRLib.ResultOptions iXRLibResult = (iXRLib.ResultOptions)result;
-		return iXRResult.Ok;//return iXRSend.EventObjectiveComplete(objectiveName, score, iXRLibResult, meta);
+		//return iXRResult.Ok;//return iXRSend.EventObjectiveComplete(objectiveName, score, iXRLibResult, meta);
 	}
-	public static iXRResult EventObjectiveComplete(string objectiveName, string score, string meta, ResultOptions result = ResultOptions.Complete)
+	public static async Task EventObjectiveComplete(string objectiveName, string score, string meta, ResultOptions result = ResultOptions.Complete)
 	{
 		meta = AddSceneData(meta);
 		// Convert the ResultOptions enum to iXRLib.ResultOptions
 		//iXRLib.ResultOptions iXRLibResult = (iXRLib.ResultOptions)result;
-		return iXRResult.Ok;//return iXRSend.EventObjectiveComplete(objectiveName, score, iXRLibResult, metaString);
+		//return iXRResult.Ok;//return iXRSend.EventObjectiveComplete(objectiveName, score, iXRLibResult, metaString);
 	}
 	// ---
-	public static iXRResult EventInteractionStart(string interactionName, Dictionary<string, string> meta = null)
+	public static async Task EventInteractionStart(string interactionName, Dictionary<string, string> meta = null)
     {
         meta ??= new Dictionary<string, string>();
         AddSceneData(meta);
-        return iXRResult.Ok;//return iXRSend.EventInteractionStart(interactionName, meta);
+        //return iXRResult.Ok;//return iXRSend.EventInteractionStart(interactionName, meta);
     }
-	public static iXRResult EventInteractionStart(string interactionName, string meta)
+	public static async Task EventInteractionStart(string interactionName, string meta)
 	{
 		meta = AddSceneData(meta);
-		return iXRResult.Ok;//return iXRSend.EventInteractionStart(interactionName, meta);
+		//return iXRResult.Ok;//return iXRSend.EventInteractionStart(interactionName, meta);
 	}
 
 	// Modified EventInteractionComplete methods.
-	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails = null, InteractionType eInteractionType = InteractionType.Null, Dictionary<string, string> meta = null)
+	public static async Task EventInteractionComplete(string interactionName, string result, string resultDetails = null, InteractionType eInteractionType = InteractionType.Null, Dictionary<string, string> meta = null)
     {
         meta ??= new Dictionary<string, string>();
         AddSceneData(meta);
 		// Convert the InteractionType enum to iXRLib.InteractionType
         //iXRLib.InteractionType iXRLibInteractionType = (iXRLib.InteractionType)eInteractionType;
-        return iXRResult.Ok;//return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, iXRLibInteractionType, meta);
+        //return iXRResult.Ok;//return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, iXRLibInteractionType, meta);
     }
-	public static iXRResult EventInteractionComplete(string interactionName, string result, string resultDetails = null, InteractionType eInteractionType = InteractionType.Null, string meta = null)
+	public static async Task EventInteractionComplete(string interactionName, string result, string resultDetails = null, InteractionType eInteractionType = InteractionType.Null, string meta = null)
 	{
 		meta = AddSceneData(meta);
 		// Convert the InteractionType enum to iXRLib.InteractionType
         //iXRLib.InteractionType iXRLibInteractionType = (iXRLib.InteractionType)eInteractionType;
-        return iXRResult.Ok;//return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, iXRLibInteractionType, meta);
+        //return iXRResult.Ok;//return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, iXRLibInteractionType, meta);
 	}
 	// ---
-	public static iXRResult EventLevelStart(string levelName, Dictionary<string, string> meta = null)
+	public static async Task EventLevelStart(string levelName, Dictionary<string, string> meta = null)
     {
         meta ??= new Dictionary<string, string>();
         AddSceneData(meta);
-        return iXRResult.Ok;//return iXRSend.EventLevelStart(levelName, meta);
+        //return iXRResult.Ok;//return iXRSend.EventLevelStart(levelName, meta);
     }
-	public static iXRResult EventLevelStart(string levelName, string meta)
+	public static async Task EventLevelStart(string levelName, string meta)
 	{
 		meta = AddSceneData(meta);
-		return iXRResult.Ok;//return iXRSend.EventLevelStart(levelName, meta);
+		//return iXRResult.Ok;//return iXRSend.EventLevelStart(levelName, meta);
 	}
 
 	// ---
-	public static iXRResult EventLevelComplete(string levelName, string score, Dictionary<string, string> meta = null)
+	public static async Task EventLevelComplete(string levelName, string score, Dictionary<string, string> meta = null)
     {
         meta ??= new Dictionary<string, string>();
         AddSceneData(meta);
-        return iXRResult.Ok;//return iXRSend.EventLevelComplete(levelName, score, meta);
+        //return iXRResult.Ok;//return iXRSend.EventLevelComplete(levelName, score, meta);
     }
-	public static iXRResult EventLevelComplete(string levelName, string score, string meta)
+	public static async Task EventLevelComplete(string levelName, string score, string meta)
 	{
 		meta = AddSceneData(meta);
-		return iXRResult.Ok;//return iXRSend.EventLevelComplete(levelName, score, meta);
+		//return iXRResult.Ok;//return iXRSend.EventLevelComplete(levelName, score, meta);
 	}
 
 	// ---
@@ -341,11 +348,6 @@ public class iXR
 		return meta;
 	}
 	
-	private static async Task LogAsync(string logLevel, string text, string meta)
-	{
-		var metaDict = StringToDict(meta);
-		await LogAsync(logLevel, text, metaDict);
-	}
 	private static async Task LogAsync(string logLevel, string text, Dictionary<string, string> meta)
 	{
 		long logTime = (long)(Time.time * 1000f) + Initialize.StartTimeMs;
@@ -368,11 +370,6 @@ public class iXR
 		await RequestAsync(fullUri.ToString(), json);
 	}
 	
-	private static async Task TelemetryAsync(string name, string meta)
-	{
-		var metaDict = StringToDict(meta);
-		await TelemetryAsync(name, metaDict);
-	}
 	private static async Task TelemetryAsync(string name, Dictionary<string, string> meta)
 	{
 		long telemetryTime = (long)(Time.time * 1000f) + Initialize.StartTimeMs;
@@ -393,12 +390,7 @@ public class iXR
 		var fullUri = new Uri(new Uri(Configuration.Instance.restUrl), "/v1/collect/telemetry");
 		await RequestAsync(fullUri.ToString(), json);
 	}
-
-	private static async Task EventAsync(string name, string meta)
-	{
-		var metaDict = StringToDict(meta);
-		await EventAsync(name, metaDict);
-	}
+	
 	private static async Task EventAsync(string name, Dictionary<string, string> meta)
     {
 	    long eventTime = (long)(Time.time * 1000f) + Initialize.StartTimeMs;
@@ -446,11 +438,11 @@ public class iXR
             
 		if (request.result == UnityWebRequest.Result.Success)
 		{
-			Debug.Log("iXRLib - Event successful");
+			Debug.Log("iXRLib - Request successful");
 		}
 		else
 		{
-			Debug.LogError($"iXRLib - Event failed : {request.error}");
+			Debug.LogError($"iXRLib - Request failed : {request.error}");
 		}
 	}
 
