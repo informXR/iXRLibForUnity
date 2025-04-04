@@ -57,10 +57,10 @@ public class iXR
 	}
 
     // Logging
-    public static iXRResult LogDebug(string text, string meta = "")
+    public static async Task LogDebug(string text, string meta = "")
     {
 	    meta = AddSceneData(meta);
-	    return iXRResult.Ok;//return iXRSend.LogDebug(text, meta);
+	    await LogAsync("debug", text, meta);
     }
     
     public static iXRResult LogInfo(string text, string meta = "")
@@ -114,10 +114,10 @@ public class iXR
 		return Event(name, meta);
 	}
 	// ---
-	public static iXRResult TelemetryEntry(string name, Dictionary<string, string> meta)
+	public static async Task TelemetryEntry(string name, Dictionary<string, string> meta)
 	{
 		AddSceneData(meta);
-		return iXRResult.Ok;//return iXRSend.AddTelemetryEntry(name, meta);
+		await TelemetryAsync(name, meta);
 	}
 
 	public static iXRResult TelemetryEntry(string name, string meta)
@@ -341,6 +341,64 @@ public class iXR
 		return meta;
 	}
 	
+	private static async Task LogAsync(string logLevel, string text, string meta)
+	{
+		var metaDict = StringToDict(meta);
+		await LogAsync(logLevel, text, metaDict);
+	}
+	private static async Task LogAsync(string logLevel, string text, Dictionary<string, string> meta)
+	{
+		long logTime = (long)(Time.time * 1000f) + Initialize.StartTimeMs;
+	    
+		var payloadList = new List<LogPayload>
+		{
+			new LogPayload
+			{
+				preciseTimestamp = logTime.ToString(),
+				logLevel = logLevel,
+				text = text,
+				meta = meta
+			}
+		};
+        
+		var wrapper = new LogPayloadWrapper { data = payloadList };
+		string json = JsonConvert.SerializeObject(wrapper, Formatting.Indented);
+
+		var fullUri = new Uri(new Uri(Configuration.Instance.restUrl), "/v1/collect/log");
+		await RequestAsync(fullUri.ToString(), json);
+	}
+	
+	private static async Task TelemetryAsync(string name, string meta)
+	{
+		var metaDict = StringToDict(meta);
+		await TelemetryAsync(name, metaDict);
+	}
+	private static async Task TelemetryAsync(string name, Dictionary<string, string> meta)
+	{
+		long telemetryTime = (long)(Time.time * 1000f) + Initialize.StartTimeMs;
+	    
+		var payloadList = new List<TelemetryPayload>
+		{
+			new TelemetryPayload
+			{
+				preciseTimestamp = telemetryTime.ToString(),
+				name = name,
+				meta = meta
+			}
+		};
+        
+		var wrapper = new TelemetryPayloadWrapper { data = payloadList };
+		string json = JsonConvert.SerializeObject(wrapper, Formatting.Indented);
+
+		var fullUri = new Uri(new Uri(Configuration.Instance.restUrl), "/v1/collect/telemetry");
+		await RequestAsync(fullUri.ToString(), json);
+	}
+
+	private static async Task EventAsync(string name, string meta)
+	{
+		var metaDict = StringToDict(meta);
+		await EventAsync(name, metaDict);
+	}
 	private static async Task EventAsync(string name, Dictionary<string, string> meta)
     {
 	    long eventTime = (long)(Time.time * 1000f) + Initialize.StartTimeMs;
@@ -359,38 +417,42 @@ public class iXR
         string json = JsonConvert.SerializeObject(wrapper, Formatting.Indented);
 
         var fullUri = new Uri(new Uri(Configuration.Instance.restUrl), "/v1/collect/event");
-        using var request = new UnityWebRequest(fullUri.ToString(), "POST");
-        byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
-        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-        request.downloadHandler = new DownloadHandlerBuffer();
-        request.SetRequestHeader("Content-Type", "application/json");
-        
-        while (string.IsNullOrEmpty(Authentication.Token)) // TODO don't wait forever
-	        await Task.Yield(); // let Unity continue rendering while we wait
-        
-        request.SetRequestHeader("Authorization", "Bearer " + Authentication.Token);
-        
-        string unixTimeSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-        request.SetRequestHeader("x-ixrlib-timestamp", unixTimeSeconds);
-
-        uint crc = Utils.ComputeCRC(json);
-        string hashString = Authentication.Token + Authentication.Secret + unixTimeSeconds + crc;
-        request.SetRequestHeader("x-ixrlib-hash", Utils.ComputeSha256Hash(hashString));
-
-        var operation = request.SendWebRequest();
-
-        while (!operation.isDone)
-            await Task.Yield(); // let Unity continue rendering while we wait
-            
-        if (request.result == UnityWebRequest.Result.Success)
-        {
-            Debug.Log("iXRLib - Event successful");
-        }
-        else
-        {
-            Debug.LogError($"iXRLib - Event failed : {request.error}");
-        }
+        await RequestAsync(fullUri.ToString(), json);
     }
+
+	private static async Task RequestAsync(string url, string json)
+	{
+		using var request = new UnityWebRequest(url, "POST");
+		byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
+		request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+		request.downloadHandler = new DownloadHandlerBuffer();
+		request.SetRequestHeader("Content-Type", "application/json");
+        
+		while (string.IsNullOrEmpty(Authentication.Token)) // TODO don't wait forever
+			await Task.Yield(); // let Unity continue rendering while we wait
+        
+		request.SetRequestHeader("Authorization", "Bearer " + Authentication.Token);
+        
+		string unixTimeSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+		request.SetRequestHeader("x-ixrlib-timestamp", unixTimeSeconds);
+
+		uint crc = Utils.ComputeCRC(json);
+		string hashString = Authentication.Token + Authentication.Secret + unixTimeSeconds + crc;
+		request.SetRequestHeader("x-ixrlib-hash", Utils.ComputeSha256Hash(hashString));
+
+		var operation = request.SendWebRequest();
+
+		while (!operation.isDone) await Task.Yield(); // let Unity continue rendering while we wait
+            
+		if (request.result == UnityWebRequest.Result.Success)
+		{
+			Debug.Log("iXRLib - Event successful");
+		}
+		else
+		{
+			Debug.LogError($"iXRLib - Event failed : {request.error}");
+		}
+	}
 
 	private class EventPayload
     {
@@ -398,9 +460,31 @@ public class iXR
 	    public string name;
 	    public Dictionary<string, string> meta;
     }
-
 	private class EventPayloadWrapper
     {
 	    public List<EventPayload> data;
     }
+	
+	private class TelemetryPayload
+	{
+		public string preciseTimestamp;
+		public string name;
+		public Dictionary<string, string> meta;
+	}
+	private class TelemetryPayloadWrapper
+	{
+		public List<TelemetryPayload> data;
+	}
+	
+	private class LogPayload
+	{
+		public string preciseTimestamp;
+		public string logLevel;
+		public string text;
+		public Dictionary<string, string> meta;
+	}
+	private class LogPayloadWrapper
+	{
+		public List<LogPayload> data;
+	}
 }

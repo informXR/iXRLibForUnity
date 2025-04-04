@@ -23,7 +23,7 @@ public class TrackSystemInfo : MonoBehaviour
             ["Percentage"] = (int)(SystemInfo.batteryLevel * 100 + 0.5) + "%",
             ["Status"] = SystemInfo.batteryStatus.ToString()
         };
-        iXR.TelemetryEntry("Battery", batteryData);
+        //iXR.TelemetryEntry("Battery", batteryData);
         
         var memoryData = new Dictionary<string, string>
         {
@@ -31,8 +31,10 @@ public class TrackSystemInfo : MonoBehaviour
             ["Total Reserved"] = UnityEngine.Profiling.Profiler.GetTotalReservedMemoryLong().ToString(),
             ["Total Unused Reserved"] = UnityEngine.Profiling.Profiler.GetTotalUnusedReservedMemoryLong().ToString()
         };
-        iXR.TelemetryEntry("Memory", memoryData);
+        //iXR.TelemetryEntry("Memory", memoryData);
         await iXR.Event("MyEvent", memoryData);
+        await iXR.LogDebug("my log text", "this=working");
+        await iXR.TelemetryEntry("MyTelemetry", batteryData);
     }
     
     private void CheckFrameRate()
