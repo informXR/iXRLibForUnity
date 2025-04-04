@@ -355,7 +355,7 @@ public class iXR
 		    }
 	    };
         
-	    var wrapper = new PayloadWrapper { data = payloadList };
+	    var wrapper = new EventPayloadWrapper { data = payloadList };
         string json = JsonConvert.SerializeObject(wrapper, Formatting.Indented);
 
         var fullUri = new Uri(new Uri(Configuration.Instance.restUrl), "/v1/collect/event");
@@ -373,9 +373,9 @@ public class iXR
         string unixTimeSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
         request.SetRequestHeader("x-ixrlib-timestamp", unixTimeSeconds);
 
-        uint crc = ComputeCRC(json);
+        uint crc = Utils.ComputeCRC(json);
         string hashString = Authentication.Token + Authentication.Secret + unixTimeSeconds + crc;
-        request.SetRequestHeader("x-ixrlib-hash", ComputeSha256Hash(hashString));
+        request.SetRequestHeader("x-ixrlib-hash", Utils.ComputeSha256Hash(hashString));
 
         var operation = request.SendWebRequest();
 
@@ -389,60 +389,17 @@ public class iXR
         else
         {
             Debug.LogError($"iXRLib - Event failed : {request.error}");
-            Debug.LogError($"xx = {request.result}");
-            Debug.LogError($"response = {request.downloadHandler.text}");
         }
     }
-	
-	public static string ComputeSha256Hash(string rawData)
-	{
-		using var sha256 = SHA256.Create();
-		byte[] bytes = Encoding.UTF8.GetBytes(rawData);
-		byte[] hash = sha256.ComputeHash(bytes);
-		return Convert.ToBase64String(hash);
-	}
-	
-	static readonly uint[] Table = GenerateTable();
 
-	public static uint ComputeCRC(string input)
-	{
-		byte[] bytes = Encoding.UTF8.GetBytes(input);
-		uint crc = 0xFFFFFFFF;
-
-		foreach (byte b in bytes)
-		{
-			byte index = (byte)((crc ^ b) & 0xFF);
-			crc = (crc >> 8) ^ Table[index];
-		}
-
-		return ~crc;
-	}
-
-	private static uint[] GenerateTable()
-	{
-		uint[] retTable = new uint[256];
-		const uint polynomial = 0xEDB88320;
-
-		for (uint i = 0; i < retTable.Length; i++)
-		{
-			uint c = i;
-			for (int j = 0; j < 8; j++)
-				c = (c & 1) != 0 ? (polynomial ^ (c >> 1)) : (c >> 1);
-			retTable[i] = c;
-		}
-
-		return retTable;
-	}
-    
-    [Serializable]
-    public class EventPayload
+	private class EventPayload
     {
 	    public string preciseTimestamp;
 	    public string name;
 	    public Dictionary<string, string> meta;
     }
-    
-    public class PayloadWrapper
+
+	private class EventPayloadWrapper
     {
 	    public List<EventPayload> data;
     }

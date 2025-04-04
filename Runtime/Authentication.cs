@@ -160,19 +160,6 @@ public class Authentication : SdkBehaviour
         _failedAuthAttempts++;*/
     }
 
-    /*private static void Authenticate()
-    {
-        //JSAuthenticate("471fd6fd-f5d0-4096-bc0c-17100c1c4fa0", "5304ef74-423f-4bd4-87d9-cba4f19c3bdb", "iXRLibForWebXR_js", "vEwWpJs5K2Kib3XeWBhXgQnQr43XNJCSyb5QJoGCU5ec590hFyb63vBSx6dX6Clj", "arborxr");
-        var result = iXRInit.Authenticate(_appId, _orgId, _deviceId, _authSecret, _partner);
-        if (result == iXR.iXRResult.Ok)
-        {
-            Debug.Log("iXRLib - Authenticated successfully");
-            return;
-        }
-
-        Debug.LogError($"iXRLib - Authentication failed : {result}");
-    }*/
-
     /*private static void ReAuthenticate()
     {
         var result = iXRInit.ReAuthenticate(false);
@@ -237,7 +224,7 @@ public class Authentication : SdkBehaviour
 
     private static async Task AuthenticateAsync()
     {
-        var data = new Payload
+        var data = new AuthPayload
         {
             appId = _appId,
             orgId = _orgId,
@@ -273,7 +260,7 @@ public class Authentication : SdkBehaviour
         if (request.result == UnityWebRequest.Result.Success)
         {
             Debug.Log("iXRLib - Authenticated successfully");
-            Response response = JsonConvert.DeserializeObject<Response>(request.downloadHandler.text);
+            AuthResponse response = JsonConvert.DeserializeObject<AuthResponse>(request.downloadHandler.text);
             Token = response.Token;
             Secret = response.Secret;
         }
@@ -282,9 +269,8 @@ public class Authentication : SdkBehaviour
             Debug.LogError($"iXRLib - Authentication failed : {request.error}");
         }
     }
-    
-    [Serializable]
-    public class Payload
+
+    private class AuthPayload
     {
         public string appId;
         public string orgId;
@@ -302,8 +288,8 @@ public class Authentication : SdkBehaviour
         public string appVersion;
         public Dictionary<string, string> authMechanism;
     }
-    
-    public class Response
+
+    private class AuthResponse
     {
         public string Token;
         public string Secret;

@@ -1,0 +1,46 @@
+using System;
+using System.Security.Cryptography;
+using System.Text;
+
+public class Utils
+{
+    public static string ComputeSha256Hash(string rawData)
+    {
+        using var sha256 = SHA256.Create();
+        byte[] bytes = Encoding.UTF8.GetBytes(rawData);
+        byte[] hash = sha256.ComputeHash(bytes);
+        return Convert.ToBase64String(hash);
+    }
+	
+    static readonly uint[] Table = GenerateTable();
+
+    public static uint ComputeCRC(string input)
+    {
+        byte[] bytes = Encoding.UTF8.GetBytes(input);
+        uint crc = 0xFFFFFFFF;
+
+        foreach (byte b in bytes)
+        {
+            byte index = (byte)((crc ^ b) & 0xFF);
+            crc = (crc >> 8) ^ Table[index];
+        }
+
+        return ~crc;
+    }
+
+    private static uint[] GenerateTable()
+    {
+        uint[] retTable = new uint[256];
+        const uint polynomial = 0xEDB88320;
+
+        for (uint i = 0; i < retTable.Length; i++)
+        {
+            uint c = i;
+            for (int j = 0; j < 8; j++)
+                c = (c & 1) != 0 ? (polynomial ^ (c >> 1)) : (c >> 1);
+            retTable[i] = c;
+        }
+
+        return retTable;
+    }
+}
