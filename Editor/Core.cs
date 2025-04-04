@@ -24,7 +24,7 @@ internal class Core
     {
         if (_config != null) return _config;
         
-        _config = Resources.Load<Configuration>("informXR");
+        _config = Resources.Load<Configuration>("ArborXR");
         if (_config != null) return _config;
         
         _config = ScriptableObject.CreateInstance<Configuration>();
@@ -34,7 +34,7 @@ internal class Core
             AssetDatabase.CreateFolder("Assets", "Resources");
         }
         
-        AssetDatabase.CreateAsset(_config, filepath + "/informXR.asset");
+        AssetDatabase.CreateAsset(_config, filepath + "/ArborXR.asset");
         EditorUtility.SetDirty(GetConfig());
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
