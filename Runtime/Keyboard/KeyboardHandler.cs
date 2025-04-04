@@ -22,14 +22,14 @@ public class KeyboardHandler : MonoBehaviour
         
         NonNativeKeyboard.Instance.OnTextSubmitted += HandleTextSubmitted;
     }
-
-    private async void HandleTextSubmitted(object sender, EventArgs e)
+    
+    private void HandleTextSubmitted(object sender, EventArgs e)
     {
         if (ProcessingSubmit) return;
         
         StartCoroutine(ProcessingVisual());
         var keyboard = (NonNativeKeyboard)sender;
-        await Authentication.KeyboardAuthenticate(keyboard.InputField.text);
+        StartCoroutine(Authentication.KeyboardAuthenticate(keyboard.InputField.text));
     }
     
     private static IEnumerator ProcessingVisual()

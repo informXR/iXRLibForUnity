@@ -11,7 +11,7 @@ public class TrackObject : MonoBehaviour
 
     private void Start()
     {
-        float positionUpdateIntervalSeconds = (float)(60.0 / Configuration.Instance.trackingUpdatesPerMinute);
+        float positionUpdateIntervalSeconds = (float)(60.0 / Configuration.instance.trackingUpdatesPerMinute);
         InvokeRepeating(nameof(UpdateLocation), 0, positionUpdateIntervalSeconds);
     }
 

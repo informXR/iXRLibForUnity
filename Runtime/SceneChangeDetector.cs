@@ -7,6 +7,7 @@ public class SceneChangeDetector : MonoBehaviour
     
     private void Start()
     {
+        CurrentSceneName = SceneManager.GetActiveScene().name;
         SceneManager.activeSceneChanged += OnActiveSceneChanged;
     }
 
