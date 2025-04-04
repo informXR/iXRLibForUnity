@@ -5,7 +5,7 @@ public static class Initialize
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void OnBeforeSceneLoad()
     {
-        iXRInit.Start();
+        //iXRInit.Start();
 #if UNITY_ANDROID
         ObjectAttacher.Attach<ExceptionLogger>("ExceptionLogger");
         ObjectAttacher.Attach<DeviceModel>("DeviceModel");

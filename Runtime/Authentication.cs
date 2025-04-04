@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using iXRLib;
 using Microsoft.MixedReality.Toolkit.Experimental.UI;
+using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.Networking;
 using XRDM.SDK.External.Unity;
 
 [DefaultExecutionOrder(1)]
@@ -17,6 +20,14 @@ public class Authentication : SdkBehaviour
     private static string _authSecret;
     private static string _userId;
     private static string _appId;
+    private static Partner _partner = Partner.None;
+    private static string _deviceModel;
+    private static string _osVersion;
+    private static string _xrdmVersion;
+    private static string _appVersion;
+    private static string _unityVersion;
+    private static string _dataPath;
+    private static string _ipAddress;
     private static int _failedAuthAttempts;
     
     protected override void OnEnable()
@@ -32,7 +43,7 @@ public class Authentication : SdkBehaviour
     {
         if (Callback.Service == null) return;
 
-        //_partner = Partner.eArborXR;
+        _partner = Partner.ArborXR;
         _orgId = Callback.Service.GetOrgId();
         _deviceId = Callback.Service.GetDeviceId();
         _authSecret = Callback.Service.GetFingerprint();
@@ -48,7 +59,7 @@ public class Authentication : SdkBehaviour
         public void OnDisconnected(bool isRetrying) => Service = null;
     }
     
-    private void Start()
+    private async void Start()
     {
 #if UNITY_ANDROID
         CheckArborInfo();
@@ -56,10 +67,10 @@ public class Authentication : SdkBehaviour
         if (GetDataFromConfig())
         {
             SetSessionData();
-            Authenticate();
-            if (iXRAuthentication.AuthMechanism.ContainsKey("prompt"))
+            await AuthenticateAsync();
+            //if (iXRAuthentication.AuthMechanism.ContainsKey("prompt"))
             {
-                KeyboardAuthenticate();
+            //    KeyboardAuthenticate();
             }
         }
     }
@@ -68,14 +79,14 @@ public class Authentication : SdkBehaviour
     {
         if (hasFocus)
         {
-			if (iXRAuthentication.TokenExpirationImminent())
+			//if (iXRAuthentication.TokenExpirationImminent())
             {
-                ReAuthenticate();
+            //    ReAuthenticate();
             }
         }
         else
         {
-            iXRInit.ForceSendUnsent();
+            //iXRInit.ForceSendUnsent();
         }
     }
 
@@ -90,7 +101,7 @@ public class Authentication : SdkBehaviour
 
         _appId = Configuration.Instance.appID;
 
-        //if (_partner == Partner.eArborXR) return true; // the rest of the values are set by Arbor
+        if (_partner == Partner.ArborXR) return true; // the rest of the values are set by Arbor
         
         _orgId = Configuration.Instance.orgID;
         if (string.IsNullOrEmpty(_orgId))
@@ -120,7 +131,8 @@ public class Authentication : SdkBehaviour
 
     public static async Task KeyboardAuthenticate(string keyboardInput = null)
     {
-        if (keyboardInput != null)
+        return;
+        /*if (keyboardInput != null)
         {
 			System.Collections.Generic.Dictionary<string, string> localAuthMechanism = iXRAuthentication.AuthMechanism;
 			string originalPrompt = localAuthMechanism["prompt"];
@@ -142,11 +154,12 @@ public class Authentication : SdkBehaviour
         string prompt = _failedAuthAttempts > 0 ? $"Authentication Failed ({_failedAuthAttempts})\n" : "";
         prompt += iXRAuthentication.AuthMechanism["prompt"];
         iXR.PresentKeyboard(prompt, iXRAuthentication.AuthMechanism["type"], emailDomain);
-        _failedAuthAttempts++;
+        _failedAuthAttempts++;*/
     }
 
-    private static void Authenticate()
+    /*private static void Authenticate()
     {
+        //JSAuthenticate("471fd6fd-f5d0-4096-bc0c-17100c1c4fa0", "5304ef74-423f-4bd4-87d9-cba4f19c3bdb", "iXRLibForWebXR_js", "vEwWpJs5K2Kib3XeWBhXgQnQr43XNJCSyb5QJoGCU5ec590hFyb63vBSx6dX6Clj", "arborxr");
         var result = iXRInit.Authenticate(_appId, _orgId, _deviceId, _authSecret, _partner);
         if (result == iXR.iXRResult.Ok)
         {
@@ -155,9 +168,9 @@ public class Authentication : SdkBehaviour
         }
 
         Debug.LogError($"iXRLib - Authentication failed : {result}");
-    }
+    }*/
 
-    private static void ReAuthenticate()
+    /*private static void ReAuthenticate()
     {
         var result = iXRInit.ReAuthenticate(false);
         if (result == iXR.iXRResult.Ok)
@@ -168,17 +181,14 @@ public class Authentication : SdkBehaviour
         {
             Debug.LogError($"iXRLib - ReAuthentication failed : {result}");
         }
-    }
+    }*/
 
     private static void SetSessionData()
     {
 #if UNITY_ANDROID
-        if (!string.IsNullOrEmpty(DeviceModel.deviceModel)) iXRAuthentication.DeviceModel = DeviceModel.deviceModel;
+        if (!string.IsNullOrEmpty(DeviceModel.deviceModel)) _deviceModel = DeviceModel.deviceModel;
 #endif
-        iXRAuthentication.Partner = _partner;
-        if (!string.IsNullOrEmpty(_userId)) iXRAuthentication.UserId = _userId;
-        
-        iXRAuthentication.OsVersion = SystemInfo.operatingSystem;
+        _osVersion = SystemInfo.operatingSystem;
         
         var currentAssembly = Assembly.GetExecutingAssembly();
         AssemblyName[] referencedAssemblies = currentAssembly.GetReferencedAssemblies();
@@ -186,16 +196,16 @@ public class Authentication : SdkBehaviour
         {
             if (assemblyName.Name == "XRDM.SDK.External.Unity")
             {
-                iXRAuthentication.XrdmVersion = assemblyName.Version.ToString();
+                _xrdmVersion = assemblyName.Version.ToString();
                 break;
             }
         }
         
         //TODO Geolocation
         
-        iXRAuthentication.AppVersion = Application.version;
-        iXRAuthentication.UnityVersion = Application.unityVersion;
-        iXRAuthentication.DataPath = Application.persistentDataPath;
+        _appVersion = Application.version;
+        _unityVersion = Application.unityVersion;
+        _dataPath = Application.persistentDataPath;
 
         SetIPAddress();
     }
@@ -211,7 +221,7 @@ public class Authentication : SdkBehaviour
             {
                 if (ip.AddressFamily == AddressFamily.InterNetwork) // Check for IPv4 addresses
                 {
-                    iXRAuthentication.IpAddress = ip.ToString();
+                    _ipAddress = ip.ToString();
                     return;
                 }
             }
@@ -220,5 +230,85 @@ public class Authentication : SdkBehaviour
         {
             Debug.LogError("iXRLib - Failed to get local IP address: " + ex.Message);
         }
+    }
+
+    private static async Task AuthenticateAsync()
+    {
+        var data = new Payload
+        {
+            appId = _appId,
+            orgId = _orgId,
+            authSecret = _authSecret,
+            deviceId = _deviceId,
+            userId = _userId,
+            tags = new string[] { },
+            sessionId = "someSessionId",
+            partner = _partner.ToString().ToLower(),
+            ipAddress = _ipAddress,
+            deviceModel = _deviceModel,
+            Geolocation = new Dictionary<string, string>(),
+            osVersion = _osVersion,
+            xrdmVersion = _xrdmVersion,
+            appVersion = _appVersion,
+            AuthMechanism = new Dictionary<string, string>()
+        };
+        
+        string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+
+        var fullUri = new Uri(new Uri(Configuration.Instance.restUrl), "/auth/token");
+        using var request = new UnityWebRequest(fullUri.ToString(), "POST");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+
+        var operation = request.SendWebRequest();
+
+        while (!operation.isDone)
+            await Task.Yield(); // let Unity continue rendering while we wait
+            
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log("iXRLib - Authenticated successfully");
+            Response response = JsonConvert.DeserializeObject<Response>(request.downloadHandler.text);
+            Debug.Log(response.Secret);
+            Debug.Log(response.Token);
+        }
+        else
+        {
+            Debug.LogError($"iXRLib - Authentication failed : {request.error}");
+        }
+    }
+    
+    [Serializable]
+    public class Payload
+    {
+        public string appId;
+        public string orgId;
+        public string authSecret;
+        public string deviceId;
+        public string userId;
+        public string[] tags;
+        public string sessionId;
+        public string partner;
+        public string ipAddress;
+        public string deviceModel;
+        public Dictionary<string, string> Geolocation;
+        public string osVersion;
+        public string xrdmVersion;
+        public string appVersion;
+        public Dictionary<string, string> AuthMechanism;
+    }
+    
+    public class Response
+    {
+        public string Token;
+        public string Secret;
+    }
+
+    private enum Partner
+    {
+        None,
+        ArborXR
     }
 }
