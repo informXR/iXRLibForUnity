@@ -1,28 +1,11 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using iXRLib;
-using UnityEngine;
+﻿using UnityEngine;
 
 public static class Initialize
 {
-#if UNITY_WEBGL && !UNITY_EDITOR
-    [DllImport("__Internal")]
-    private static extern void iXRLibLoad();
-#endif
-    
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void OnBeforeSceneLoad()
     {
-#if UNITY_WEBGL && !UNITY_EDITOR
-        iXRLibLoad();
-#else
         iXRInit.Start();
-#endif
-        //TestDiagnosticStringCallbackMechanism();
-#if !UNITY_WEBGL
-        SetConfigValues();
-#endif
 #if UNITY_ANDROID
         ObjectAttacher.Attach<ExceptionLogger>("ExceptionLogger");
         ObjectAttacher.Attach<DeviceModel>("DeviceModel");
@@ -38,33 +21,6 @@ public static class Initialize
             ObjectAttacher.Attach<TrackInputDevices>("TrackInputDevices");
         }
 #endif
-    }
-
-    private static void SetConfigValues()
-    {
-        iXRLib.Configuration.restUrl = Configuration.Instance.restUrl;
-        iXRLib.Configuration.sendRetriesOnFailure = (uint)Configuration.Instance.sendRetriesOnFailure;
-        iXRLib.Configuration.sendRetryInterval = TimeSpan.FromSeconds(Configuration.Instance.sendRetryIntervalSeconds);
-        iXRLib.Configuration.sendNextBatchWait = TimeSpan.FromSeconds(Configuration.Instance.sendNextBatchWaitSeconds);
-        iXRLib.Configuration.stragglerTimeout = TimeSpan.FromSeconds(Configuration.Instance.stragglerTimeoutSeconds);
-        iXRLib.Configuration.eventsPerSendAttempt = (uint)Configuration.Instance.eventsPerSendAttempt;
-        iXRLib.Configuration.logsPerSendAttempt = (uint)Configuration.Instance.logsPerSendAttempt;
-        iXRLib.Configuration.telemetryEntriesPerSendAttempt = (uint)Configuration.Instance.telemetryEntriesPerSendAttempt;
-        iXRLib.Configuration.storageEntriesPerSendAttempt = (uint)Configuration.Instance.storageEntriesPerSendAttempt;
-        iXRLib.Configuration.pruneSentItemsOlderThan = TimeSpan.FromHours(Configuration.Instance.pruneSentItemsOlderThanHours);
-        iXRLib.Configuration.maximumCachedItems = (uint)Configuration.Instance.maximumCachedItems;
-        iXRLib.Configuration.retainLocalAfterSent = Configuration.Instance.retainLocalAfterSent;
-    }
-
-    private static void TestDiagnosticStringCallbackMechanism()
-    {
-        iXRLibAnalytics.SetDiagnosticStringCallback(DiagnosticString);
-        iXRLibAnalytics.TestDiagnosticStringCallbackMechanism();
-    }
-
-    private static async Task DiagnosticString(string szString)
-    {
-        await Task.Run(() => Debug.Log($"iXRLib - {szString}"));
     }
 }
 
