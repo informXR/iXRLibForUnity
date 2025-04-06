@@ -1,13 +1,15 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class DataBatcher
+public class DataBatcher : MonoBehaviour
 {
+	private const float SendIntervalSeconds = 10f;
+	
 	private const string LogUrlPath = "/v1/collect/log";
 	private const string TelemetryUrlPath = "/v1/collect/telemetry";
 	private const string EventUrlPath = "/v1/collect/event";
@@ -15,6 +17,34 @@ public class DataBatcher
 	private static readonly List<LogPayload> LogPayloads = new();
 	private static readonly List<TelemetryPayload> TelemetryPayloads = new();
 	private static readonly List<EventPayload> EventPayloads = new();
+	
+	private void Start()
+	{
+		StartCoroutine(SendLoop());
+	}
+
+	private IEnumerator SendLoop()
+	{
+		while (true)
+		{
+			yield return new WaitForSeconds(SendIntervalSeconds);
+
+			if (LogPayloads.Count > 0)
+			{
+				yield return SendLogs();
+			}
+
+			if (TelemetryPayloads.Count > 0)
+			{
+				yield return SendTelemetries();
+			}
+
+			if (EventPayloads.Count > 0)
+			{
+				yield return SendEvents();
+			}
+		}
+	}
 	
     public static void AddLog(string logLevel, string text, Dictionary<string, string> meta)
     {
@@ -30,13 +60,13 @@ public class DataBatcher
 		LogPayloads.Add(payload);
 	}
 
-	public static async Task SendLogs()
+	private IEnumerator SendLogs()
 	{
 		var wrapper = new LogPayloadWrapper { data = LogPayloads };
 		string json = JsonConvert.SerializeObject(wrapper, Formatting.Indented);
 
 		var fullUri = new Uri(new Uri(Configuration.Instance.restUrl), LogUrlPath);
-		await SendRequestAsync(fullUri.ToString(), json);
+		yield return SendRequest(fullUri.ToString(), json);
 	}
 	
 	public static void AddTelemetry(string name, Dictionary<string, string> meta)
@@ -52,13 +82,13 @@ public class DataBatcher
 		TelemetryPayloads.Add(payload);
 	}
 	
-	public static async Task SendTelemetries()
+	private IEnumerator SendTelemetries()
 	{
 		var wrapper = new TelemetryPayloadWrapper { data = TelemetryPayloads };
 		string json = JsonConvert.SerializeObject(wrapper, Formatting.Indented);
 
 		var fullUri = new Uri(new Uri(Configuration.Instance.restUrl), TelemetryUrlPath);
-		await SendRequestAsync(fullUri.ToString(), json);
+		yield return SendRequest(fullUri.ToString(), json);
 	}
 	
 	public static void AddEvent(string name, Dictionary<string, string> meta)
@@ -74,25 +104,41 @@ public class DataBatcher
 	    EventPayloads.Add(payload);
     }
 	
-	public static async Task SendEvents()
+	private IEnumerator SendEvents()
 	{
 		var wrapper = new EventPayloadWrapper { data = EventPayloads };
 		string json = JsonConvert.SerializeObject(wrapper, Formatting.Indented);
 
 		var fullUri = new Uri(new Uri(Configuration.Instance.restUrl), EventUrlPath);
-		await SendRequestAsync(fullUri.ToString(), json);
+		yield return SendRequest(fullUri.ToString(), json);
 	}
 
-	private static async Task SendRequestAsync(string url, string json)
+	private IEnumerator SendRequest(string url, string json)
 	{
 		using var request = new UnityWebRequest(url, "POST");
+		BuildRequest(request, json);
+		
+		yield return request.SendWebRequest();
+		if (request.result == UnityWebRequest.Result.Success)
+		{
+			Debug.Log("iXRLib - Request successful");
+			if (url.Contains("log")) LogPayloads.Clear();
+			if (url.Contains("telemetry")) TelemetryPayloads.Clear();
+			if (url.Contains("event")) EventPayloads.Clear();
+			//TODO need to lock the list while I'm doing this
+		}
+		else
+		{
+			Debug.LogError($"iXRLib - Request failed : {request.error}");
+		}
+	}
+
+	private void BuildRequest(UnityWebRequest request, string json)
+	{
 		byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
 		request.uploadHandler = new UploadHandlerRaw(bodyRaw);
 		request.downloadHandler = new DownloadHandlerBuffer();
 		request.SetRequestHeader("Content-Type", "application/json");
-        
-		while (string.IsNullOrEmpty(Authentication.Token)) // TODO don't wait forever
-			await Task.Yield(); // let Unity continue rendering while we wait
         
 		request.SetRequestHeader("Authorization", "Bearer " + Authentication.Token);
         
@@ -102,19 +148,6 @@ public class DataBatcher
 		uint crc = Utils.ComputeCRC(json);
 		string hashString = Authentication.Token + Authentication.Secret + unixTimeSeconds + crc;
 		request.SetRequestHeader("x-ixrlib-hash", Utils.ComputeSha256Hash(hashString));
-
-		var operation = request.SendWebRequest();
-
-		while (!operation.isDone) await Task.Yield(); // let Unity continue rendering while we wait
-            
-		if (request.result == UnityWebRequest.Result.Success)
-		{
-			Debug.Log("iXRLib - Request successful");
-		}
-		else
-		{
-			Debug.LogError($"iXRLib - Request failed : {request.error}");
-		}
 	}
 
 	private static long GetEventTime() => (long)(Time.time * 1000f) + Initialize.StartTimeMs;
