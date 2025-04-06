@@ -44,6 +44,8 @@ public class iXR
 	private static Dictionary<string, string> StringToDict(string input)
 	{
 		var dict = new Dictionary<string, string>();
+		if (string.IsNullOrEmpty(input)) return dict;
+		
 		var pairs = input.Split(',');
 		foreach (var pair in pairs)
 		{
@@ -56,81 +58,77 @@ public class iXR
 	}
 
     // Logging
-    public static async Task LogDebug(string text, string meta = "")
+    public static void LogDebug(string text, string meta = "")
     {
-	    meta = AddSceneData(meta);
 	    var metaDict = StringToDict(meta);
-	    await LogAsync("debug", text, metaDict);
+	    AddSceneData(metaDict);
+	    DataBatcher.AddLog("debug", text, metaDict);
     }
     
-    public static async Task LogInfo(string text, string meta = "")
+    public static void LogInfo(string text, string meta = "")
     {
-	    meta = AddSceneData(meta);
 	    var metaDict = StringToDict(meta);
-	    await LogAsync("info", text, metaDict);
+	    AddSceneData(metaDict);
+	    DataBatcher.AddLog("info", text, metaDict);
     }
     
-    public static async Task LogWarn(string text, string meta = "")
+    public static void LogWarn(string text, string meta = "")
     {
-	    meta = AddSceneData(meta);
 	    var metaDict = StringToDict(meta);
-	    await LogAsync("warn", text, metaDict);
+	    AddSceneData(metaDict);
+	    DataBatcher.AddLog("warn", text, metaDict);
     }
     
-    public static async Task LogError(string text, string meta = "")
+    public static void LogError(string text, string meta = "")
     {
-	    meta = AddSceneData(meta);
 	    var metaDict = StringToDict(meta);
-	    await LogAsync("error", text, metaDict);
+	    AddSceneData(metaDict);
+	    DataBatcher.AddLog("error", text, metaDict);
     }
     
-    public static async Task LogCritical(string text, string meta = "")
+    public static void LogCritical(string text, string meta = "")
     {
-	    meta = AddSceneData(meta);
 	    var metaDict = StringToDict(meta);
-	    await LogAsync("critical", text, metaDict);
+	    AddSceneData(metaDict);
+	    DataBatcher.AddLog("critical", text, metaDict);
     }
 
     // ---
-	public static async Task Event(string name, Dictionary<string, string> meta)
+	public static void Event(string name, Dictionary<string, string> meta)
 	{
 		AddSceneData(meta);
-		await EventAsync(name, meta);
+		DataBatcher.AddEvent(name, meta);
 	}
 
-	public static async Task Event(string name, Dictionary<string, string> meta, GameObject gameObject)
+	public static void Event(string name, Dictionary<string, string> meta, GameObject gameObject)
 	{
-		AddSceneData(meta);
 		AddPositionData(meta, gameObject);
-		await Event(name, meta);
+		Event(name, meta);
 	}
 	
-	public static async Task Event(string name, string meta)
+	public static void Event(string name, string meta)
 	{
-		meta = AddSceneData(meta);
 		var metaDict = StringToDict(meta);
-		await Event(name, metaDict);
+		Event(name, metaDict);
 	}
 
-	public static async Task Event(string name, string meta, GameObject gameObject)
+	public static void Event(string name, string meta, GameObject gameObject)
 	{
-		meta = AddSceneData(meta);
-		meta = AddPositionData(meta, gameObject);
 		var metaDict = StringToDict(meta);
-		await Event(name, metaDict);
+		AddPositionData(metaDict, gameObject);
+		Event(name, metaDict);
 	}
 	// ---
-	public static async Task TelemetryEntry(string name, Dictionary<string, string> meta)
+	public static void TelemetryEntry(string name, Dictionary<string, string> meta)
 	{
 		AddSceneData(meta);
-		await TelemetryAsync(name, meta);
+		DataBatcher.AddTelemetry(name, meta);
 	}
 
-	public static async Task TelemetryEntry(string name, string meta)
+	public static void TelemetryEntry(string name, string meta)
 	{
-		meta = AddSceneData(meta);
 		var metaDict = StringToDict(meta);
-		await TelemetryAsync(name, metaDict);
+		TelemetryEntry(name, metaDict);
 	}
 
 	// Storage
@@ -189,7 +187,8 @@ public class iXR
 	}
 	public static async Task EventAssessmentStart(string assessmentName, string meta)
 	{
-		meta = AddSceneData(meta);
+		var metaDict = StringToDict(meta);
+		AddSceneData(metaDict);
 		//return iXRResult.Ok;//return iXRSend.EventAssessmentStart(assessmentName, meta);
 	}
 
@@ -204,7 +203,8 @@ public class iXR
 	}
 	public static async Task EventAssessmentComplete(string assessmentName, string score, string meta, ResultOptions result = ResultOptions.Complete)
 	{
-		meta = AddSceneData(meta);
+		var metaDict = StringToDict(meta);
+		AddSceneData(metaDict);
 		// Convert the ResultOptions enum to iXRLib.ResultOptions
 		//iXRLib.ResultOptions iXRLibResult = (iXRLib.ResultOptions)result;
 		//return iXRResult.Ok;//return iXRSend.EventAssessmentComplete(assessmentName, score, iXRLibResult, metaString);
@@ -218,7 +218,8 @@ public class iXR
 	}
 	public static async Task EventObjectiveStart(string objectiveName, string meta)
 	{
-		meta = AddSceneData(meta);
+		var metaDict = StringToDict(meta);
+		AddSceneData(metaDict);
 		//return iXRResult.Ok;//return iXRSend.EventObjectiveStart(objectiveName, meta);
 	}
 
@@ -233,7 +234,8 @@ public class iXR
 	}
 	public static async Task EventObjectiveComplete(string objectiveName, string score, string meta, ResultOptions result = ResultOptions.Complete)
 	{
-		meta = AddSceneData(meta);
+		var metaDict = StringToDict(meta);
+		AddSceneData(metaDict);
 		// Convert the ResultOptions enum to iXRLib.ResultOptions
 		//iXRLib.ResultOptions iXRLibResult = (iXRLib.ResultOptions)result;
 		//return iXRResult.Ok;//return iXRSend.EventObjectiveComplete(objectiveName, score, iXRLibResult, metaString);
@@ -247,7 +249,8 @@ public class iXR
     }
 	public static async Task EventInteractionStart(string interactionName, string meta)
 	{
-		meta = AddSceneData(meta);
+		var metaDict = StringToDict(meta);
+		AddSceneData(metaDict);
 		//return iXRResult.Ok;//return iXRSend.EventInteractionStart(interactionName, meta);
 	}
 
@@ -262,7 +265,8 @@ public class iXR
     }
 	public static async Task EventInteractionComplete(string interactionName, string result, string resultDetails = null, InteractionType eInteractionType = InteractionType.Null, string meta = null)
 	{
-		meta = AddSceneData(meta);
+		var metaDict = StringToDict(meta);
+		AddSceneData(metaDict);
 		// Convert the InteractionType enum to iXRLib.InteractionType
         //iXRLib.InteractionType iXRLibInteractionType = (iXRLib.InteractionType)eInteractionType;
         //return iXRResult.Ok;//return iXRSend.EventInteractionComplete(interactionName, result, resultDetails, iXRLibInteractionType, meta);
@@ -276,7 +280,8 @@ public class iXR
     }
 	public static async Task EventLevelStart(string levelName, string meta)
 	{
-		meta = AddSceneData(meta);
+		var metaDict = StringToDict(meta);
+		AddSceneData(metaDict);
 		//return iXRResult.Ok;//return iXRSend.EventLevelStart(levelName, meta);
 	}
 
@@ -289,7 +294,8 @@ public class iXR
     }
 	public static async Task EventLevelComplete(string levelName, string score, string meta)
 	{
-		meta = AddSceneData(meta);
+		var metaDict = StringToDict(meta);
+		AddSceneData(metaDict);
 		//return iXRResult.Ok;//return iXRSend.EventLevelComplete(levelName, score, meta);
 	}
 
@@ -326,157 +332,9 @@ public class iXR
 		meta["y"] = gameObject.transform.position.y.ToString(CultureInfo.InvariantCulture);
 		meta["z"] = gameObject.transform.position.z.ToString(CultureInfo.InvariantCulture);
 	}
-
-	private static string AddPositionData(string meta, GameObject gameObject)
-	{
-		if (!string.IsNullOrEmpty(meta)) meta += ",";
-		meta += $"x={gameObject.transform.position.x},";
-		meta += $"y={gameObject.transform.position.y},";
-		meta += $"z={gameObject.transform.position.z}";
-		return meta;
-	}
 	
 	private static void AddSceneData(Dictionary<string, string> meta)
 	{
 		meta["sceneName"] = SceneChangeDetector.CurrentSceneName;
-	}
-
-	private static string AddSceneData(string meta)
-	{
-		if (!string.IsNullOrEmpty(meta)) meta += ",";
-		meta += $"sceneName={SceneChangeDetector.CurrentSceneName}";
-		return meta;
-	}
-	
-	private static async Task LogAsync(string logLevel, string text, Dictionary<string, string> meta)
-	{
-		long logTime = (long)(Time.time * 1000f) + Initialize.StartTimeMs;
-	    
-		var payloadList = new List<LogPayload>
-		{
-			new LogPayload
-			{
-				preciseTimestamp = logTime.ToString(),
-				logLevel = logLevel,
-				text = text,
-				meta = meta
-			}
-		};
-        
-		var wrapper = new LogPayloadWrapper { data = payloadList };
-		string json = JsonConvert.SerializeObject(wrapper, Formatting.Indented);
-
-		var fullUri = new Uri(new Uri(Configuration.Instance.restUrl), "/v1/collect/log");
-		await RequestAsync(fullUri.ToString(), json);
-	}
-	
-	private static async Task TelemetryAsync(string name, Dictionary<string, string> meta)
-	{
-		long telemetryTime = (long)(Time.time * 1000f) + Initialize.StartTimeMs;
-	    
-		var payloadList = new List<TelemetryPayload>
-		{
-			new TelemetryPayload
-			{
-				preciseTimestamp = telemetryTime.ToString(),
-				name = name,
-				meta = meta
-			}
-		};
-        
-		var wrapper = new TelemetryPayloadWrapper { data = payloadList };
-		string json = JsonConvert.SerializeObject(wrapper, Formatting.Indented);
-
-		var fullUri = new Uri(new Uri(Configuration.Instance.restUrl), "/v1/collect/telemetry");
-		await RequestAsync(fullUri.ToString(), json);
-	}
-	
-	private static async Task EventAsync(string name, Dictionary<string, string> meta)
-    {
-	    long eventTime = (long)(Time.time * 1000f) + Initialize.StartTimeMs;
-	    
-	    var payloadList = new List<EventPayload>
-	    {
-		    new EventPayload
-		    {
-			    preciseTimestamp = eventTime.ToString(),
-			    name = name,
-			    meta = meta
-		    }
-	    };
-        
-	    var wrapper = new EventPayloadWrapper { data = payloadList };
-        string json = JsonConvert.SerializeObject(wrapper, Formatting.Indented);
-
-        var fullUri = new Uri(new Uri(Configuration.Instance.restUrl), "/v1/collect/event");
-        await RequestAsync(fullUri.ToString(), json);
-    }
-
-	private static async Task RequestAsync(string url, string json)
-	{
-		using var request = new UnityWebRequest(url, "POST");
-		byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
-		request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-		request.downloadHandler = new DownloadHandlerBuffer();
-		request.SetRequestHeader("Content-Type", "application/json");
-        
-		while (string.IsNullOrEmpty(Authentication.Token)) // TODO don't wait forever
-			await Task.Yield(); // let Unity continue rendering while we wait
-        
-		request.SetRequestHeader("Authorization", "Bearer " + Authentication.Token);
-        
-		string unixTimeSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-		request.SetRequestHeader("x-ixrlib-timestamp", unixTimeSeconds);
-
-		uint crc = Utils.ComputeCRC(json);
-		string hashString = Authentication.Token + Authentication.Secret + unixTimeSeconds + crc;
-		request.SetRequestHeader("x-ixrlib-hash", Utils.ComputeSha256Hash(hashString));
-
-		var operation = request.SendWebRequest();
-
-		while (!operation.isDone) await Task.Yield(); // let Unity continue rendering while we wait
-            
-		if (request.result == UnityWebRequest.Result.Success)
-		{
-			Debug.Log("iXRLib - Request successful");
-		}
-		else
-		{
-			Debug.LogError($"iXRLib - Request failed : {request.error}");
-		}
-	}
-
-	private class EventPayload
-    {
-	    public string preciseTimestamp;
-	    public string name;
-	    public Dictionary<string, string> meta;
-    }
-	private class EventPayloadWrapper
-    {
-	    public List<EventPayload> data;
-    }
-	
-	private class TelemetryPayload
-	{
-		public string preciseTimestamp;
-		public string name;
-		public Dictionary<string, string> meta;
-	}
-	private class TelemetryPayloadWrapper
-	{
-		public List<TelemetryPayload> data;
-	}
-	
-	private class LogPayload
-	{
-		public string preciseTimestamp;
-		public string logLevel;
-		public string text;
-		public Dictionary<string, string> meta;
-	}
-	private class LogPayloadWrapper
-	{
-		public List<LogPayload> data;
 	}
 }
