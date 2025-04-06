@@ -32,6 +32,7 @@ public class Authentication : SdkBehaviour
 
     public static string Token;
     public static string Secret;
+    private static DateTime _tokenExpiry;
     
     protected override void OnEnable()
     {
@@ -82,9 +83,9 @@ public class Authentication : SdkBehaviour
     {
         if (hasFocus)
         {
-			//if (iXRAuthentication.TokenExpirationImminent())
+            if (_tokenExpiry - DateTime.UtcNow <= TimeSpan.FromMinutes(1))
             {
-            //    ReAuthenticate();
+                //ReAuthenticate();
             }
         }
         else
@@ -263,6 +264,8 @@ public class Authentication : SdkBehaviour
             AuthResponse response = JsonConvert.DeserializeObject<AuthResponse>(request.downloadHandler.text);
             Token = response.Token;
             Secret = response.Secret;
+            Dictionary<string, object> decodedJwt = Utils.DecodeJwt(Token);
+            _tokenExpiry = DateTimeOffset.FromUnixTimeSeconds((long)decodedJwt["exp"]).UtcDateTime;
         }
         else
         {

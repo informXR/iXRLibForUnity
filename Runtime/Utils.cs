@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using Newtonsoft.Json;
 
 public class Utils
 {
@@ -59,5 +60,31 @@ public class Utils
         }
 
         return retTable;
+    }
+    
+    public static Dictionary<string, object> DecodeJwt(string token)
+    {
+        string[] parts = token.Split('.');
+        string payload = parts[1];
+        payload = PadBase64(payload); // Ensure padding is correct
+        byte[] bytes = Convert.FromBase64String(Base64UrlDecode(payload));
+        string json = Encoding.UTF8.GetString(bytes);
+
+        return JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+    }
+
+    private static string Base64UrlDecode(string input)
+    {
+        return input.Replace('-', '+').Replace('_', '/');
+    }
+
+    private static string PadBase64(string input)
+    {
+        switch (input.Length % 4)
+        {
+            case 2: return input + "==";
+            case 3: return input + "=";
+            default: return input;
+        }
     }
 }
