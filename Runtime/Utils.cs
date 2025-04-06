@@ -1,9 +1,26 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
 public class Utils
 {
+    public static Dictionary<string, string> StringToDict(string input)
+    {
+        var dict = new Dictionary<string, string>();
+        if (string.IsNullOrEmpty(input)) return dict;
+		
+        var pairs = input.Split(',');
+        foreach (var pair in pairs)
+        {
+            var parts = pair.Split('=');
+            string key = parts[0].Trim();
+            string value = parts[1].Trim();
+            dict[key] = value;
+        }
+        return dict;
+    }
+    
     public static string ComputeSha256Hash(string rawData)
     {
         using var sha256 = SHA256.Create();
