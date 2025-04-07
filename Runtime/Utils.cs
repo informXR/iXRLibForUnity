@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
+using UnityEngine;
 
 public class Utils
 {
@@ -86,5 +89,28 @@ public class Utils
             case 3: return input + "=";
             default: return input;
         }
+    }
+    
+    public static string GetIPAddress()
+    {
+        try
+        {
+            string hostName = Dns.GetHostName();
+            IPHostEntry hostEntry = Dns.GetHostEntry(hostName);
+
+            foreach (IPAddress ip in hostEntry.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork) // Check for IPv4 addresses
+                {
+                    return ip.ToString();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("iXRLib - Failed to get local IP address: " + ex.Message);
+        }
+
+        return "0.0.0.0";
     }
 }
