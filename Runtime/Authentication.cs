@@ -77,18 +77,21 @@ public class Authentication : SdkBehaviour
             //    KeyboardAuthenticate();
             }
         }
+        
+        InvokeRepeating(nameof(CheckForReAuth), 0, 60); // Call every 60 seconds
+    }
+
+    private void CheckForReAuth()
+    {
+        if (_tokenExpiry - DateTime.UtcNow <= TimeSpan.FromMinutes(2))
+        {
+            //ReAuthenticate();
+        }
     }
     
     private void OnApplicationFocus(bool hasFocus)
     {
-        if (hasFocus)
-        {
-            if (_tokenExpiry - DateTime.UtcNow <= TimeSpan.FromMinutes(1))
-            {
-                //ReAuthenticate();
-            }
-        }
-        else
+        if (!hasFocus)
         {
             DataBatcher.SendNow(this);
         }
