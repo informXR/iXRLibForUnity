@@ -29,8 +29,8 @@ public class Authentication : SdkBehaviour
     private static string _sessionId;
     private static int _failedAuthAttempts;
 
-    public static string Token;
-    public static string Secret;
+    public static string AuthToken;
+    public static string AuthSecret;
     private static AuthMechanism _authMechanism;
     private static DateTime _tokenExpiry;
     
@@ -185,12 +185,11 @@ public class Authentication : SdkBehaviour
             }
         }
         
-        //TODO Geolocation
-        
         _appVersion = Application.version;
         _unityVersion = Application.unityVersion;
         _dataPath = Application.persistentDataPath;
         _ipAddress = Utils.GetIPAddress();
+        //TODO Geolocation
     }
 
     private static async Task<bool> AuthenticateAsync()
@@ -235,9 +234,9 @@ public class Authentication : SdkBehaviour
         {
             Debug.Log("iXRLib - Authenticated successfully");
             AuthResponse postResponse = JsonConvert.DeserializeObject<AuthResponse>(request.downloadHandler.text);
-            Token = postResponse.Token;
-            Secret = postResponse.Secret;
-            Dictionary<string, object> decodedJwt = Utils.DecodeJwt(Token);
+            AuthToken = postResponse.Token;
+            AuthSecret = postResponse.Secret;
+            Dictionary<string, object> decodedJwt = Utils.DecodeJwt(AuthToken);
             _tokenExpiry = DateTimeOffset.FromUnixTimeSeconds((long)decodedJwt["exp"]).UtcDateTime;
             return true;
         }
@@ -275,12 +274,12 @@ public class Authentication : SdkBehaviour
     
     public static void SetAuthHeaders(UnityWebRequest request, string json = "")
     {
-        request.SetRequestHeader("Authorization", "Bearer " + Token);
+        request.SetRequestHeader("Authorization", "Bearer " + AuthToken);
         
         string unixTimeSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
         request.SetRequestHeader("x-ixrlib-timestamp", unixTimeSeconds);
         
-        string hashString = Token + Secret + unixTimeSeconds;
+        string hashString = AuthToken + AuthSecret + unixTimeSeconds;
         if (!string.IsNullOrEmpty(json))
         {
             uint crc = Utils.ComputeCRC(json);
