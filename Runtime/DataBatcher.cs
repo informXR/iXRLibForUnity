@@ -23,26 +23,35 @@ public class DataBatcher : MonoBehaviour
 		StartCoroutine(SendLoop());
 	}
 
-	private IEnumerator SendLoop()
+	public static void SendNow(MonoBehaviour context)
+	{
+		context.StartCoroutine(Send());
+	}
+
+	private static IEnumerator SendLoop()
 	{
 		while (true)
 		{
 			yield return new WaitForSeconds(SendIntervalSeconds);
+			yield return Send();
+		}
+	}
 
-			if (LogPayloads.Count > 0)
-			{
-				yield return SendLogs();
-			}
+	private static IEnumerator Send()
+	{
+		if (LogPayloads.Count > 0)
+		{
+			yield return SendLogs();
+		}
 
-			if (TelemetryPayloads.Count > 0)
-			{
-				yield return SendTelemetries();
-			}
+		if (TelemetryPayloads.Count > 0)
+		{
+			yield return SendTelemetries();
+		}
 
-			if (EventPayloads.Count > 0)
-			{
-				yield return SendEvents();
-			}
+		if (EventPayloads.Count > 0)
+		{
+			yield return SendEvents();
 		}
 	}
 	
@@ -60,7 +69,7 @@ public class DataBatcher : MonoBehaviour
 		LogPayloads.Add(payload);
 	}
 
-	private IEnumerator SendLogs()
+	private static IEnumerator SendLogs()
 	{
 		var wrapper = new LogPayloadWrapper { data = LogPayloads };
 		string json = JsonConvert.SerializeObject(wrapper, Formatting.Indented);
@@ -82,7 +91,7 @@ public class DataBatcher : MonoBehaviour
 		TelemetryPayloads.Add(payload);
 	}
 	
-	private IEnumerator SendTelemetries()
+	private static IEnumerator SendTelemetries()
 	{
 		var wrapper = new TelemetryPayloadWrapper { data = TelemetryPayloads };
 		string json = JsonConvert.SerializeObject(wrapper, Formatting.Indented);
@@ -104,7 +113,7 @@ public class DataBatcher : MonoBehaviour
 	    EventPayloads.Add(payload);
     }
 	
-	private IEnumerator SendEvents()
+	private static IEnumerator SendEvents()
 	{
 		var wrapper = new EventPayloadWrapper { data = EventPayloads };
 		string json = JsonConvert.SerializeObject(wrapper, Formatting.Indented);
@@ -113,7 +122,7 @@ public class DataBatcher : MonoBehaviour
 		yield return SendRequest(fullUri.ToString(), json);
 	}
 
-	private IEnumerator SendRequest(string url, string json)
+	private static IEnumerator SendRequest(string url, string json)
 	{
 		using var request = new UnityWebRequest(url, "POST");
 		BuildRequest(request, json);
@@ -133,7 +142,7 @@ public class DataBatcher : MonoBehaviour
 		}
 	}
 
-	private void BuildRequest(UnityWebRequest request, string json)
+	private static void BuildRequest(UnityWebRequest request, string json)
 	{
 		byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
 		request.uploadHandler = new UploadHandlerRaw(bodyRaw);

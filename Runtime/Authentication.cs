@@ -90,7 +90,7 @@ public class Authentication : SdkBehaviour
         }
         else
         {
-            //iXRInit.ForceSendUnsent();
+            DataBatcher.SendNow(this);
         }
     }
 
