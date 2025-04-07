@@ -28,6 +28,7 @@ public class Authentication : SdkBehaviour
     private static string _unityVersion;
     private static string _dataPath;
     private static string _ipAddress;
+    private static string _sessionId;
     private static int _failedAuthAttempts;
 
     public static string Token;
@@ -65,27 +66,34 @@ public class Authentication : SdkBehaviour
     
     private async void Start()
     {
-#if UNITY_ANDROID
-        CheckArborInfo();
-#endif
-        if (GetDataFromConfig())
+        try
         {
-            SetSessionData();
-            await AuthenticateAsync();
-            //if (iXRAuthentication.AuthMechanism.ContainsKey("prompt"))
+#if UNITY_ANDROID
+            CheckArborInfo();
+#endif
+            if (GetDataFromConfig())
             {
-            //    KeyboardAuthenticate();
+                SetSessionData();
+                await AuthenticateAsync();
+                //if (iXRAuthentication.AuthMechanism.ContainsKey("prompt"))
+                {
+                    //    KeyboardAuthenticate();
+                }
             }
-        }
         
-        InvokeRepeating(nameof(CheckForReAuth), 0, 60); // Call every 60 seconds
+            InvokeRepeating(nameof(CheckForReAuth), 0, 60); // Call every 60 seconds
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"iXRLib - Authentication.Start Error: {e.Message}");
+        }
     }
 
     private void CheckForReAuth()
     {
         if (_tokenExpiry - DateTime.UtcNow <= TimeSpan.FromMinutes(2))
         {
-            //ReAuthenticate();
+            _ = AuthenticateAsync();
         }
     }
     
@@ -164,19 +172,6 @@ public class Authentication : SdkBehaviour
         _failedAuthAttempts++;*/
     }
 
-    /*private static void ReAuthenticate()
-    {
-        var result = iXRInit.ReAuthenticate(false);
-        if (result == iXR.iXRResult.Ok)
-        {
-            Debug.Log("iXRLib - ReAuthenticated successfully");
-        }
-        else
-        {
-            Debug.LogError($"iXRLib - ReAuthentication failed : {result}");
-        }
-    }*/
-
     private static void SetSessionData()
     {
 #if UNITY_ANDROID
@@ -228,6 +223,8 @@ public class Authentication : SdkBehaviour
 
     private static async Task AuthenticateAsync()
     {
+        if (string.IsNullOrEmpty(_sessionId)) _sessionId = Guid.NewGuid().ToString();
+        
         var data = new AuthPayload
         {
             appId = _appId,
@@ -236,7 +233,7 @@ public class Authentication : SdkBehaviour
             deviceId = _deviceId,
             userId = _userId,
             tags = new string[] { },
-            sessionId = "someSessionId",
+            sessionId = _sessionId,
             partner = _partner.ToString().ToLower(),
             ipAddress = _ipAddress,
             deviceModel = _deviceModel,
@@ -273,6 +270,7 @@ public class Authentication : SdkBehaviour
         else
         {
             Debug.LogError($"iXRLib - Authentication failed : {request.error}");
+            _sessionId = null;
         }
     }
 
