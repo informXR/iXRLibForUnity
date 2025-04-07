@@ -25,6 +25,9 @@ public class DataBatcher : MonoBehaviour
 
 	public static void SendNow(MonoBehaviour context)
 	{
+		// In case this gets called immediately on startup
+		if (string.IsNullOrEmpty(Authentication.Token)) return;
+		
 		context.StartCoroutine(Send());
 	}
 
