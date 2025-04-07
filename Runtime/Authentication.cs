@@ -33,6 +33,7 @@ public class Authentication : SdkBehaviour
 
     public static string Token;
     public static string Secret;
+    private static AuthMechanism _authMechanism;
     private static DateTime _tokenExpiry;
     
     protected override void OnEnable()
@@ -75,9 +76,9 @@ public class Authentication : SdkBehaviour
             {
                 SetSessionData();
                 await AuthenticateAsync();
-                //if (iXRAuthentication.AuthMechanism.ContainsKey("prompt"))
+                if (!string.IsNullOrEmpty(_authMechanism.prompt))
                 {
-                    //    KeyboardAuthenticate();
+                    _ = KeyboardAuthenticate();
                 }
             }
         
@@ -146,7 +147,7 @@ public class Authentication : SdkBehaviour
 
     public static async Task KeyboardAuthenticate(string keyboardInput = null)
     {
-        return;
+        Debug.Log("iXRLib - Keyboard Authentication");
         /*if (keyboardInput != null)
         {
 			System.Collections.Generic.Dictionary<string, string> localAuthMechanism = iXRAuthentication.AuthMechanism;
@@ -163,12 +164,12 @@ public class Authentication : SdkBehaviour
 
             localAuthMechanism["prompt"] = originalPrompt;
 			iXRAuthentication.SetAuthMechanism(localAuthMechanism);
-        }
+        }*/
         
-        iXRAuthentication.AuthMechanism.TryGetValue("domain", out string emailDomain);
+        /*iXRAuthentication.AuthMechanism.TryGetValue("domain", out string emailDomain);
         string prompt = _failedAuthAttempts > 0 ? $"Authentication Failed ({_failedAuthAttempts})\n" : "";
         prompt += iXRAuthentication.AuthMechanism["prompt"];
-        iXR.PresentKeyboard(prompt, iXRAuthentication.AuthMechanism["type"], emailDomain);
+        iXR.PresentKeyboard(prompt, _authMechanism.type, emailDomain);
         _failedAuthAttempts++;*/
     }
 
@@ -220,6 +221,29 @@ public class Authentication : SdkBehaviour
             Debug.LogError("iXRLib - Failed to get local IP address: " + ex.Message);
         }
     }
+    
+    private static async Task<string> GetConfigAsync()
+    {
+        var fullUri = new Uri(new Uri(Configuration.Instance.restUrl), "/v1/storage/config");
+        using UnityWebRequest request = UnityWebRequest.Get(fullUri.ToString());
+        request.SetRequestHeader("Accept", "application/json");
+        SetAuthHeaders(request);
+
+        var op = request.SendWebRequest();
+
+        while (!op.isDone)
+            await Task.Yield(); // non-blocking
+            
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            return request.downloadHandler.text;
+        }
+        else
+        {
+            Debug.LogWarning("GetConfig failed: " + request.error);
+            return null;
+        }
+    }
 
     private static async Task AuthenticateAsync()
     {
@@ -261,17 +285,49 @@ public class Authentication : SdkBehaviour
         if (request.result == UnityWebRequest.Result.Success)
         {
             Debug.Log("iXRLib - Authenticated successfully");
-            AuthResponse response = JsonConvert.DeserializeObject<AuthResponse>(request.downloadHandler.text);
-            Token = response.Token;
-            Secret = response.Secret;
+            AuthResponse postResponse = JsonConvert.DeserializeObject<AuthResponse>(request.downloadHandler.text);
+            Token = postResponse.Token;
+            Secret = postResponse.Secret;
             Dictionary<string, object> decodedJwt = Utils.DecodeJwt(Token);
             _tokenExpiry = DateTimeOffset.FromUnixTimeSeconds((long)decodedJwt["exp"]).UtcDateTime;
+
+            // TODO what if the GET doesn't have any AuthMechanism?
+            string getResponse = await GetConfigAsync();
+            _authMechanism = JsonConvert.DeserializeObject<AuthWrapper>(getResponse).authMechanism;
         }
         else
         {
             Debug.LogError($"iXRLib - Authentication failed : {request.error}");
             _sessionId = null;
         }
+    }
+    
+    public static void SetAuthHeaders(UnityWebRequest request, string json = "")
+    {
+        request.SetRequestHeader("Authorization", "Bearer " + Token);
+        
+        string unixTimeSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+        request.SetRequestHeader("x-ixrlib-timestamp", unixTimeSeconds);
+        
+        string hashString = Token + Secret + unixTimeSeconds;
+        if (!string.IsNullOrEmpty(json))
+        {
+            uint crc = Utils.ComputeCRC(json);
+            hashString += crc;
+        }
+        
+        request.SetRequestHeader("x-ixrlib-hash", Utils.ComputeSha256Hash(hashString));
+    }
+    
+    public class AuthMechanism
+    {
+        public string type;
+        public string prompt;
+    }
+
+    public class AuthWrapper
+    {
+        public AuthMechanism authMechanism;
     }
 
     private class AuthPayload

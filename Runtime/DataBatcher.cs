@@ -151,15 +151,7 @@ public class DataBatcher : MonoBehaviour
 		request.uploadHandler = new UploadHandlerRaw(bodyRaw);
 		request.downloadHandler = new DownloadHandlerBuffer();
 		request.SetRequestHeader("Content-Type", "application/json");
-        
-		request.SetRequestHeader("Authorization", "Bearer " + Authentication.Token);
-        
-		string unixTimeSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-		request.SetRequestHeader("x-ixrlib-timestamp", unixTimeSeconds);
-
-		uint crc = Utils.ComputeCRC(json);
-		string hashString = Authentication.Token + Authentication.Secret + unixTimeSeconds + crc;
-		request.SetRequestHeader("x-ixrlib-hash", Utils.ComputeSha256Hash(hashString));
+		Authentication.SetAuthHeaders(request, json);
 	}
 
 	private static long GetEventTime() => (long)(Time.time * 1000f) + Initialize.StartTimeMs;
