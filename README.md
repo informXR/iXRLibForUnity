@@ -278,7 +278,7 @@ The Integration Methods offer developers access to additional services, enabling
 public string Abxr.AIProxy(string prompt, string past_messages = "", string bot_id = "")
 
 // Example usage
-Abxr.AIProxy("Provide me a randomized greeting that includes common small talk");
+Abxr.AIProxy("Provide me a randomized greeting that includes common small talk and ends asking some form of how can I help");
 ```
 
 **Parameters:**
