@@ -276,6 +276,9 @@ The Integration Methods offer developers access to additional services, enabling
 #### AIProxy
 ```csharp
 public string Abxr.AIProxy(string prompt, string past_messages = "", string bot_id = "")
+
+// Example usage
+Abxr.AIProxy("Provide me a randomized greeting that includes common small talk");
 ```
 
 **Parameters:**
