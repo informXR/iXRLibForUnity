@@ -109,7 +109,7 @@ public static class Utils
         }
         catch (Exception ex)
         {
-            Debug.LogError("iXRLib - Failed to get local IP address: " + ex.Message);
+            Debug.LogError("AbxrLib - Failed to get local IP address: " + ex.Message);
         }
 
         return "0.0.0.0";

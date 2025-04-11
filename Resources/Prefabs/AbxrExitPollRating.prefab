@@ -1370,7 +1370,7 @@ GameObject:
   - component: {fileID: 2260489868239985790}
   - component: {fileID: -1254853392002778101}
   m_Layer: 5
-  m_Name: iXRExitPollRating
+  m_Name: AbxrExitPollRating
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

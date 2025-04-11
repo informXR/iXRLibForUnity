@@ -42,7 +42,7 @@ public class StorageBatcher : MonoBehaviour
 		}
 	}
 	
-	public static void Add(string name, Dictionary<string, string> entry, iXR.StorageScope scope, iXR.StoragePolicy policy)
+	public static void Add(string name, Dictionary<string, string> entry, Abxr.StorageScope scope, Abxr.StoragePolicy policy)
 	{
 		long storageTime = Utils.GetUnityTime();
 		string isoTime = DateTimeOffset.FromUnixTimeMilliseconds(storageTime).UtcDateTime.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
@@ -82,11 +82,11 @@ public class StorageBatcher : MonoBehaviour
 		yield return request.SendWebRequest();
 		if (request.result == UnityWebRequest.Result.Success)
 		{
-			Debug.Log("iXRLib - Storage POST Request successful");
+			Debug.Log("AbxrLib - Storage POST Request successful");
 		}
 		else
 		{
-			Debug.LogError($"iXRLib - Storage POST Request failed : {request.error} - {request.downloadHandler.text}");
+			Debug.LogError($"AbxrLib - Storage POST Request failed : {request.error} - {request.downloadHandler.text}");
 			_sendInterval = Configuration.instance.sendRetryIntervalSeconds;
 			lock (Lock)
 			{
@@ -95,7 +95,7 @@ public class StorageBatcher : MonoBehaviour
 		}
 	}
 
-	public static async Task<PayloadWrapper> Get(string name, iXR.StorageScope scope)
+	public static async Task<PayloadWrapper> Get(string name, Abxr.StorageScope scope)
 	{
 		var queryParams = new Dictionary<string, string>
 		{
@@ -123,12 +123,12 @@ public class StorageBatcher : MonoBehaviour
 		}
 		else
 		{
-			Debug.LogWarning($"iXRLib - GetStorageEntries failed: {request.error} - {request.downloadHandler.text}");
+			Debug.LogWarning($"AbxrLib - GetStorageEntries failed: {request.error} - {request.downloadHandler.text}");
 			result.Value = "";
 		}
 	}
 	
-	public static async Task Delete(iXR.StorageScope scope, string name = "")
+	public static async Task Delete(Abxr.StorageScope scope, string name = "")
 	{
 		var queryParams = new Dictionary<string, string>
 		{
@@ -149,11 +149,11 @@ public class StorageBatcher : MonoBehaviour
 		yield return request.SendWebRequest();
 		if (request.result == UnityWebRequest.Result.Success)
 		{
-			Debug.Log("iXRLib - DeleteStorageEntries succeeded");
+			Debug.Log("AbxrLib - DeleteStorageEntries succeeded");
 		}
 		else
 		{
-			Debug.LogWarning($"iXRLib - DeleteStorageEntries failed: {request.error} - {request.downloadHandler.text}");
+			Debug.LogWarning($"AbxrLib - DeleteStorageEntries failed: {request.error} - {request.downloadHandler.text}");
 		}
 	}
 	

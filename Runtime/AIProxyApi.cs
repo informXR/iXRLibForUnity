@@ -47,11 +47,11 @@ public class AIProxyApi : MonoBehaviour
         {
             PastMessages.Add(prompt);
             Responses[prompt] = request.downloadHandler.text;
-            Debug.Log("iXRLib - AI POST Request successful");
+            Debug.Log("AbxrLib - AI POST Request successful");
         }
         else
         {
-            Debug.LogError($"iXRLib - AI POST Request failed : {request.error}");
+            Debug.LogError($"AbxrLib - AI POST Request failed : {request.error}");
             //TODO retry logic
         }
     }

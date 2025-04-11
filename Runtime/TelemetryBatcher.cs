@@ -75,11 +75,11 @@ public class TelemetryBatcher : MonoBehaviour
 		yield return request.SendWebRequest();
 		if (request.result == UnityWebRequest.Result.Success)
 		{
-			Debug.Log("iXRLib - Telemetry POST Request successful");
+			Debug.Log("AbxrLib - Telemetry POST Request successful");
 		}
 		else
 		{
-			Debug.LogError($"iXRLib - Telemetry POST Request failed : {request.error} - {request.downloadHandler.text}");
+			Debug.LogError($"AbxrLib - Telemetry POST Request failed : {request.error} - {request.downloadHandler.text}");
 			_sendInterval = Configuration.instance.sendRetryIntervalSeconds;
 			lock (Lock)
 			{

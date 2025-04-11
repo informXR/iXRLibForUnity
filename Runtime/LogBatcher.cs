@@ -77,11 +77,11 @@ public class LogBatcher : MonoBehaviour
 		yield return request.SendWebRequest();
 		if (request.result == UnityWebRequest.Result.Success)
 		{
-			Debug.Log("iXRLib - Log POST Request successful");
+			Debug.Log("AbxrLib - Log POST Request successful");
 		}
 		else
 		{
-			Debug.LogError($"iXRLib - Log POST Request failed : {request.error} - {request.downloadHandler.text}");
+			Debug.LogError($"AbxrLib - Log POST Request failed : {request.error} - {request.downloadHandler.text}");
 			_sendInterval = Configuration.instance.sendRetryIntervalSeconds;
 			lock (Lock)
 			{

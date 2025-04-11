@@ -1,12 +1,12 @@
 {
-    "name": "com.informxr.unity",
+    "name": "com.arborxr.unity",
     "version": "1.1.0",
-    "displayName": "iXRLib for Unity",
-    "description": "iXRLib analytics for Unity",
+    "displayName": "AbxrLib for Unity",
+    "description": "AbxrLib analytics for Unity",
     "unity": "2022.3",
     "author": {
-      "name": "informXR",
-      "url": "https://informxr.com"
+      "name": "arborXR",
+      "url": "https://arborxr.com"
     },
     "dependencies": {
       "com.unity.textmeshpro": "3.0.6",

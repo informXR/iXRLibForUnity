@@ -10,7 +10,7 @@ public class KeyboardHandler : MonoBehaviour
     
     private void Start()
     {
-        GameObject keyboard = Resources.Load<GameObject>("Prefabs/iXRKeyboard");
+        GameObject keyboard = Resources.Load<GameObject>("Prefabs/AbxrKeyboard");
         if (keyboard != null)
         {
             Instantiate(keyboard, Camera.main.transform);

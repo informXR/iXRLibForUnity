@@ -602,7 +602,7 @@ GameObject:
   - component: {fileID: 2260489868239985790}
   - component: {fileID: -1254853392002778101}
   m_Layer: 5
-  m_Name: iXRExitPollThumbs
+  m_Name: AbxrExitPollThumbs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

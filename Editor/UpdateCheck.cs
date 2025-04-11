@@ -14,7 +14,7 @@ public class UpdateCheck
     private const string PackageName = "com.informxr.unity";
     private const string SkippedVersionKey = "SkippedPackageVersion";
     private const int UpdateCheckFrequencyDays = 1;
-    public const string UpdateCheckPref = "iXR_updateCheck";
+    public const string UpdateCheckPref = "Abxr_updateCheck";
 
     [MenuItem("informXR/Check For Updates")]
     public static async void CheckForUpdatesMenu()
@@ -42,7 +42,7 @@ public class UpdateCheck
         {
             if (forced)
             {
-                EditorUtility.DisplayDialog("Up-to-date", "You have the latest version of 'iXRLib for Unity'.", "OK");
+                EditorUtility.DisplayDialog("Up-to-date", "You have the latest version of 'AbxrLib for Unity'.", "OK");
             }
         }
         else

@@ -20,7 +20,7 @@ public class SceneChangeDetector : MonoBehaviour
     private static void OnActiveSceneChanged(Scene oldScene, Scene newScene)
     {
         CurrentSceneName = newScene.name;
-        Debug.Log("iXRLib - Active scene changed to " + newScene.name);
-        iXR.Event("Scene Changed", $"Scene Name={newScene.name}");
+        Debug.Log("AbxrLib - Active scene changed to " + newScene.name);
+        Abxr.Event("Scene Changed", $"Scene Name={newScene.name}");
     }
 }

@@ -23,8 +23,8 @@ public class ExitPollHandler : MonoBehaviour
     private static void CreatePoll(PollType pollType)
     {
         string pollPath = "";
-        if (pollType == PollType.Rating) pollPath = "Prefabs/iXRExitPollRating";
-        else if (pollType == PollType.Thumbs) pollPath = "Prefabs/iXRExitPollThumbs";
+        if (pollType == PollType.Rating) pollPath = "Prefabs/AbxrExitPollRating";
+        else if (pollType == PollType.Thumbs) pollPath = "Prefabs/AbxrExitPollThumbs";
         GameObject exitPoll = Resources.Load<GameObject>(pollPath);
         if (exitPoll != null)
         {
@@ -57,7 +57,7 @@ public class ExitPollHandler : MonoBehaviour
     private static void HandleThumbsUp(object sender, EventArgs e)
     {
         var poll = (ExitPoll)sender;
-        iXR.Event(poll.prompt.text, "answer=up");
+        Abxr.Event(poll.prompt.text, "answer=up");
         if (Polls.Count > 0) ProcessPoll();
         _isProcessing = false;
     }
@@ -65,7 +65,7 @@ public class ExitPollHandler : MonoBehaviour
     private static void HandleThumbsDown(object sender, EventArgs e)
     {
         var poll = (ExitPoll)sender;
-        iXR.Event(poll.prompt.text, "answer=down");
+        Abxr.Event(poll.prompt.text, "answer=down");
         if (Polls.Count > 0) ProcessPoll();
         _isProcessing = false;
     }
@@ -73,7 +73,7 @@ public class ExitPollHandler : MonoBehaviour
     private static void HandleRating(object sender, ExitPoll.RatingEventArgs e)
     {
         var poll = (ExitPoll)sender;
-        iXR.Event(poll.prompt.text, $"answer={e.rating}");
+        Abxr.Event(poll.prompt.text, $"answer={e.rating}");
         if (Polls.Count > 0) ProcessPoll();
         _isProcessing = false;
     }

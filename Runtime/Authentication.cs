@@ -118,7 +118,7 @@ public class Authentication : SdkBehaviour
         const string appIdPattern = "^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$";
         if (string.IsNullOrEmpty(Configuration.instance.appID) || !Regex.IsMatch(Configuration.instance.appID, appIdPattern))
         {
-            Debug.LogError("iXRLib - Invalid Application ID. Cannot authenticate.");
+            Debug.LogError("AbxrLib - Invalid Application ID. Cannot authenticate.");
             return false;
         }
 
@@ -129,21 +129,21 @@ public class Authentication : SdkBehaviour
         _orgId = Configuration.instance.orgID;
         if (string.IsNullOrEmpty(_orgId))
         {
-            Debug.LogError("iXRLib - Missing Organization ID. Cannot authenticate.");
+            Debug.LogError("AbxrLib - Missing Organization ID. Cannot authenticate.");
             return false;
         }
         
         const string orgIdPattern = "^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$";
         if (!Regex.IsMatch(_orgId, orgIdPattern))
         {
-            Debug.LogError("iXRLib - Invalid Organization ID. Cannot authenticate.");
+            Debug.LogError("AbxrLib - Invalid Organization ID. Cannot authenticate.");
             return false;
         }
 
         _authSecret = Configuration.instance.authSecret;
         if (string.IsNullOrEmpty(_authSecret))
         {
-            Debug.LogError("iXRLib - Missing Auth Secret. Cannot authenticate.");
+            Debug.LogError("AbxrLib - Missing Auth Secret. Cannot authenticate.");
             return false;
         }
         
@@ -171,7 +171,7 @@ public class Authentication : SdkBehaviour
         
         string prompt = _failedAuthAttempts > 0 ? $"Authentication Failed ({_failedAuthAttempts})\n" : "";
         prompt += _authMechanism.prompt;
-        iXR.PresentKeyboard(prompt, _authMechanism.type, _authMechanism.domain);
+        Abxr.PresentKeyboard(prompt, _authMechanism.type, _authMechanism.domain);
         _failedAuthAttempts++;
     }
 
@@ -232,7 +232,7 @@ public class Authentication : SdkBehaviour
         yield return request.SendWebRequest();
         if (request.result == UnityWebRequest.Result.Success)
         {
-            Debug.Log("iXRLib - Authenticated successfully");
+            Debug.Log("AbxrLib - Authenticated successfully");
             AuthResponse postResponse = JsonConvert.DeserializeObject<AuthResponse>(request.downloadHandler.text);
             _authToken = postResponse.Token;
             _apiSecret = postResponse.Secret;
@@ -242,7 +242,7 @@ public class Authentication : SdkBehaviour
         }
         else
         {
-            Debug.LogError($"iXRLib - Authentication failed : {request.error} - {request.downloadHandler.text}");
+            Debug.LogError($"AbxrLib - Authentication failed : {request.error} - {request.downloadHandler.text}");
             _sessionId = null;
         }
     }
@@ -264,7 +264,7 @@ public class Authentication : SdkBehaviour
         }
         else
         {
-            Debug.LogWarning($"iXRLib - GetConfiguration failed: {request.error} - {request.downloadHandler.text}");
+            Debug.LogWarning($"AbxrLib - GetConfiguration failed: {request.error} - {request.downloadHandler.text}");
         }
     }
     
@@ -273,7 +273,7 @@ public class Authentication : SdkBehaviour
         request.SetRequestHeader("Authorization", "Bearer " + _authToken);
         
         string unixTimeSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-        request.SetRequestHeader("x-ixrlib-timestamp", unixTimeSeconds);
+        request.SetRequestHeader("x-abxrlib-timestamp", unixTimeSeconds);
         
         string hashString = _authToken + _apiSecret + unixTimeSeconds;
         if (!string.IsNullOrEmpty(json))
@@ -282,7 +282,7 @@ public class Authentication : SdkBehaviour
             hashString += crc;
         }
         
-        request.SetRequestHeader("x-ixrlib-hash", Utils.ComputeSha256Hash(hashString));
+        request.SetRequestHeader("x-abxrlib-hash", Utils.ComputeSha256Hash(hashString));
     }
 
     private static Dictionary<string, string> CreateAuthMechanismDict()

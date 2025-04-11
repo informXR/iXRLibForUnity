@@ -28,6 +28,6 @@ public class TrackObject : MonoBehaviour
             ["y"] = transform.position.y.ToString(CultureInfo.InvariantCulture),
             ["z"] = transform.position.z.ToString(CultureInfo.InvariantCulture)
         };
-        iXR.TelemetryEntry(name + " Position", positionDict);
+        Abxr.TelemetryEntry(name + " Position", positionDict);
     }
 }
