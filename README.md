@@ -158,6 +158,7 @@ public void Abxr.EventAssessmentStart(string assessmentName)
 public void Abxr.EventLevelComplete(string levelName, int score)
 public void Abxr.EventLevelComplete(string levelName, int score, Dictionary<string, string> meta = null)
 
+// Example Usage
 Abxr.EventLevelStart("level_1");
 Abxr.EventLevelComplete("level_1", 85);
 ```
@@ -181,7 +182,9 @@ The Log Methods provide straightforward logging functionality, similar to syslog
 ```csharp
 public void Abxr.Log(LogLevel level, string message)
 
+// Example usage
 Abxr.Log("Info", "Module started");
+```
 
 Use standard or severity-specific logging:
 ```csharp
@@ -259,9 +262,7 @@ To log spatial or system telemetry:
 public void Abxr.Telemetry(string name, Dictionary<string, string> data)
 
 // Example usage
-Abxr.Telemetry("headset_position", new Dictionary<string, string> {
-    {"x", "1.23"}, {"y", "4.56"}, {"z", "7.89"}
-});
+Abxr.Telemetry("headset_position", new Dictionary<string, string> { {"x", "1.23"}, {"y", "4.56"}, {"z", "7.89"} });
 ```
 
 **Parameters:**
