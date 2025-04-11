@@ -1,119 +1,91 @@
-# Table of Contents
+# ArborXR Insights Unity SDK
 
+## Table of Contents
 1. [Introduction](#introduction)
 2. [Installation](#installation)
 3. [Configuration](#configuration)
-4. [Sending Data](#sending-data) 
+4. [Sending Data](#sending-data)
 5. [FAQ](#faq)
 6. [Troubleshooting](#troubleshooting)
 7. [Contact](#contact)
+
+---
 
 ## Introduction
 
 ### Overview
 
-The informXR SDK for Unity empowers developers **for free** to seamlessly integrate advanced XR tracking, analytics, and data management into their applications. By leveraging informXR's comprehensive features _(see below)_, **developers like you** can **significantly enhance their product's appeal to enterprise customers**. We are a cost-effective solution for your customers, making your product not just innovative, but also enterprise-ready.
-* Seamless LMS and business intelligence integrations
-* An advanced analytics platform
-* Secure data storage solutions
-* An AI proxy
+The **ArborXR Insights SDK for Unity** empowers developers to seamlessly integrate enterprise-grade XR analytics and data tracking into their applications. Built on the **AbxrLib** runtime, this open-source library enables scalable event tracking, telemetry, and session-based storage—essential for enterprise and education XR environments.
 
-### Key SDK Features
+ArborXR Insights enhances product value by offering:
+- Seamless LMS & Business Intelligence integrations
+- A robust, analytics-driven backend
+- Encrypted, cross-session data persistence
+- AI-ready event streams
 
-- **Event Tracking**: Get error logs and user interaction-based events within your XR applications.
-- **HMD and Controller Tracking**: Real-time tracking of head-mounted displays (HMD) and controllers for a comprehensive XR experience.   
-- **Object Tracking**: Track specific objects within your XR environment to monitor interactions and movements.
-- **System Information Tracking**: Capture system-level data, such as device specifications and performance metrics.  
+### Core Features
+
+- **Event Tracking:** Monitor user behaviors, interactions, and system events.
+- **Spatial & Hardware Telemetry:** Capture headset/controller movement and hardware metrics.
+- **Object & System Info:** Track XR objects and environmental state.
+- **Storage & Session Management:** Support resumable training and long-form experiences.
+- **Logs:** Developer and system-level logs available across sessions.
+
+---
 
 ## Installation
 
-### Steps to Install
+### Unity Package Installation
 
-1. On the top menu, choose `Window > Package Manager`.
-2. Click the **'+'** button in the top left and select 'Add Package from git URL'.
-3. Input `https://github.com/informXR/iXRLibForUnity.git`.
-4. Once the package is installed, you should see informXR appear in your Unity toolbar.
+1. Open Unity and go to `Window > Package Manager`.
+2. Select the '+' dropdown and choose **'Add package from git URL'**.
+3. Use the GitHub repo URL:
+   ```
+   https://github.com/ArborXR/abxrlib-for-unity.git
+   ```
+4. Once imported, you will see `ArborXR Insights` in your Unity toolbar.
+
+---
 
 ## Configuration
 
-### Initial Setup
+### Setup & Authentication
 
-To get started with the informXR SDK, you'll need to configure your application with the necessary authentication details.
+Configure the SDK with settings available via the [ArborXR Dashboard](https://app.arborxr.com/):
 
-1. On the top menu, choose `informXR > Configuration`.
-2. Enter the Application ID, Organization ID, and Authorization Secret. These can be retrieved from the [informXR Web Application](https://app.informxr.io/) which requires a **free account** to continue.
-     * Organization ID and Authorization Secret: Available under `Settings > Organization Codes`.
-     * Application ID: Available in the Web Dashboard under your application settings. Please use the 'Get Started' tutorial button on the Home page and then choose the 'Content Developer' path for step-by-step instructions.
-     * Follow the visual guides below for clarity.
+1. In Unity, navigate to: `ArborXR Insights > Configuration`.
+2. Input: **Application ID**
 
-### Organization ID and Authorization Secret Location - Web App
-Follow the visual instructions below for clarification on how to get to the Organization ID and Authorization Secret in Settings.
-![Visual Tutorial to get to Settings](https://github.com/informXR/iXRLibForUnity/blob/main/READMEFiles/GotoSettings.png?raw=true "Go to Settings")
-![Visual Tutorial to get to Organization Codes](https://github.com/informXR/iXRLibForUnity/blob/main/READMEFiles/goToOrganizationCodes.png?raw=true "Go to Organization Codes")
+The value is retrieved from the [ArborXR Dashboard](https://app.arborxr.com/):
+- Navigate to `Content Library > [Your APplication]` and you will find the value in the URL.
+- Example: https:\/\/app.arborxr.com\/abcd1234-abc1-2345-6789-abc1234d\/content\/`987654cba-54ba-dc43-98cb-dcba54321`
+  - **Application ID** = `987654cba-54ba-dc43-98cb-dcba54321`
 
-### Application ID Location - Web App
-Simply use the provided tutorials with the 'Get Started Button' shown below, and choose the 'Content Developer' path.
-![Visual Tutorial to get App ID](https://github.com/informXR/iXRLibForUnity/blob/main/READMEFiles/PubAppTour1.png?raw=true "Press Get Started")
+---
 
 ## Sending Data
 
 ### Event Methods
-The Event Methods are designed to track user progress and activity throughout the experience. These functions allow developers to record specific actions, milestones, or interactions within the application, providing valuable insights into user behavior and engagement. By leveraging these methods, developers can create a detailed log of a user's journey, enabling comprehensive analysis and performance tracking.
-
-#### Event
 ```csharp
-public void iXR.Event(string name) 
-
-public void iXR.Event(string name, Dictionary<string, string> meta = null)
-
-public void iXR.Event(string name, Dictionary<string, string> meta = null, Vector3 location_data = null)
+public void Abxr.Event(string name);
+public void Abxr.Event(string name, Dictionary<string, string> meta = null);
+public void Abxr.Event(string name, Dictionary<string, string> meta = null, Vector3 location_data = null);
 ```
-Records an event with optional metadata and location data.
-
 **Parameters:**
 - `name` (string): The name of the event. Use snake_case for better analytics processing.
 - `meta` (Dictionary<string, string>): Optional. Additional key-value pairs describing the event.
 - `location_data` (Vector3): Optional. The (x, y, z) coordinates of the event in 3D space.
 
-**Note:** The system automatically includes a timestamp and origin ("user" by default, "system" for lib-generated events) with each event.
+Logs a named event with optional metadata and spatial context. Timestamps and origin (`user` or `system`) are automatically appended.
 
-...
+### Event Wrappers (for LMS Compatibility)
+-The LMS Event Functions are specialized versions of the Event method, tailored for common scenarios in XR experiences. These functions help enforce consistency in event logging across different parts of the application and are crucial for powering integrations with Learning Management System (LMS) platforms. By using these standardized wrapper functions, developers ensure that key events like starting or completing levels, assessments, or interactions are recorded in a uniform format. This consistency not only simplifies data analysis but also facilitates seamless communication with external educational systems, enhancing the overall learning ecosystem.
 
-### Event Wrapper Functions
-The Event Wrapper Functions are specialized versions of the Event method, tailored for common scenarios in XR experiences. These functions help enforce consistency in event logging across different parts of the application and are crucial for powering integrations with Learning Management System (LMS) platforms. By using these standardized wrapper functions, developers ensure that key events like starting or completing levels, assessments, or interactions are recorded in a uniform format. This consistency not only simplifies data analysis but also facilitates seamless communication with external educational systems, enhancing the overall learning ecosystem.
-
-#### EventLevelStart
-```csharp
-public void iXR.EventLevelStart(string levelName) 
-
-public void iXR.EventLevelStart(string levelName, Dictionary<string, string> meta = null)
-public void iXR.EventLevelStart(string levelName, string metaString = "")
-```
-Note: The meta/metaString parameter is optional and can be a string or a dictionary.
-
-#### EventLevelComplete
-```csharp
-public void iXR.EventLevelComplete(string levelName, int score)
-
-public void iXR.EventLevelComplete(string levelName, int score, Dictionary<string, string> meta = null)
-public void iXR.EventLevelComplete(string levelName, int score, string metaString = "")
-```
-Note: If you use iXR.EventLevelStart first, it will automatically record the duration of the level and provide metrics for users who start but never end the level.
-
-### 🎓 Assessments (LMS Compatible)
+#### Assessments
 Assessments are intended to track the overall performance of a learner across multiple Objectives and Interactions. 
 * Think of it as the learner's score for a specific course or curriculum.
 * When the Assessment is complete, it will automatically record and close out the Assessment in the various LMS platforms we support.
 
-#### EventAssessmentStart
-```csharp
-public void iXR.EventAssessmentStart(string assessmentName) 
-
-public void iXR.EventAssessmentStart(string assessmentName, Dictionary<string, string> meta = null)
-public void iXR.EventAssessmentStart(string assessmentName, string metaString = "")
-```
-
-#### EventAssessmentComplete
 ```csharp
 public enum ResultOptions
 {
@@ -123,59 +95,38 @@ public enum ResultOptions
     Incomplete
 }
 
-public void iXR.EventAssessmentComplete(string assessmentName, int score, ResultOptions result = ResultOptions.Complete)
+public void Abxr.EventAssessmentStart(string assessmentName) 
+public void Abxr.EventAssessmentStart(string assessmentName, Dictionary<string, string> meta = null)
 
-public void iXR.EventAssessmentComplete(string assessmentName, int score, ResultOptions result = ResultOptions.Complete, Dictionary<string, string> meta = null)
-public void iXR.EventAssessmentComplete(string assessmentName, int score, ResultOptions result = ResultOptions.Complete, string metaString = "")
+public void Abxr.EventAssessmentComplete(string assessmentName, int score, ResultOptions result = ResultOptions.Complete)
+public void Abxr.EventAssessmentComplete(string assessmentName, int score, ResultOptions result = ResultOptions.Complete, Dictionary<string, string> meta = null)
+
+// Example Usage
+Abxr.EventAssessmentStart("final_exam");
+Abxr.EventAssessmentComplete("final_exam", 92, ResultOptions.Pass);
 ```
 
-### 🎯 Objectives (LMS Compatible)
-Objectives are intended to track the performance of a learner on a specific task or objective. 
-* Think of it as the learner's score for a specific section of a course or curriculum.
-* You can have multiple Objectives per Assessment. Note: SCORM limits to 255 Objectives per Assessment.
-
-#### EventObjectiveStart
-```csharp
-public void iXR.EventObjectiveStart(string objectiveName)
-
-public void iXR.EventObjectiveStart(string objectiveName, Dictionary<string, string> meta)
-public void iXR.EventObjectiveStart(string objectiveName, string metaString = "")
-```
-
-#### EventObjectiveComplete
+#### Objectives
 ```csharp
 public enum ResultOptions
 {
-    Null,
     Pass,
     Fail,
     Complete,
     Incomplete
 }
 
-iXR.EventObjectiveComplete(string objectiveName, int score)
+public void Abxr.EventObjectiveStart(string objectiveName)
 
-public void iXR.EventObjectiveComplete(string objectiveName, int score, ResultOptions result = ResultOptions.Complete)
+public void Abxr.EventObjectiveStart(string objectiveName, Dictionary<string, string> meta)
+public void Abxr.EventObjectiveStart(string objectiveName, string metaString = "")
 
-public void iXR.EventObjectiveComplete(string objectiveName, int score, ResultOptions result = ResultOptions.Complete, Dictionary<string, string> meta = null)
-public void iXR.EventObjectiveComplete(string objectiveName, int score, ResultOptions result = ResultOptions.Complete, string metaString = "")
+// Example Usage
+Abxr.EventObjectiveStart("open_valve");
+Abxr.EventObjectiveComplete("open_valve", 100, ResultOptions.Complete);
 ```
 
-### 🔄 Interactions (LMS Compatible)
-Interactions are intended to track the performance of a learner on a specific task or interaction. 
-* This gives you the ability to record the learner's performance on a specific interaction and choices they make.
-* Because of this, the options are a bit different than Assessments or Objectives, and you should look at our documentation carefully to use Interactions to their full advantage.
-* You can have multiple Interactions per Assessment. Note: SCORM limits to 255 Interactions per Assessment.
-
-#### EventInteractionStart
-```csharp
-public void iXR.EventInteractionStart(string interactionName)
-
-public void iXR.EventInteractionStart(string interactionName, Dictionary<string, string> meta)
-public void iXR.EventInteractionStart(string interactionName, string metaString = "")
-```
-
-#### EventInteractionComplete
+#### Interactions
 ```csharp
 public enum InteractionType
 {
@@ -187,18 +138,32 @@ public enum InteractionType
    Number // integer
 }
 
-public void iXR.EventInteractionComplete(string interactionName, string result)
+public void Abxr.EventInteractionStart(string interactionName)
 
-public void iXR.EventInteractionComplete(string interactionName, string result, string result_details = null)
+public void Abxr.EventInteractionComplete(string interactionName, string result)
+public void Abxr.EventInteractionComplete(string interactionName, string result, string result_details = null)
+public void Abxr.EventInteractionComplete(string interactionName, string result, string result_details = null, InteractionType type = InteractionType.Text)
+public void Abxr.EventInteractionComplete(string interactionName, string result, string result_details = null, InteractionType type = InteractionType.Text, Dictionary<string, string> meta = null)
 
-public void iXR.EventInteractionComplete(string interactionName, string result, string result_details = null, InteractionType type = InteractionType.Text)
+// Example Usage
+Abxr.EventInteractionStart("select_option_a");
+Abxr.EventInteractionComplete("select_option_a", "true", "a", InteractionType.Select);
+```
 
-public void iXR.EventInteractionComplete(string interactionName, string result, string result_details = null, InteractionType type = InteractionType.Text, Dictionary<string, string> meta = null)
-public void iXR.EventInteractionComplete(string interactionName, string result, string result_details = null, InteractionType type = InteractionType.Text, string metaString = "")
+### Other Event Wrappers
+#### Levels
+```csharp
+public void Abxr.EventAssessmentStart(string assessmentName) 
+
+public void Abxr.EventLevelComplete(string levelName, int score)
+public void Abxr.EventLevelComplete(string levelName, int score, Dictionary<string, string> meta = null)
+
+Abxr.EventLevelStart("level_1");
+Abxr.EventLevelComplete("level_1", 85);
 ```
 
 **Parameters for all Event Wrapper Functions:**
-- `levelName/assessmentName/objectiveName/interactionName` (string): The identifier for the level, assessment, objective, or interaction.
+- `levelName/assessmentName/objectiveName/interactionName` (string): The identifier for the assessment, objective, interaction, or level.
 - `score` (int): The numerical score achieved. While typically between 1-100, any integer is valid. In metadata, you can also set a minScore and maxScore to define the range of scores for this objective.
 - `result` (ResultOptions for Assessment and Objective): The basic result of the assessment or objective.
 - `result` (Interactions): The result for the interaction is based on the InteractionType.
@@ -206,40 +171,42 @@ public void iXR.EventInteractionComplete(string interactionName, string result, 
 - `type` (InteractionType): Optional. The type of interaction for this event.
 - `meta` (Dictionary<string, string>): Optional. Additional key-value pairs describing the event.
 
-**Note:** For all "Complete" events, the duration is automatically calculated if the corresponding "Start" event was recorded with the same name.
+**Note:** All complete events automatically calculate duration if a corresponding start event was logged.
 
-### Log Methods
+---
+
+### Logging
 The Log Methods provide straightforward logging functionality, similar to syslogs. These functions are available to developers by default, even across enterprise users, allowing for consistent and accessible logging across different deployment scenarios.
 
-#### Log
 ```csharp
-public void iXR.Log(LogLevel level, string message)
+public void Abxr.Log(LogLevel level, string message)
+
+Abxr.Log("Info", "Module started");
+
+Use standard or severity-specific logging:
+```csharp
+public void Abxr.LogDebug(string message)
+public void Abxr.LogInfo(string message)
+public void Abxr.LogWarn(string message)
+public void Abxr.LogError(string message)
+public void Abxr.LogCritical(string message)
+
+// Example usage
+Abxr.LogError("Critical error in assessment phase");
 ```
 
-**Parameters:**
-- `level` (LogLevel): The severity of the log (Debug, Info, Warn, Error, Critical).
-- `message` (string): The content of the log message.
+---
 
-#### Log Wrapper Functions
+### Storage API
+The Storage API enable developers to store and retrieve learner/player progress, facilitating the creation of long-form training content. When users log in using ArborXR's facility or the developer's in-app solution, these methods allow users to continue their progress on different headsets, ensuring a seamless learning experience across multiple sessions or devices.
+
+#### Save Progress
 ```csharp
-public void iXR.LogDebug(string message)
-public void iXR.LogInfo(string message)
-public void iXR.LogWarn(string message)
-public void iXR.LogError(string message)
-public void iXR.LogCritical(string message)
+public void Abxr.SetStorageEntry(Dictionary<string, string> data, string name = "state", bool keep_latest = true, string origin = null, bool session_data = false)
+
+// Example usage
+Abxr.SetStorageEntry(new Dictionary<string, string>{{"progress", "75%"}});
 ```
-
-**Parameters:**
-- `message` (string): The content of the log message.
-
-### Storage Methods
-The Storage Methods enable developers to store and retrieve learner/player progress, facilitating the creation of long-form training content. When users log in using ArborXR's facility or the developer's in-app solution, these methods allow users to continue their progress on different headsets, ensuring a seamless learning experience across multiple sessions or devices.
-
-#### SetStorageEntry
-```csharp
-public void iXR.SetStorageEntry(Dictionary<string, string> data, string name = "state", bool keep_latest = true, string origin = null, bool session_data = false)
-```
-
 **Parameters:**
 - `data` (Dictionary<string, string>): The key-value pairs to store.
 - `name` (string): Optional. The identifier for this storage entry. Default is "state".
@@ -247,11 +214,13 @@ public void iXR.SetStorageEntry(Dictionary<string, string> data, string name = "
 - `origin` (string): Optional. The source of the data (e.g., "system").
 - `session_data` (bool): Optional. If true, the data is specific to the current session. Default is false.
 
-#### GetStorageEntry
+#### Retrieve Data
 ```csharp
-public Dictionary<string, string> iXR.GetStorageEntry(string name = "state", string origin = null, string[] tags_any = null, string[] tags_all = null, bool user_only = false)
-```
+public Dictionary<string, string> Abxr.GetStorageEntry(string name = "state", string origin = null, string[] tags_any = null, string[] tags_all = null, bool user_only = false)
 
+// Example usage
+var state = Abxr.GetStorageEntry("state");
+```
 **Parameters:**
 - `name` (string): Optional. The identifier of the storage entry to retrieve. Default is "state".
 - `origin` (string): Optional. Filter entries by their origin ("system", "user", or "admin").
@@ -261,39 +230,51 @@ public Dictionary<string, string> iXR.GetStorageEntry(string name = "state", str
 
 **Returns:** A dictionary containing the retrieved storage entry.
 
-#### RemoveStorageEntry
+#### Remove Storage
 ```csharp
-public void iXR.RemoveStorageEntry(string name = "state")
-```
+public void Abxr.RemoveStorageEntry(string name = "state")
 
+// Example usage
+Abxr.RemoveStorageEntry("state");
+```
 **Parameters:**
 - `name` (string): Optional. The identifier of the storage entry to remove. Default is "state".
 
-#### GetAllStorageEntries
+#### Get All Entries
 ```csharp
-public Dictionary<string, string> iXR.GetAllStorageEntries()
-```
+public Dictionary<string, string> Abxr.GetAllStorageEntries()
 
+// Example usage
+var allEntries = Abxr.GetAllStorageEntries();
+```
 **Returns:** A dictionary containing all storage entries for the current user/device.
 
-### Telemetry Methods
+---
+
+### Telemetry
 The Telemetry Methods provide comprehensive tracking of the XR environment. By default, they capture headset and controller movements, but can be extended to track any custom objects in the virtual space. These functions also allow collection of system-level data such as frame rates or device temperatures. This versatile tracking enables developers to gain deep insights into user interactions and application performance, facilitating optimization and enhancing the overall XR experience.
 
-#### Telemetry
+To log spatial or system telemetry:
 ```csharp
-public void iXR.Telemetry(string name, Dictionary<string, string> data)
+public void Abxr.Telemetry(string name, Dictionary<string, string> data)
+
+// Example usage
+Abxr.Telemetry("headset_position", new Dictionary<string, string> {
+    {"x", "1.23"}, {"y", "4.56"}, {"z", "7.89"}
+});
 ```
 
 **Parameters:**
 - `name` (string): The type of telemetry data (e.g., "OS_Version", "Battery_Level", "RAM_Usage").
 - `data` (Dictionary<string, string>): Key-value pairs of telemetry data.
 
+---
 ### AI Integration Methods
 The Integration Methods offer developers access to additional services, enabling customized experiences for enterprise users. Currently, this includes access to GPT services through the AIProxy method, allowing for advanced AI-powered interactions within the XR environment. More integration services are planned for future releases, further expanding the capabilities available to developers for creating tailored enterprise solutions.
 
 #### AIProxy
 ```csharp
-public string iXR.AIProxy(string prompt, string past_messages = "", string bot_id = "")
+public string Abxr.AIProxy(string prompt, string past_messages = "", string bot_id = "")
 ```
 
 **Parameters:**
@@ -309,12 +290,12 @@ public string iXR.AIProxy(string prompt, string past_messages = "", string bot_i
 
 #### SetUserId
 ```csharp
-public void iXR.SetUserId(string userId)
+public void Abxr.SetUserId(string userId)
 ```
 
 #### SetUserMeta
 ```csharp
-public void iXR.SetUserMeta(string metaString)
+public void Abxr.SetUserMeta(string metaString)
 ```
 
 **Parameters:**
@@ -348,32 +329,41 @@ A: Object tracking can be enabled by adding the Track Object component to any Ga
 
 ## Troubleshooting
 
-### Common Issues
+---
 
-1. **Issue**: Authentication failing due to network error.  
-     
-   - **Solution**: Uncheck 'Force Remove Internet Permissions' in `Project Settings > XR Plug-in Management > OpenXR > Meta Quest Support Settings`.
+## Backend Integration: ArborXR Insights Storage API
 
-2. **Issue**: Event data not appearing in the dashboard.
+All Unity data is securely routed to the **ArborXR Insights Storage API**, which:
+- Validates authentication via signed JWTs
+- Ensures session continuity across user/device
+- Persists structured logs into MongoDB Atlas
+- Provides async-ready responses for batch telemetry logging
 
-   - **Solution**: Verify that your Application ID, Organization ID, and Authorization Secret are correctly configured in the Unity SDK.
+Example endpoints:
+- `/v1/collect/event` → Event logging
+- `/v1/collect/log` → Developer log ingestion
+- `/v1/collect/telemetry` → Positional + hardware data
+- `/v1/storage` → Persisted user/device state
 
-## Contact
+---
 
-### Support
+## Web UI + Insights User API
 
-For support, please reach out to our team at [info@informxr.com](mailto:info@informxr.com).
+For dashboards, analytics queries, impersonation, and integration management, use the **ArborXR Insights User API**, accessible through the platform’s admin portal.
 
-### Feedback
+Example features:
+- Visualize training completion & performance by cohort
+- Export SCORM/xAPI-compatible results
+- Query trends in interaction data
 
-We value your contributions! If you'd like to suggest changes or improvements to our SDK, you can do so by creating a Pull Request (PR).
+Endpoints of note:
+- `/v1/analytics/dashboard`
+- `/v1/admin/system/organization/{org_id}`
+- `/v1/analytics/data`
 
-To submit a Pull Request:
-1. Fork the repository to your GitHub account.
-2. Clone the forked repository to your local machine.
-3. Create a new branch for your changes.
-4. Make your changes and commit them to your branch.
-5. Push the changes to your fork on GitHub.
-6. Go to the original repository and create a Pull Request from your forked branch.
+---
 
-Once submitted, our team will review your Pull Request. We may ask for additional information or changes, and once everything looks good, we'll approve and merge your changes into the main branch. If necessary, we might also deny the PR with feedback on why it was not accepted.
+## Support
+
+- **Docs:** [https://help.arborxr.com/](https://help.arborxr.com/)
+- **GitHub:** [https://github.com/ArborXR/abxrlib-for-unity](https://github.com/ArborXR/abxrlib-for-unity)
