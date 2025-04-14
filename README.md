@@ -68,7 +68,6 @@ The value is retrieved from the [ArborXR Dashboard](https://app.arborxr.com/):
 ### Event Methods
 ```cpp
 //C# Event Method Signatures
-//C# Event Method Signatures
 public void Abxr.Event(string name);
 public void Abxr.Event(string name, Dictionary<string, string> meta = null);
 public void Abxr.Event(string name, Dictionary<string, string> meta = null, Vector3 location_data = null);
