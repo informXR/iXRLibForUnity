@@ -66,10 +66,27 @@ The value is retrieved from the [ArborXR Dashboard](https://app.arborxr.com/):
 ## Sending Data
 
 ### Event Methods
-```csharp
+```cpp
+//C# Event Method Signatures
+//C# Event Method Signatures
 public void Abxr.Event(string name);
 public void Abxr.Event(string name, Dictionary<string, string> meta = null);
 public void Abxr.Event(string name, Dictionary<string, string> meta = null, Vector3 location_data = null);
+
+// Example Usage - Basic Event
+Abxr.Event("button_pressed");
+
+// Example Usage - Event with Metadata
+Abxr.Event("item_collected", new Dictionary<string, string> {
+    {"item_type", "coin"},
+    {"item_value", "100"}
+});
+
+// Example Usage - Event with Metadata and Location
+Abxr.Event("player_teleported", 
+    new Dictionary<string, string> {{"destination", "spawn_point"}},
+    new Vector3(1.5f, 0.0f, -3.2f)
+);
 ```
 **Parameters:**
 - `name` (string): The name of the event. Use snake_case for better analytics processing.
@@ -86,7 +103,8 @@ Assessments are intended to track the overall performance of a learner across mu
 * Think of it as the learner's score for a specific course or curriculum.
 * When the Assessment is complete, it will automatically record and close out the Assessment in the various LMS platforms we support.
 
-```csharp
+```cpp
+//C# List Definition
 public enum ResultOptions
 {
     Pass,
@@ -95,6 +113,7 @@ public enum ResultOptions
     Incomplete
 }
 
+//C# Event Method Signatures
 public void Abxr.EventAssessmentStart(string assessmentName) 
 public void Abxr.EventAssessmentStart(string assessmentName, Dictionary<string, string> meta = null)
 
@@ -107,7 +126,8 @@ Abxr.EventAssessmentComplete("final_exam", 92, ResultOptions.Pass);
 ```
 
 #### Objectives
-```csharp
+```cpp
+//C# List Definition
 public enum ResultOptions
 {
     Pass,
@@ -116,8 +136,8 @@ public enum ResultOptions
     Incomplete
 }
 
+//C# Event Method Signatures
 public void Abxr.EventObjectiveStart(string objectiveName)
-
 public void Abxr.EventObjectiveStart(string objectiveName, Dictionary<string, string> meta)
 public void Abxr.EventObjectiveStart(string objectiveName, string metaString = "")
 
@@ -127,7 +147,8 @@ Abxr.EventObjectiveComplete("open_valve", 100, ResultOptions.Complete);
 ```
 
 #### Interactions
-```csharp
+```cpp
+//C# List Definition
 public enum InteractionType
 {
    Null, 
@@ -138,6 +159,7 @@ public enum InteractionType
    Number // integer
 }
 
+//C# Event Method Signatures
 public void Abxr.EventInteractionStart(string interactionName)
 
 public void Abxr.EventInteractionComplete(string interactionName, string result)
@@ -152,7 +174,8 @@ Abxr.EventInteractionComplete("select_option_a", "true", "a", InteractionType.Se
 
 ### Other Event Wrappers
 #### Levels
-```csharp
+```cpp
+//C# Event Method Signatures
 public void Abxr.EventAssessmentStart(string assessmentName) 
 
 public void Abxr.EventLevelComplete(string levelName, int score)
@@ -179,7 +202,8 @@ Abxr.EventLevelComplete("level_1", 85);
 ### Logging
 The Log Methods provide straightforward logging functionality, similar to syslogs. These functions are available to developers by default, even across enterprise users, allowing for consistent and accessible logging across different deployment scenarios.
 
-```csharp
+```cpp
+//C# Event Method Signatures
 public void Abxr.Log(LogLevel level, string message)
 
 // Example usage
@@ -187,7 +211,8 @@ Abxr.Log("Info", "Module started");
 ```
 
 Use standard or severity-specific logging:
-```csharp
+```cpp
+//C# Event Method Signatures
 public void Abxr.LogDebug(string message)
 public void Abxr.LogInfo(string message)
 public void Abxr.LogWarn(string message)
@@ -204,7 +229,8 @@ Abxr.LogError("Critical error in assessment phase");
 The Storage API enables developers to store and retrieve learner/player progress, facilitating the creation of long-form training content. When users log in using ArborXR's facility or the developer's in-app solution, these methods allow users to continue their progress on different headsets, ensuring a seamless learning experience across multiple sessions or devices.
 
 #### Save Progress
-```csharp
+```cpp
+//C# Event Method Signatures
 public void Abxr.SetStorageEntry(Dictionary<string, string> data, string name = "state", bool keep_latest = true, string origin = null, bool session_data = false)
 
 // Example usage
@@ -218,7 +244,8 @@ Abxr.SetStorageEntry(new Dictionary<string, string>{{"progress", "75%"}});
 - `session_data` (bool): Optional. If true, the data is specific to the current session. Default is false.
 
 #### Retrieve Data
-```csharp
+```cpp
+//C# Event Method Signatures
 public Dictionary<string, string> Abxr.GetStorageEntry(string name = "state", string origin = null, string[] tags_any = null, string[] tags_all = null, bool user_only = false)
 
 // Example usage
@@ -234,7 +261,8 @@ var state = Abxr.GetStorageEntry("state");
 **Returns:** A dictionary containing the retrieved storage entry.
 
 #### Remove Storage
-```csharp
+```cpp
+//C# Event Method Signatures
 public void Abxr.RemoveStorageEntry(string name = "state")
 
 // Example usage
@@ -244,7 +272,8 @@ Abxr.RemoveStorageEntry("state");
 - `name` (string): Optional. The identifier of the storage entry to remove. Default is "state".
 
 #### Get All Entries
-```csharp
+```cpp
+//C# Event Method Signatures
 public Dictionary<string, string> Abxr.GetAllStorageEntries()
 
 // Example usage
@@ -258,7 +287,8 @@ var allEntries = Abxr.GetAllStorageEntries();
 The Telemetry Methods provide comprehensive tracking of the XR environment. By default, they capture headset and controller movements, but can be extended to track any custom objects in the virtual space. These functions also allow collection of system-level data such as frame rates or device temperatures. This versatile tracking enables developers to gain deep insights into user interactions and application performance, facilitating optimization and enhancing the overall XR experience.
 
 To log spatial or system telemetry:
-```csharp
+```cpp
+//C# Event Method Signatures
 public void Abxr.Telemetry(string name, Dictionary<string, string> data)
 
 // Example usage
@@ -274,7 +304,8 @@ Abxr.Telemetry("headset_position", new Dictionary<string, string> { {"x", "1.23"
 The Integration Methods offer developers access to additional services, enabling customized experiences for enterprise users. Currently, this includes access to GPT services through the AIProxy method, allowing for advanced AI-powered interactions within the XR environment. More integration services are planned for future releases, further expanding the capabilities available to developers for creating tailored enterprise solutions.
 
 #### AIProxy
-```csharp
+```cpp
+//C# Event Method Signatures
 public string Abxr.AIProxy(string prompt, string past_messages = "", string bot_id = "")
 
 // Example usage
@@ -293,12 +324,14 @@ Abxr.AIProxy("Provide me a randomized greeting that includes common small talk a
 ### Authentication Methods
 
 #### SetUserId
-```csharp
+```cpp
+//C# Event Method Signatures
 public void Abxr.SetUserId(string userId)
 ```
 
 #### SetUserMeta
-```csharp
+```cpp
+//C# Event Method Signatures
 public void Abxr.SetUserMeta(string metaString)
 ```
 
@@ -308,7 +341,8 @@ public void Abxr.SetUserMeta(string metaString)
 
 ## Exit Polls
 Deliver questionnaires to users to gather feedback.
-```csharp
+```cpp
+//C# Event Method Signatures
 public void PollUser(string prompt, ExitPollHandler.PollType pollType)
 ```
 **Poll Types:**
