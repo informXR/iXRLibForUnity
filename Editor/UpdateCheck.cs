@@ -9,8 +9,8 @@ using Debug = UnityEngine.Debug;
 
 public class UpdateCheck
 {
-    private const string PackageUrl = "https://github.com/informXR/iXRLibUnitySDK.git";
-    private const string VersionUrl = "https://api.github.com/repos/informXR/iXRLibForUnity/releases/latest";
+    private const string PackageUrl = "https://github.com/informXR/abxrlib-for-unity.git";
+    private const string VersionUrl = "https://api.github.com/repos/informXR/abxrlib-for-unity/releases/latest";
     private const string PackageName = "com.arborxr.unity";
     private const string SkippedVersionKey = "SkippedPackageVersion";
     private const int UpdateCheckFrequencyDays = 1;

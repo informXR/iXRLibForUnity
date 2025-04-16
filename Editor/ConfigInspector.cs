@@ -24,7 +24,7 @@ public class ConfigInspector : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Network", EditorStyles.boldLabel);
         config.restUrl = EditorGUILayout.TextField(new GUIContent(
-            "REST URL", "Should most likely be\nhttps://libapi.informxr.io/"), config.restUrl);
+            "REST URL", "Should most likely be\nhttps://lib-backend.xrdm.dev/ during Beta"), config.restUrl);
         
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Data Sending Rules", EditorStyles.boldLabel);

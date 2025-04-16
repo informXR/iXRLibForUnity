@@ -272,7 +272,7 @@ public class Authentication : SdkBehaviour
         request.SetRequestHeader("Authorization", "Bearer " + _authToken);
         
         string unixTimeSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-        request.SetRequestHeader("x-ixrlib-timestamp", unixTimeSeconds);
+        request.SetRequestHeader("x-abxrlib-timestamp", unixTimeSeconds);
         
         string hashString = _authToken + _apiSecret + unixTimeSeconds;
         if (!string.IsNullOrEmpty(json))
@@ -281,7 +281,7 @@ public class Authentication : SdkBehaviour
             hashString += crc;
         }
         
-        request.SetRequestHeader("x-ixrlib-hash", Utils.ComputeSha256Hash(hashString));
+        request.SetRequestHeader("x-abxrlib-hash", Utils.ComputeSha256Hash(hashString));
     }
 
     private static Dictionary<string, string> CreateAuthMechanismDict()
